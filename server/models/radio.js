@@ -1,0 +1,23 @@
+const mongoose = require('mongoose');
+
+const radioSchema = new mongoose.Schema({
+    title: { type: String, required: false },
+    radio: { type: String, required: false },
+    language: { type: String, required: false },
+    genre: { type: String, required: false },
+    image: {type: String, required: false},
+    bitrate: {type: Number, default: 0},
+    online: {type: Number, default: 0},
+    rating: [{
+        value: {type: Number, default: 0, required: false},
+        description: { type: String, required: false },
+        name: { type: String, required: false },
+        commentatorId: { type: String, required: false },
+    }],
+}, { toJSON: { virtuals: true } });
+
+
+const Radio = mongoose.model("radio", radioSchema);
+
+
+module.exports = { Radio };
