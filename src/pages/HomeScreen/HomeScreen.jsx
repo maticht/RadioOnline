@@ -92,7 +92,7 @@ function HomeScreen() {
                             <audio src={selectedRadio.radio} autoPlay controls ></audio>
                         </div>
                     )}
-                    <h2 style={{margin:'20px 0 10px 10px'}}>{`Похожие странции`}</h2>
+                    <h2 style={{margin:'20px 0 10px 10px'}}>{`Похожие станции`}</h2>
                     <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
                         {radios.map((radio) => (
                             <div className={'oneBestSpecialistsBlock'} key={radio.id} onClick={() => playRadio(radio)}>

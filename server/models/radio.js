@@ -3,8 +3,18 @@ const mongoose = require('mongoose');
 const radioSchema = new mongoose.Schema({
     title: { type: String, required: false },
     radio: { type: String, required: false },
-    language: { type: String, required: false },
-    genre: { type: String, required: false },
+    language: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Language'
+    },
+    genre: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Genre'
+    },
+    country: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Country'
+    },
     image: {type: String, required: false},
     bitrate: {type: Number, default: 0},
     online: {type: Number, default: 0},
@@ -13,6 +23,7 @@ const radioSchema = new mongoose.Schema({
         description: { type: String, required: false },
         name: { type: String, required: false },
         commentatorId: { type: String, required: false },
+        created: {type: Date, default: Date.now}
     }],
 }, { toJSON: { virtuals: true } });
 
