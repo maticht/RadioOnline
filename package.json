@@ -1,6 +1,6 @@
 {
-  "name": "cisdeals-app",
-  "version": "0.1.0",
+  "name": "radionline",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.14",
