@@ -6,7 +6,6 @@ import axios from "axios";
 import goldStar from "../../img/goldStar.svg";
 import './HomeScreen.css';
 import Star from "../../img/Star1.svg";
-import styles from "../../components/UpdateDescription/styles.module.css";
 
 const useStyles = createUseStyles({
     container: {
@@ -24,7 +23,7 @@ function HomeScreen() {
     };
     const fetchUsers = async () => {
         try {
-            const response = await axios.get(`http://localhost:8081/getAllUsers`);
+            const response = await axios.get(`http://localhost:8081/getAllRadios`);
             setRadios(response.data);
         } catch (error) {
             console.error(error);
@@ -148,7 +147,7 @@ function HomeScreen() {
                                             onChange={handleChangeName}
                                             value={ratingName.name}
                                             required
-                                            className={styles.input}
+                                            className="input"
                                         />
                                     </div>
                                     <div style={{width:'100%',position: 'relative', display:'flex', alignItems:'center'}}>
@@ -158,12 +157,12 @@ function HomeScreen() {
                                             onChange={handleChange}
                                             value={ratingDesc.description}
                                             required
-                                            className={`${styles.input} ${styles["input-top"]}`}
+                                            className="inputTop"
                                             style={{height: '50px', margin:'10px 0 0 0'}}
                                             disabled={rating === 0}
                                         />
                                     </div>
-                                    <button onClick={handleAddRating} className={styles.submit_btn} style={{width:'100%', margin:'15px 10px'}}>
+                                    <button onClick={handleAddRating} className="submit_btn" style={{width:'100%', margin:'15px 10px'}}>
                                         Добавить
                                     </button>
                                 </div>

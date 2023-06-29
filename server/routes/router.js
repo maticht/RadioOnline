@@ -1,8 +1,7 @@
 const Router = require('express');
 const router = new Router();
-const {getAllUsers, deleteRadio} = require('../controller/controller');
+const {getAllRadios} = require('../controller/controller');
 
-router.get('/getAllUsers',getAllUsers)
-router.get('/deleteRadio/:ServId/', deleteRadio)
+router.get('/getAllRadios',getAllRadios)
 
-//module.exports = router
+module.exports = router
