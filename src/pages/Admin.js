@@ -18,9 +18,7 @@ const Admin = observer(() => {
         <>
 
         <Container className="d-flex flex-column">
-
             <h2 className="mt-2">Админ панель</h2>
-
             <Button
                 variant={"outline-dark"}
                 className="mt-3 p-2 mt-3"
