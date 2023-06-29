@@ -5,7 +5,7 @@ import styles from "./styles.module.css";
 import goldStar from "../../img/goldStar.svg";
 
 
-const Signup = () => {
+const Admin = () => {
     const [data, setData] = useState({
         title: "",
         radio: "",
@@ -27,7 +27,7 @@ const Signup = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get(`http://localhost:8081/getAllUsers`);
+            const response = await axios.get(`http://localhost:8081/getAllRadios`);
             setRadios(response.data);
         } catch (error) {
             console.error(error);
@@ -171,4 +171,4 @@ const Signup = () => {
 
 };
 
-export default Signup;
+export default Admin;
