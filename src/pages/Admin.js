@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, Navbar} from "react-bootstrap";
+import {Button, Col, Container, Navbar, Row} from "react-bootstrap";
 import CreateGenre from "../components/modals/CreateGenre";
 import CreateCountry from "../components/modals/CreateCountry";
 import CreateRadio from "../components/modals/CreateRadio";
@@ -17,29 +17,33 @@ const Admin = observer(() => {
     return (
         <>
 
-        <Container className="d-flex flex-column">
-            <h2 className="mt-2">Админ панель</h2>
+
+
+            <Container className="d-flex flex-column">
+                <h2 className="mt-2 text-center my-2">Админ панель</h2>
+            <Col className="d-flex justify-content-between">
             <Button
                 variant={"outline-dark"}
-                className="mt-3 p-2 mt-3"
+                className="mt-3 p-2 flex-fill"
                 onClick={() => setCountryVisible(true)}
             >
                 Добавить страну
             </Button>
             <Button
                 variant={"outline-dark"}
-                className="mt-3 p-2"
+                className="mt-3 p-2 flex-fill mx-4"
                 onClick={() => setGenreVisible(true)}
             >
                 Добавить жанр
             </Button>
             <Button
                 variant={"outline-dark"}
-                className="mt-3 p-2"
+                className="mt-3 p-2 flex-fill"
                 onClick={() => setLanguageVisible(true)}
             >
                 Добавить язык
             </Button>
+            </Col>
             <Button
                 variant={"outline-dark"}
                 className="mt-3 p-2"
@@ -51,7 +55,7 @@ const Admin = observer(() => {
             <CreateGenre show={genreVisible} onHide={() => setGenreVisible(false)}/>
             <CreateLanguage show={languageVisible} onHide={() => setLanguageVisible(false)}/>
             <CreateRadio show={radioVisible} onHide={() => setRadioVisible(false)}/>
-        </Container>
+                </Container>
         </>
     );
 });

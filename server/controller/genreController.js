@@ -27,7 +27,6 @@ class GenreController {
         try {
             let genre = await Genre.find();
             if (!genre) return res.status(409).send({message: "Жанров нет в базе данных!"});
-            console.log(genre)
             return res.json(genre);
         } catch (error) {
             console.log(error);

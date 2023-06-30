@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Radio } = require("./radio");
+const { Radio } = require("../models/radio");
 
 router.put("/:id", async (req, res) => {
     try {
@@ -13,7 +13,7 @@ router.put("/:id", async (req, res) => {
         const { userId, value, description, name, commentatorId} = req.body;
 
         radio.rating.push({ user: userId, value, description, name, commentatorId });
-        const updatedUser = await Radio.save();
+        const updatedUser = await radio.save();
         return res.status(200).json({ data: updatedUser });
     } catch (error) {
         console.log(error.message);
