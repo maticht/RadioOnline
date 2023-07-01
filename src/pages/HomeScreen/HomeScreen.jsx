@@ -21,8 +21,8 @@ const useStyles = createUseStyles({
 });
 const HomeScreen = observer(() => {
     const classes = useStyles();
-    const [radios, setRadios] = useState([]);
     const [selectedRadio, setSelectedRadio] = useState(null);
+    const {radioStation} = useContext(Context)
 
     const playRadio = (radio) => {
         setSelectedRadio(radio);
@@ -81,8 +81,6 @@ const HomeScreen = observer(() => {
         setRating(value);
     };
 
-
-    const {radioStation} = useContext(Context)
 
     useEffect(() => {
         radioStation.setSearchName('')
