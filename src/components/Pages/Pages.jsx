@@ -11,14 +11,15 @@ const Pages = observer(() => {
     const pages = useMemo(() => [...Array(pageCount)].reduce((acc, _, i) => acc.concat(i + 1), []), [pageCount]);
 
     const handlePrevPage = () => {
-        radioStation.setPage(prevPage => (
-            prevPage > 1 ? prevPage - 1 : prevPage
-        ));
+        if (radioStation.page > 1) {
+            radioStation.setPage(radioStation.page - 1);
+        }
     };
+
     const handleNextPage = () => {
-        radioStation.setPage(prevPage => (
-            prevPage < pageCount ? prevPage + 1 : prevPage
-        ));
+        if (radioStation.page < pageCount) {
+            radioStation.setPage(radioStation.page + 1);
+        }
     };
 
     return (
