@@ -7,9 +7,10 @@ import axios from "axios";
 import goldStar from "../../img/goldStar.svg";
 import './HomeScreen.css';
 import Star from "../../img/Star1.svg";
+import nonePrev from "../../img/noneprev.png";
 import {Context} from "../../index";
 import {getAllCountries, getAllGenres, getOneRadio, getRadios} from "../../http/radioApi";
-import Pages from "../../components/Pages";
+import Pages from "../../components/Pages/Pages";
 import {observer} from "mobx-react-lite";
 
 const useStyles = createUseStyles({
@@ -138,37 +139,49 @@ const HomeScreen = observer(() => {
                                             {radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (
                                                 <div style={{
                                                     position: 'absolute',
-                                                    top: 4,
-                                                    right: 4,
+                                                    top: 1,
+                                                    left: 1,
                                                     backgroundColor: '#ffffff',
-                                                    padding: '0',
+                                                    padding: '13px 5px 1px 12px',
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'space-between',
-                                                    borderRadius: '4px'
+                                                    borderRadius: '8px'
                                                 }}>
                                                     <img style={{width: '12px'}} src={goldStar} alt="star"/>
-                                                    <p style={{margin: '0 0 2px 0', fontSize: '13px'}}>
+                                                    <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>
                                                         {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}
                                                     </p>
                                                 </div>
                                             )}
                                         </div>
                                         <div style={{
-                                            marginLeft: '10px',
+                                            marginTop: '10px',
                                             display: 'flex',
                                             flexDirection: 'column',
                                             justifyContent: 'space-between',
                                             alignContent: 'space-around'
                                         }}>
-                                            <Image width={110} height={110}
+                                            <Image width={140} height={125}
                                                    className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                   src={'http://localhost:8081/' + radio.image}/>
-                                            <p className="mx-auto" style={{fontWeight: '500', margin: '5px 0 0 0'}}>
-                                                {radio.title}
-                                            </p>
+                                                   src={radio.image !== 'image' ? 'http://localhost:8081/' + radio.image : nonePrev}/>
+
                                         </div>
                                     </div>
+                                    <div style={{
+                                        marginTop:'10px',
+                                        paddingTop:'2px',
+                                        borderTop:"1px solid #EAEAEA",
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        alignContent: 'space-around'
+                                    }}>
+                                        <p className="mx-auto" style={{fontWeight: '500', margin: '5px 0 0 0'}}>
+                                            {radio.title}
+                                        </p>
+                                    </div>
+
                                 </Link>
                             </div>
                         ))}
