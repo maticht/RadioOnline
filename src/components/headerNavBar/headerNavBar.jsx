@@ -44,33 +44,39 @@ const HeaderNavBar = observer(() => {
             <img src={logo} alt={"logo"}
             onClick={refresh}/>
         </Link>
-        <div style={{width:'340px',height:'40px', backgroundColor:'#fff', display:'flex', justifyContent:'flex-start', alignItems:'center', borderRadius:'10px'}}>
-            <img style={{width:'30px', marginBottom:'3px'}} src={searchBtn} alt="logo" />
-            <input
-                style={{ border: 'none' }}
-                placeholder="Введите запрос"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                onKeyDown={handleKeyDown}/>
+        <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
+            <div style={{width:'340px',height:'40px', backgroundColor:'#fff', display:'flex', marginRight:'15px', justifyContent:'flex-start', alignItems:'center', borderRadius:'10px'}}>
+                <img style={{width:'30px'}} src={searchBtn} alt="logo" />
+                <input
+                    style={{ border: 'none' }}
+                    className="searchFld"
+                    placeholder="Введите запрос"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    onKeyDown={handleKeyDown}/>
+            </div>
+            <Dropdown className="custom-dropdown" style={{width:'170px'}}>
+                <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
+                <DropdownMenu className="custom-dropdown-menu" style={{width:'170px'}}>
+                    {radioStation.countries.map(country =>
+                        <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
+                                       key={country.id}> {country.name} </Dropdown.Item>
+                    )}
+                </DropdownMenu>
+            </Dropdown>
+            <Dropdown className="custom-dropdown">
+                <DropdownToggle className="custom-dropdown-toggle"
+                                style={{backgroundColor: '#FFFFFF', color: '#909095'}}
+                >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
+                <DropdownMenu className="custom-dropdown-menu">
+                    {radioStation.genres.map(genre =>
+                        <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
+                                       key={genre.id}> {genre.name} </Dropdown.Item>
+                    )}
+                </DropdownMenu>
+            </Dropdown>
         </div>
-        <Dropdown className="mt-3 mb-3">
-            <DropdownToggle>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
-            <DropdownMenu>
-                {radioStation.countries.map(country =>
-                    <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
-                                   key={country.id}> {country.name} </Dropdown.Item>
-                )}
-            </DropdownMenu>
-        </Dropdown>
-        <Dropdown className="mt-3 mb-3">
-            <DropdownToggle>{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
-            <DropdownMenu>
-                {radioStation.genres.map(genre =>
-                    <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
-                                   key={genre.id}> {genre.name} </Dropdown.Item>
-                )}
-            </DropdownMenu>
-        </Dropdown>
+
         <Link className={"logInBlock"} to={"/admin"}>
             <p className={"accountText"}>Админ</p>
             <button className={"accountBtn"}></button>
