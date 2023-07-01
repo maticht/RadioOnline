@@ -30,6 +30,7 @@
     background-color: rgba(255, 255, 255, 0);
     border: none;
     width: 24px;
+    margin-left: 5px;
     height: 24px;
     background-image: url('../../img/Frame.svg');
     background-repeat: no-repeat;
@@ -46,7 +47,7 @@
     flex-direction: row;
     font-size: 14px;
     font-weight: bold;
-    margin-right: 5px;
+    margin: 0;
 }
 .burgerBtn{
     background-color: rgba(255, 255, 255, 0);
@@ -88,18 +89,11 @@
 }
 
 .searchFld{
-    width: 93%;
-    background-color: rgba(255, 255, 255, 0);
     border: none;
+    width:300px
 }
 .searchFld:focus {
-    color: #212529;
-    background-color: #ffffff;
     outline: 0;
-}
-.searchFld::placeholder {
-    color: #454545;
-    font-size: 14px;
 }
 
 .searchBlock{
@@ -117,4 +111,69 @@
     height: inherit;
     border-radius: 4px 8px 8px 4px;
     aspect-ratio: 1;
+}
+.custom-dropdown {
+    background-color: #FFFFFF;
+    border: 0px;
+    width: 160px;
+    border-radius: 8px;
+    margin-right: 15px;
+    height: 40px;
+    color: #909095;
+}
+
+.custom-dropdown-toggle {
+    background-color: #FFFFFF;
+    border: 0px;
+    width: 160px;
+    border-radius: 8px;
+    color: #909095;
+    outline: none;
+    padding-right: 40px;
+    background-image: url('../../img/arrow_down=24.svg');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) 16px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.custom-dropdown-toggle::after {
+    background-image: url('../../img/arrow_up=24.svg');
+    display: none;
+    background-color: #FFFFFF !important;
+    color: #909095 !important;
+}
+
+.custom-dropdown-menu.show + .custom-dropdown-toggle::after {
+    display: none;
+    background-image: url('../../img/arrow_up=24.svg');
+    background-color: #FFFFFF !important;
+    color: #909095 !important;
+}
+
+.custom-dropdown-menu {
+    background-color: #FFFFFF;
+    border: 0px;
+    margin-top: 10px;
+    width: 160px;
+    color: #909095;
+    box-shadow: 0px 0px 15px rgba(133, 133, 133, 0.2);
+}
+
+.custom-dropdown-toggle:hover,
+.custom-dropdown-toggle:focus,
+.custom-dropdown-menu.show .custom-dropdown-toggle,
+.custom-dropdown-toggle:active,
+.custom-dropdown-toggle:focus-visible,
+.custom-dropdown-toggle:active:focus {
+    background-color: #FFFFFF !important;
+    color: #909095 !important;
+    box-shadow: none !important;
+}
+
+.custom-dropdown-menu .dropdown-item:focus,
+.custom-dropdown-menu .dropdown-item:hover {
+    background-color: #FFFFFF !important;
+    color: #909095 !important;
 }
