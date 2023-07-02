@@ -11,7 +11,7 @@ import {
     deleteRadio,
     fetchOneRadio,
     getAllCountries,
-    getAllGenres,
+    getAllGenres, getAllLanguages,
     getRadios,
     updateRadio
 } from "../http/radioApi";
@@ -30,8 +30,6 @@ const Admin = observer(() => {
     const [genreVisible, setGenreVisible] = useState(false)
     const [languageVisible, setLanguageVisible] = useState(false)
     const [radioVisible, setRadioVisible] = useState(false)
-    const [delModalVisible, setDelModalVisible] = useState(false)
-    const [updModalVisible, setUpdModalVisible] = useState(false)
     const [selectedRadio, setSelectedRadio] = useState(null);
     const [title, setTitle] = useState('')
     const [radioWave, setRadioWave] = useState('')
@@ -83,6 +81,18 @@ const Admin = observer(() => {
             setRadioWave(r.radio)
             console.log()
         })
+    }
+
+    const getCountries = async() =>{
+            getAllCountries().then(data => radioStation.setCountries(data))
+    }
+
+    const getGenres = async() =>{
+            getAllGenres().then(data => radioStation.setGenres(data))
+    }
+
+    const getLanguages = async() =>{
+            getAllLanguages().then(data => radioStation.setLanguages(data))
     }
 
     const deleteR = async (id) =>{
@@ -197,7 +207,7 @@ const Admin = observer(() => {
                                         Параметры радио
                                     </p>
                                     <Col className="d-flex justify-content-between">
-                                        <Dropdown className="custom-dropdown" >
+                                        <Dropdown className="custom-dropdown" onClick={getGenres}>
                                             <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{updGenre.name|| 'жанр' }</DropdownToggle>
                                             <DropdownMenu className="custom-dropdown-menu" style={{width:'170px'}}>
                                                 {radioStation.genres.map(genre =>
@@ -206,7 +216,7 @@ const Admin = observer(() => {
                                                 )}
                                             </DropdownMenu>
                                         </Dropdown>
-                                        <Dropdown className="custom-dropdown" >
+                                        <Dropdown className="custom-dropdown" onClick={getCountries}>
                                             <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{updCountry.name || 'страна' }</DropdownToggle>
                                             <DropdownMenu className="custom-dropdown-menu" style={{width:'170px'}}>
                                                 {radioStation.countries.map(country =>
@@ -215,7 +225,7 @@ const Admin = observer(() => {
                                                 )}
                                             </DropdownMenu>
                                         </Dropdown>
-                                        <Dropdown className="custom-dropdown">
+                                        <Dropdown className="custom-dropdown" onClick={getLanguages}>
                                             <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{updLanguage.name|| 'язык'}</DropdownToggle>
                                             <DropdownMenu className="custom-dropdown-menu" style={{width:'170px'}}>
                                                 {radioStation.languages.map(language =>
