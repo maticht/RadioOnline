@@ -9,12 +9,16 @@ import {Context} from "../../index";
 import {Dropdown} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
+import {useLocation} from "react-router-dom";
+import {getAllCountries, getAllGenres} from "../../http/radioApi";
 
 const HeaderNavBar = observer(() => {
 
     const {radioStation} = useContext(Context)
     const [search, setSearch] = useState('')
     const history = useNavigate()
+    const location = useLocation()
+    const isAdminLoc = location.pathname === '/admin'
     const handleKeyDown = (event) => {
         if(event.key === 'Enter'){
             event.preventDefault()
@@ -39,6 +43,20 @@ const HeaderNavBar = observer(() => {
         radioStation.setSelectLanguage({})
     }
 
+    const getCountries = async() =>{
+        if(isAdminLoc){
+            getAllCountries().then(data => radioStation.setCountries(data))
+        }
+    }
+
+    const getGenres = async() =>{
+        if(isAdminLoc) {
+            getAllGenres().then(data => radioStation.setGenres(data))
+        }
+    }
+
+
+
     return (<div className={'navBarBlock'}>
         <Link to={"/"}>
             <img src={logo} alt={"logo"}
@@ -55,7 +73,7 @@ const HeaderNavBar = observer(() => {
                     onChange={e => setSearch(e.target.value)}
                     onKeyDown={handleKeyDown}/>
             </div>
-            <Dropdown className="custom-dropdown" style={{width:'170px'}}>
+            <Dropdown className="custom-dropdown" style={{width:'170px'}} onClick={getCountries}>
                 <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
                 <DropdownMenu className="custom-dropdown-menu" style={{width:'170px'}}>
                     {radioStation.countries.map(country =>
@@ -64,7 +82,7 @@ const HeaderNavBar = observer(() => {
                     )}
                 </DropdownMenu>
             </Dropdown>
-            <Dropdown className="custom-dropdown">
+            <Dropdown className="custom-dropdown" onClick={getGenres}>
                 <DropdownToggle className="custom-dropdown-toggle"
                                 style={{backgroundColor: '#FFFFFF', color: '#909095'}}
                 >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
@@ -76,11 +94,13 @@ const HeaderNavBar = observer(() => {
                 </DropdownMenu>
             </Dropdown>
         </div>
-
+        {!isAdminLoc ?
         <Link className={"logInBlock"} to={"/admin"}>
             <p className={"accountText"}>Админ</p>
             <button className={"accountBtn"}></button>
         </Link>
+            :null}
+
     </div>);
 })
 
