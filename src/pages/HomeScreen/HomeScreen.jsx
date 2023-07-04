@@ -304,7 +304,6 @@ const HomeScreen = observer(() => {
                             </div>
                         </div>
                     )}
-
                 </div>
             </div>
         </>
