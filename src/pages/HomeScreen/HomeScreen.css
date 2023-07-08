@@ -6,6 +6,17 @@
     max-width: 100px;
 
 }
+
+.largeRadioBlockAdmin {
+    max-width: 1070px;
+    width: 100%;
+    height: 300px;
+    background-color: #fff;
+
+    align-items: center;
+    border-radius: 8px;
+    margin: 10px 12px 10px 10px;
+}
 .oneBestSpecialistsBlock {
     max-width: 160px;
     width: 100%;

@@ -59,7 +59,18 @@ export const getRadios = async (country_id, genre_id, page, limit, searchName) =
     return data
 }
 
-export const getOneRadio = async (id) =>{
+export const deleteRadio = async (id) => {
+    const {data} = await $authHost.post('api/radio/delete/'  + id, id)
+    return data
+}
+
+export const updateRadio = async (radio) => {
+    console.log('popal2')
+    const {data} = await $authHost.post('api/radio/upd', radio)
+    return data
+}
+
+export const fetchOneRadio = async (id) =>{
     const {data} = await $host.get('api/radio/' + id)
     return data
 }

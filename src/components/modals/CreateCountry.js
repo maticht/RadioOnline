@@ -6,6 +6,7 @@ const CreateCountry = ({show, onHide}) => {
 
     const [value, setValue] = useState('')
 
+
     const addCountry = () => {
         createCountry({name: value}).then(data => {
             setValue('')
