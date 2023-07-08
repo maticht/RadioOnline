@@ -23,6 +23,9 @@ class RadioController {
                 country: req.body.country_id,
                 image: fileName,
             }).save();
+            let genre = await Genre.findById(req.body.genre_id);
+            genre.numberOfRS = genre.numberOfRS + 1;
+            await genre.save();
             return res.status(201).send({message: "Радиостанция добавлена успешно"});
         } catch (error) {
             console.log(error);
@@ -109,6 +112,9 @@ class RadioController {
         if (!id) res.status(400).json('None Id')
         try {
             const deletedDocument = await Radio.findByIdAndDelete(id);
+            let genre = await Genre.findById(deletedDocument.genre);
+            genre.numberOfRS = genre.numberOfRS - 1;
+            await genre.save();
             fs.unlink(path.resolve(__dirname, '..', 'static', deletedDocument.image), (err) => {
                 if (err) {
                     console.error(err);
@@ -144,7 +150,15 @@ class RadioController {
                 await image.mv(path.resolve(__dirname, '..', 'static', fileName))
 
             }
-            console.log(fileName)
+            if(radio.genre !== req.body.genre){
+                let genre = await Genre.findById(radio.genre);
+                genre.numberOfRS = genre.numberOfRS - 1;
+                await genre.save();
+
+                genre = await Genre.findById(req.body.genre_id);
+                genre.numberOfRS = genre.numberOfRS + 1;
+                await genre.save();
+            }
             radio.title = req.body.title
             radio.radio = req.body.radio
             radio.language = req.body.language_id
