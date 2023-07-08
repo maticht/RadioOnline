@@ -7,6 +7,9 @@ const {Country} = require("../models/country");
 const {Language} = require("../models/language");
 const fs = require('fs');
 
+const icy = require('icy');
+
+
 class RadioController {
     async create(req, res, next) {
         try {
@@ -105,8 +108,30 @@ class RadioController {
         }
     }
 
+    async getRadioMetadata(req, res) {
+        // const {url} = req.body;
+        let url = 'http://jazz-wr01.ice.infomaniak.ch/jazz-wr01-128.mp3';
 
+        try {
+            const parsedMetadata = await new Promise((resolve, reject) => {
+                icy.get(url, (res) => {
+                    res.on('metadata', (metadata) => {
+                        const parsedMetadata = icy.parse(metadata);
+                        resolve(parsedMetadata);
+                    });
 
+                    res.on('error', (err) => {
+                        reject(err);
+                    });
+                });
+            });
+
+            return res.json(parsedMetadata);
+        } catch (err) {
+            console.error('Ошибка при получении потока:', err);
+            return res.status(500).json({ success: false, error: 'Internal server error' });
+        }
+    }
     async delete(req, res) {
         const {id} = req.body
         if (!id) res.status(400).json('None Id')
