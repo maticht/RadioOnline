@@ -6,16 +6,20 @@
     max-width: 100px;
 
 }
+.radioBlock{
+    width: 1045px;
+    background-color: #fff;
+    border-radius: 8px;
+    margin: 15px 0 0 20px;
+    padding: 15px;
+}
 
 .largeRadioBlockAdmin {
-    max-width: 1070px;
-    width: 100%;
-    height: 300px;
+    width: 1045px;
     background-color: #fff;
-
-    align-items: center;
     border-radius: 8px;
-    margin: 10px 12px 10px 10px;
+    margin: 15px 0 0 20px;
+    padding: 15px;
 }
 .oneBestSpecialistsBlock {
     max-width: 160px;
@@ -26,7 +30,7 @@
     justify-content: flex-start;
     align-items: center;
     border-radius: 8px;
-    margin: 10px 12px 10px 10px;
+    margin: 10px 9px 10px 8px;
 }
 .inputTop {
     text-align: left;

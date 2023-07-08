@@ -5,6 +5,7 @@ import {createUseStyles} from "react-jss";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import goldStar from "../../img/goldStar.svg";
+import online from "../../img/online.svg";
 import './HomeScreen.css';
 import Star from "../../img/Star1.svg";
 import nonePrev from "../../img/noneprev.png";
@@ -28,14 +29,6 @@ const HomeScreen = observer(() => {
     const playRadio = (radio) => {
         setSelectedRadio(radio);
     };
-    // const fetchUsers = async () => {
-    //     try {
-    //         const response = await axios.get(`http://localhost:8081/getAllRadios`);
-    //         setRadios(response.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
 
     const toggleRate = async (userid, rating, description, name) => {
         try {
@@ -113,8 +106,92 @@ const HomeScreen = observer(() => {
 
                 <div className={'bestSpecialists'}>
                     {selectedRadio && (
-                        <div className="largeRadioBlock">
-                            <audio src={selectedRadio.radio} autoPlay controls></audio>
+                        <div className="radioBlock">
+                            <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                                <div>
+                                    <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
+                                        {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
+
+                                            <div style={{
+                                                backgroundColor: '#ffffff',
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                justifyContent: 'space-between',
+                                                flexDirection:'column',
+                                                borderRadius: '8px'
+                                            }}>
+                                                <div style={{display:'flex', flexDirection:'row'}}>
+                                                    <img style={{width: '16px'}} src={online} alt="star"/>
+
+                                                    <p style={{margin: '0 0 0 5px', fontSize: '14px'}}>
+                                                        234
+                                                    </p>
+                                                </div>
+                                                <Image width={140} height={125}
+                                                       className="mt-1 rounded rounded-10 d-block mx-auto"
+                                                       src={selectedRadio.image !== 'image' ? 'http://localhost:8081/' + selectedRadio.image : nonePrev}/>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
+                                        {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
+
+                                            <div style={{
+                                                backgroundColor: '#ffffff',
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                justifyContent: 'space-between',
+                                                flexDirection:'column',
+                                                borderRadius: '8px'
+                                            }}>
+                                                <div style={{paddingBottom:'10px',width:'160px', borderBottom:'1px solid #E9E9E9'}}>
+                                                    <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
+                                                        <img style={{width: '12px'}} src={goldStar} alt="star"/>
+                                                        <p style={{margin: '0 0 0 2px', fontSize: '13px', fontWeight:'500'}}>
+                                                            {(selectedRadio.rating.reduce((acc, rating) => acc + rating.value, 0) / selectedRadio.rating.length).toFixed(1)}
+                                                        </p>
+                                                        <p style={{margin: '0 0 0 5px', fontSize: '11px'}}>
+                                                            ({selectedRadio.rating.length} отзывов)
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <h6 style={{fontWeight:'bold'}}>{selectedRadio.title}</h6>
+                                                    </div>
+                                                </div>
+                                                <div style={{display: 'flex', flexDirection: 'row', marginTop:'10px'}}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'flex-start',
+                                                        justifyContent: 'space-between',
+                                                        flexDirection:'column',
+                                                    }}>
+                                                        <p style={{margin:'2px 0', fontSize:'12px'}}>Жанр</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px'}}>Страна</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px'}}>Язык</p>
+                                                    </div>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'flex-start',
+                                                        justifyContent: 'space-between',
+                                                        flexDirection:'column',
+                                                        margin:'0 0 0 10px'
+                                                    }}>
+                                                        <p style={{margin:'2px 0', fontSize:'12px', fontWeight:'bold'}}>Жанр</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px', fontWeight:'bold'}}>Страна</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px', fontWeight:'bold'}}>Язык</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div>
+                                    <audio src={selectedRadio.radio} autoPlay controls></audio>
+                                </div>
+                            </div>
+
                         </div>
                     )}
                     <h2 style={{margin: '20px 0 10px 10px'}}>{`Похожие станции`}</h2>
@@ -192,7 +269,7 @@ const HomeScreen = observer(() => {
                             <div style={{position: 'relative', zIndex: 99, marginBottom: '10px'}}>
                                 <div style={{
                                     margin: '0 10px 0 10px',
-                                    width: '1070px',
+                                    width: '1050px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     flexDirection: 'column'
@@ -258,7 +335,7 @@ const HomeScreen = observer(() => {
                                     </button>
                                 </div>
                             </div>
-                            <div style={{margin: '10px 0 50px 10px', width: '1070px', overflow: 'auto'}}>
+                            <div style={{margin: '10px 0 50px 10px', width: '1050px', overflow: 'auto'}}>
                                 {selectedRadio.rating.map((rating, index) => (
                                     <div key={index} style={{
                                         display: 'flex',

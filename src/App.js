@@ -1,7 +1,7 @@
 import React from "react";
 import HomeScreen from "./pages/HomeScreen/HomeScreen";
 import {Route, Routes, Navigate, BrowserRouter} from "react-router-dom";
-import Admin from "./pages/Admin";
+import Admin from "./pages/Admin/Admin";
 
 function App() {
     return (
