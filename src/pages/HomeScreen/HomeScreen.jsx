@@ -12,6 +12,7 @@ import {Context} from "../../index";
 import {getAllCountries, getAllGenres, getOneRadio, getRadios} from "../../http/radioApi";
 import Pages from "../../components/Pages/Pages";
 import {observer} from "mobx-react-lite";
+import Footer from "../../components/Footer/Footer";
 
 const useStyles = createUseStyles({
     container: {
@@ -303,8 +304,13 @@ const HomeScreen = observer(() => {
                         </div>
                     )}
 
+
+
+
                 </div>
+                <Footer/>
             </div>
+
         </>
     );
 })
