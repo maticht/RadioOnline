@@ -110,8 +110,6 @@ const HomeScreen = observer(() => {
                             <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
                                 <div>
                                     <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
-                                        {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
-
                                             <div style={{
                                                 backgroundColor: '#ffffff',
                                                 display: 'flex',
@@ -131,12 +129,11 @@ const HomeScreen = observer(() => {
                                                        className="mt-1 rounded rounded-10 d-block mx-auto"
                                                        src={selectedRadio.image !== 'image' ? 'http://localhost:8081/' + selectedRadio.image : nonePrev}/>
                                             </div>
-                                        )}
                                     </div>
                                 </div>
                                 <div>
                                     <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
-                                        {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
+
 
                                             <div style={{
                                                 backgroundColor: '#ffffff',
@@ -147,6 +144,7 @@ const HomeScreen = observer(() => {
                                                 borderRadius: '8px'
                                             }}>
                                                 <div style={{paddingBottom:'10px',width:'160px', borderBottom:'1px solid #E9E9E9'}}>
+                                                    {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
                                                     <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
                                                         <img style={{width: '12px'}} src={goldStar} alt="star"/>
                                                         <p style={{margin: '0 0 0 2px', fontSize: '13px', fontWeight:'500'}}>
@@ -156,6 +154,7 @@ const HomeScreen = observer(() => {
                                                             ({selectedRadio.rating.length} отзывов)
                                                         </p>
                                                     </div>
+                                                    )}
                                                     <div>
                                                         <h6 style={{fontWeight:'bold'}}>{selectedRadio.title}</h6>
                                                     </div>
@@ -184,7 +183,6 @@ const HomeScreen = observer(() => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        )}
                                     </div>
                                 </div>
                                 <div>
