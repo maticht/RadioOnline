@@ -6,6 +6,7 @@ const {Genre} = require("../models/genre");
 const {Country} = require("../models/country");
 const {Language} = require("../models/language");
 const fs = require('fs');
+const icy = require('icy');
 
 class RadioController {
     async create(req, res, next) {
@@ -23,6 +24,9 @@ class RadioController {
                 country: req.body.country_id,
                 image: fileName,
             }).save();
+            let genre = await Genre.findById(req.body.genre_id);
+            genre.numberOfRS = genre.numberOfRS + 1;
+            await genre.save();
             return res.status(201).send({message: "Радиостанция добавлена успешно"});
         } catch (error) {
             console.log(error);
@@ -102,6 +106,31 @@ class RadioController {
         }
     }
 
+    async getRadioMetadata(req, res) {
+        // const {url} = req.body;
+        let url = 'http://jazz-wr01.ice.infomaniak.ch/jazz-wr01-128.mp3';
+
+        try {
+            const parsedMetadata = await new Promise((resolve, reject) => {
+                icy.get(url, (res) => {
+                    res.on('metadata', (metadata) => {
+                        const parsedMetadata = icy.parse(metadata);
+                        resolve(parsedMetadata);
+                    });
+
+                    res.on('error', (err) => {
+                        reject(err);
+                    });
+                });
+            });
+
+            return res.json(parsedMetadata);
+        } catch (err) {
+            console.error('Ошибка при получении потока:', err);
+            return res.status(500).json({ success: false, error: 'Internal server error' });
+        }
+    }
+
 
 
     async delete(req, res) {
@@ -109,6 +138,9 @@ class RadioController {
         if (!id) res.status(400).json('None Id')
         try {
             const deletedDocument = await Radio.findByIdAndDelete(id);
+            let genre = await Genre.findById(deletedDocument.genre);
+            genre.numberOfRS = genre.numberOfRS - 1;
+            await genre.save();
             fs.unlink(path.resolve(__dirname, '..', 'static', deletedDocument.image), (err) => {
                 if (err) {
                     console.error(err);
@@ -144,7 +176,15 @@ class RadioController {
                 await image.mv(path.resolve(__dirname, '..', 'static', fileName))
 
             }
-            console.log(fileName)
+            if(radio.genre !== req.body.genre){
+                let genre = await Genre.findById(radio.genre);
+                genre.numberOfRS = genre.numberOfRS - 1;
+                await genre.save();
+
+                genre = await Genre.findById(req.body.genre_id);
+                genre.numberOfRS = genre.numberOfRS + 1;
+                await genre.save();
+            }
             radio.title = req.body.title
             radio.radio = req.body.radio
             radio.language = req.body.language_id
