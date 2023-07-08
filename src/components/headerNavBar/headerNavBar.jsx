@@ -29,7 +29,11 @@ const HeaderNavBar = observer(() => {
         try{
             radioStation.setSearchName(search)
             console.log(radioStation.searchName)
-            history("/")
+            if(isAdminLoc){
+                history("/admin")
+            }else {
+                history("/")
+            }
 
         }catch (e){
             alert(e.response.data.message)
