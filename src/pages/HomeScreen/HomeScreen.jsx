@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Image} from "react-bootstrap";
+import {Button, Col, Image} from "react-bootstrap";
 import HeaderNavBar from '../../components/headerNavBar/headerNavBar';
 import {createUseStyles} from "react-jss";
 import {Link} from "react-router-dom";
@@ -28,6 +28,8 @@ const HomeScreen = observer(() => {
     const [selectGenre, setSelectGenre] = useState('')
     const [selectCountry, setSelectCountry] = useState('')
     const [selectLanguage, setSelectLanguage] = useState('')
+    const [allReviews, setAllReviews] = useState(false)
+    const [leaveReview, setLeaveReview] = useState(false)
 
     const playRadio = (radio) => {
         setSelectedRadio(radio);
@@ -90,7 +92,7 @@ const HomeScreen = observer(() => {
                 radioStation.setTotalCount(data[1])
             }
         )
-    }, [])
+    }, [leaveReview, allReviews])
 
     useEffect(() => {
             getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
@@ -103,6 +105,8 @@ const HomeScreen = observer(() => {
 
     const getOneRadio = (r) => {
         setSelectedRadio(r)
+        setLeaveReview(false)
+        setAllReviews(false)
         fetchOneRadio(r.id).then(data => {
             setSelectGenre(data[1])
             setSelectCountry(data[2])
@@ -276,6 +280,7 @@ const HomeScreen = observer(() => {
                     {selectedRadio && (
                         <div className="largeRadioBlock">
                             <h2 style={{margin: '20px 0 10px 10px'}}>{`Отзывы`}</h2>
+                            {leaveReview ?
                             <div style={{position: 'relative', zIndex: 99, marginBottom: '10px'}}>
                                 <div style={{
                                     margin: '0 10px 0 10px',
@@ -341,12 +346,14 @@ const HomeScreen = observer(() => {
                                     </div>
                                     <button onClick={handleAddRating} className="submit_btn"
                                             style={{width: '100%', margin: '15px 10px'}}>
-                                        Добавить
+                                        Добавить отзыв
                                     </button>
                                 </div>
                             </div>
-                            <div style={{margin: '10px 0 50px 10px', width: '1050px', overflow: 'auto'}}>
-                                {selectedRadio.rating.map((rating, index) => (
+                                : null }
+                            <div style={{margin: '10px 0 13px 10px', width: '1050px', overflow: 'auto'}}>
+                                {allReviews ?
+                                    selectedRadio.rating.map((rating, index) => (
                                     <div key={index} style={{
                                         display: 'flex',
                                         alignItems: 'flex-start',
@@ -385,14 +392,72 @@ const HomeScreen = observer(() => {
                                         }}>
                                             {rating.description}
                                         </p>
+
                                     </div>
-                                ))}
+                                ))
+                                :
+                                    selectedRadio.rating.slice(0, 2).map((rating, index) => (
+                                        <div key={index} style={{
+                                            display: 'flex',
+                                            alignItems: 'flex-start',
+                                            flexDirection: 'column',
+                                            padding: "10px 10px",
+                                            backgroundColor: '#fff',
+                                            borderRadius: '10px',
+                                            textDecoration: "none",
+                                            color: "#000000",
+                                            marginBottom: '10px'
+                                        }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                width: '100%',
+                                                flexDirection: 'row',
+                                                justifyContent: 'flex-start',
+                                                alignItems: 'center'
+                                            }}>
+                                                <p style={{
+                                                    margin: '0px',
+                                                    fontWeight: '700',
+                                                    color: '#000',
+                                                    fontSize: '14px'
+                                                }}>{rating.name}</p>
+                                                <div style={{display: 'flex', flexDirection: 'row', marginLeft: '15px'}}>
+                                                    <img src={goldStar} alt="Star"
+                                                         style={{marginRight: '5px', width: '18px'}}/>
+                                                    <p style={{margin: '0px', fontWeight: '500',}}>{rating.value}</p>
+                                                </div>
+                                            </div>
+                                            <p style={{
+                                                wordWrap: "break-word",
+                                                color: '#000',
+                                                margin: '5px 5px 5px 0',
+                                                fontSize: '13px'
+                                            }}>
+                                                {rating.description}
+                                            </p>
+                                        </div>))
+                                }
+                                <Col className="d-flex justify-content-between">
+                                    <Button
+                                        variant={"outline-dark"}
+                                        style={{width: 'calc(50% - 8px)'}}
+                                        className="admin-additional-button"
+                                        onClick={()=> setAllReviews(true)}
+                                    >
+                                        Читать все отзывы
+                                    </Button>
+                                    <Button
+                                        variant={"outline-dark"}
+                                        style={{width: 'calc(50% - 8px)'}}
+                                        className="main-admin-button"
+                                        onClick={()=> setLeaveReview(true)}
+                                    >
+                                        Оставить отзыв
+                                    </Button>
+                                </Col>
                             </div>
                         </div>
                     )}
-
-
-
 
                 </div>
                 <Footer/>
