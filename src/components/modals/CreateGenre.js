@@ -19,23 +19,24 @@ const CreateGenre = ({show, onHide}) => {
             size="lg"
             centered
         >
-            <Modal.Header closeButton>
+            <Modal.Header closeButton  style={{backgroundColor:'#F4F4F4'}}>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Добавить жанр
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body  style={{backgroundColor:'#F4F4F4'}}>
                 <Form>
                     <Form.Control
                         value={value}
                         onChange={e => setValue(e.target.value)}
                         placeholder={"Введите название жанра"}
+                        style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
                     />
                 </Form>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant={"outline-danger"} onClick={onHide}>Закрыть</Button>
-                <Button variant={"outline-success"} onClick={addGenre}>Добавить</Button>
+            <Modal.Footer  style={{backgroundColor:'#F4F4F4', width:'100%', justifyContent:'space-between'}}>
+                <Button variant={"outline-danger"} style={{width:'375px'}} className='admin-additional-button' onClick={onHide}>Закрыть</Button>
+                <Button variant={"outline-success"}  style={{width:'375px'}} className='main-admin-button' onClick={addGenre}>Добавить</Button>
             </Modal.Footer>
         </Modal>
     );
