@@ -19,6 +19,7 @@
     "express-jwt": "^8.4.1",
     "express-validator": "^6.14.0",
     "git": "^0.1.5",
+    "icy": "^2.1.0",
     "mongoose": "^6.9.0",
     "nanoid": "^4.0.0",
     "nodemon": "^2.0.20",
