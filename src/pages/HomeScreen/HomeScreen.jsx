@@ -99,7 +99,7 @@ const HomeScreen = observer(() => {
                 radioStation.setTotalCount(data[1])
             }
         )
-    }, [])
+    }, [leaveReview, allReviews])
 
     useEffect(() => {
             getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
@@ -188,78 +188,54 @@ const HomeScreen = observer(() => {
                                     <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
 
 
-                                        <div style={{
-                                            backgroundColor: '#ffffff',
-                                            display: 'flex',
-                                            alignItems: 'flex-start',
-                                            justifyContent: 'space-between',
-                                            flexDirection: 'column',
-                                            borderRadius: '8px'
-                                        }}>
                                             <div style={{
-                                                paddingBottom: '10px',
-                                                width: '160px',
-                                                borderBottom: '1px solid #E9E9E9'
+                                                backgroundColor: '#ffffff',
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                justifyContent: 'space-between',
+                                                flexDirection:'column',
+                                                borderRadius: '8px'
                                             }}>
-                                                {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
-                                                    <div style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center'
-                                                    }}>
+                                                <div style={{paddingBottom:'10px',width:'160px', borderBottom:'1px solid #E9E9E9'}}>
+                                                    {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
+                                                    <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
                                                         <img style={{width: '12px'}} src={goldStar} alt="star"/>
-                                                        <p style={{
-                                                            margin: '0 0 0 2px',
-                                                            fontSize: '13px',
-                                                            fontWeight: '500'
-                                                        }}>
+                                                        <p style={{margin: '0 0 0 2px', fontSize: '13px', fontWeight:'500'}}>
                                                             {(selectedRadio.rating.reduce((acc, rating) => acc + rating.value, 0) / selectedRadio.rating.length).toFixed(1)}
                                                         </p>
                                                         <p style={{margin: '0 0 0 5px', fontSize: '11px'}}>
                                                             ({selectedRadio.rating.length} отзывов)
                                                         </p>
                                                     </div>
-                                                )}
-                                                <div>
-                                                    <h6 style={{fontWeight: 'bold'}}>{selectedRadio.title}</h6>
+                                                    )}
+                                                    <div>
+                                                        <h6 style={{fontWeight:'bold'}}>{selectedRadio.title}</h6>
+                                                    </div>
+                                                </div>
+                                                <div style={{display: 'flex', flexDirection: 'row', marginTop:'10px'}}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'flex-start',
+                                                        justifyContent: 'space-between',
+                                                        flexDirection:'column',
+                                                    }}>
+                                                        <p style={{margin:'2px 0', fontSize:'12px'}}>Жанр</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px'}}>Страна</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px'}}>Язык</p>
+                                                    </div>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'flex-start',
+                                                        justifyContent: 'space-between',
+                                                        flexDirection:'column',
+                                                        margin:'0 0 0 10px'
+                                                    }}>
+                                                        <p style={{margin:'2px 0', fontSize:'12px', fontWeight:'bold'}}>{selectGenre.name}</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px', fontWeight:'bold'}}>{selectCountry.name}</p>
+                                                        <p style={{margin:'2px 0', fontSize:'12px', fontWeight:'bold'}}>{selectLanguage.name}</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div style={{display: 'flex', flexDirection: 'row', marginTop: '10px'}}>
-                                                <div style={{
-                                                    display: 'flex',
-                                                    alignItems: 'flex-start',
-                                                    justifyContent: 'space-between',
-                                                    flexDirection: 'column',
-                                                }}>
-                                                    <p style={{margin: '2px 0', fontSize: '12px'}}>Жанр</p>
-                                                    <p style={{margin: '2px 0', fontSize: '12px'}}>Страна</p>
-                                                    <p style={{margin: '2px 0', fontSize: '12px'}}>Язык</p>
-                                                </div>
-                                                <div style={{
-                                                    display: 'flex',
-                                                    alignItems: 'flex-start',
-                                                    justifyContent: 'space-between',
-                                                    flexDirection: 'column',
-                                                    margin: '0 0 0 10px'
-                                                }}>
-                                                    <p style={{
-                                                        margin: '2px 0',
-                                                        fontSize: '12px',
-                                                        fontWeight: 'bold'
-                                                    }}>{selectGenre.name}</p>
-                                                    <p style={{
-                                                        margin: '2px 0',
-                                                        fontSize: '12px',
-                                                        fontWeight: 'bold'
-                                                    }}>{selectCountry.name}</p>
-                                                    <p style={{
-                                                        margin: '2px 0',
-                                                        fontSize: '12px',
-                                                        fontWeight: 'bold'
-                                                    }}>{selectLanguage.name}</p>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div>
@@ -275,8 +251,7 @@ const HomeScreen = observer(() => {
                     <div
                         style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                         {radioStation.radios.map((radio) => (
-                            <div className={'oneBestSpecialistsBlock'} key={radio.id}
-                                 onClick={() => getOneRadio(radio)}>
+                            <div className={'oneBestSpecialistsBlock'} key={radio.id} onClick={() => getOneRadio(radio)}>
                                 <Link style={{
                                     textDecoration: "none",
                                     color: "#000",
@@ -323,9 +298,9 @@ const HomeScreen = observer(() => {
                                         </div>
                                     </div>
                                     <div style={{
-                                        marginTop: '10px',
-                                        paddingTop: '2px',
-                                        borderTop: "1px solid #EAEAEA",
+                                        marginTop:'10px',
+                                        paddingTop:'2px',
+                                        borderTop:"1px solid #EAEAEA",
                                         display: 'flex',
                                         flexDirection: 'column',
                                         justifyContent: 'space-between',
@@ -345,58 +320,58 @@ const HomeScreen = observer(() => {
                         <div className="largeRadioBlock">
                             <h2 style={{margin: '20px 0 10px 10px'}}>{`Отзывы`}</h2>
                             {leaveReview ?
-                                <div style={{position: 'relative', zIndex: 99, marginBottom: '10px'}}>
+                            <div style={{position: 'relative', zIndex: 99, marginBottom: '10px'}}>
+                                <div style={{
+                                    margin: '0 10px 0 10px',
+                                    width: '1050px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flexDirection: 'column'
+                                }}>
                                     <div style={{
-                                        margin: '0 10px 0 10px',
-                                        width: '1050px',
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                        <h4 style={{margin: '0'}}>Оценить:</h4>
+                                        <div>
+                                            <img onClick={() => handleRate(1)} style={{marginRight: '15px',}}
+                                                 src={rating >= 1 ? goldStar : Star} alt={'Star'}/>
+                                            <img onClick={() => handleRate(2)} style={{marginRight: '15px',}}
+                                                 src={rating >= 2 ? goldStar : Star} alt={'Star'}/>
+                                            <img onClick={() => handleRate(3)} style={{marginRight: '15px',}}
+                                                 src={rating >= 3 ? goldStar : Star} alt={'Star'}/>
+                                            <img onClick={() => handleRate(4)} style={{marginRight: '15px',}}
+                                                 src={rating >= 4 ? goldStar : Star} alt={'Star'}/>
+                                            <img onClick={() => handleRate(5)} style={{}}
+                                                 src={rating >= 5 ? goldStar : Star} alt={'Star'}/>
+                                        </div>
+                                    </div>
+
+                                    <div style={{
+                                        position: 'relative',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        flexDirection: 'column'
+                                        width: '100%',
+                                        marginTop: '5px'
                                     }}>
-                                        <div style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center'
-                                        }}>
-                                            <h4 style={{margin: '0'}}>Оценить:</h4>
-                                            <div>
-                                                <img onClick={() => handleRate(1)} style={{marginRight: '15px',}}
-                                                     src={rating >= 1 ? goldStar : Star} alt={'Star'}/>
-                                                <img onClick={() => handleRate(2)} style={{marginRight: '15px',}}
-                                                     src={rating >= 2 ? goldStar : Star} alt={'Star'}/>
-                                                <img onClick={() => handleRate(3)} style={{marginRight: '15px',}}
-                                                     src={rating >= 3 ? goldStar : Star} alt={'Star'}/>
-                                                <img onClick={() => handleRate(4)} style={{marginRight: '15px',}}
-                                                     src={rating >= 4 ? goldStar : Star} alt={'Star'}/>
-                                                <img onClick={() => handleRate(5)} style={{}}
-                                                     src={rating >= 5 ? goldStar : Star} alt={'Star'}/>
-                                            </div>
-                                        </div>
-
-                                        <div style={{
-                                            position: 'relative',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            width: '100%',
-                                            marginTop: '5px'
-                                        }}>
-                                            <input
-                                                type="text"
-                                                placeholder="Имя"
-                                                name="name"
-                                                onChange={handleChangeName}
-                                                value={ratingName.name}
-                                                required
-                                                className="input"
-                                            />
-                                        </div>
-                                        <div style={{
-                                            width: '100%',
-                                            position: 'relative',
-                                            display: 'flex',
-                                            alignItems: 'center'
-                                        }}>
+                                        <input
+                                            type="text"
+                                            placeholder="Имя"
+                                            name="name"
+                                            onChange={handleChangeName}
+                                            value={ratingName.name}
+                                            required
+                                            className="input"
+                                        />
+                                    </div>
+                                    <div style={{
+                                        width: '100%',
+                                        position: 'relative',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}>
                                         <textarea
                                             placeholder={rating === 0 ? "Поставьте оценку перед написанием комментария" : "Напишите комментарий к оценке"}
                                             name="description"
@@ -407,60 +382,59 @@ const HomeScreen = observer(() => {
                                             style={{height: '50px', margin: '10px 0 0 0'}}
                                             disabled={rating === 0}
                                         />
-                                        </div>
-                                        <button onClick={handleAddRating} className="submit_btn"
-                                                style={{width: '100%', margin: '15px 10px'}}>
-                                            Добавить отзыв
-                                        </button>
                                     </div>
+                                    <button onClick={handleAddRating} className="submit_btn"
+                                            style={{width: '100%', margin: '15px 10px'}}>
+                                        Добавить отзыв
+                                    </button>
                                 </div>
-                                : null}
+                            </div>
+                                : null }
                             <div style={{margin: '10px 0 13px 10px', width: '1050px', overflow: 'auto'}}>
                                 {allReviews ?
                                     selectedRadio.rating.map((rating, index) => (
-                                        <div key={index} style={{
+                                    <div key={index} style={{
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        flexDirection: 'column',
+                                        padding: "10px 10px",
+                                        backgroundColor: '#fff',
+                                        borderRadius: '10px',
+                                        textDecoration: "none",
+                                        color: "#000000",
+                                        marginBottom: '10px'
+                                    }}>
+                                        <div style={{
                                             display: 'flex',
-                                            alignItems: 'flex-start',
-                                            flexDirection: 'column',
-                                            padding: "10px 10px",
-                                            backgroundColor: '#fff',
-                                            borderRadius: '10px',
-                                            textDecoration: "none",
-                                            color: "#000000",
-                                            marginBottom: '10px'
+                                            width: '100%',
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start',
+                                            alignItems: 'center'
                                         }}>
-                                            <div style={{
-                                                display: 'flex',
-                                                width: '100%',
-                                                flexDirection: 'row',
-                                                justifyContent: 'flex-start',
-                                                alignItems: 'center'
-                                            }}>
-                                                <p style={{
-                                                    margin: '0px',
-                                                    fontWeight: '700',
-                                                    color: '#000',
-                                                    fontSize: '14px'
-                                                }}>{rating.name}</p>
-                                                <div
-                                                    style={{display: 'flex', flexDirection: 'row', marginLeft: '15px'}}>
-                                                    <img src={goldStar} alt="Star"
-                                                         style={{marginRight: '5px', width: '18px'}}/>
-                                                    <p style={{margin: '0px', fontWeight: '500',}}>{rating.value}</p>
-                                                </div>
-                                            </div>
                                             <p style={{
-                                                wordWrap: "break-word",
+                                                margin: '0px',
+                                                fontWeight: '700',
                                                 color: '#000',
-                                                margin: '5px 5px 5px 0',
-                                                fontSize: '13px'
-                                            }}>
-                                                {rating.description}
-                                            </p>
-
+                                                fontSize: '14px'
+                                            }}>{rating.name}</p>
+                                            <div style={{display: 'flex', flexDirection: 'row', marginLeft: '15px'}}>
+                                                <img src={goldStar} alt="Star"
+                                                     style={{marginRight: '5px', width: '18px'}}/>
+                                                <p style={{margin: '0px', fontWeight: '500',}}>{rating.value}</p>
+                                            </div>
                                         </div>
-                                    ))
-                                    :
+                                        <p style={{
+                                            wordWrap: "break-word",
+                                            color: '#000',
+                                            margin: '5px 5px 5px 0',
+                                            fontSize: '13px'
+                                        }}>
+                                            {rating.description}
+                                        </p>
+
+                                    </div>
+                                ))
+                                :
                                     selectedRadio.rating.slice(0, 2).map((rating, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
@@ -486,8 +460,7 @@ const HomeScreen = observer(() => {
                                                     color: '#000',
                                                     fontSize: '14px'
                                                 }}>{rating.name}</p>
-                                                <div
-                                                    style={{display: 'flex', flexDirection: 'row', marginLeft: '15px'}}>
+                                                <div style={{display: 'flex', flexDirection: 'row', marginLeft: '15px'}}>
                                                     <img src={goldStar} alt="Star"
                                                          style={{marginRight: '5px', width: '18px'}}/>
                                                     <p style={{margin: '0px', fontWeight: '500',}}>{rating.value}</p>
@@ -508,7 +481,7 @@ const HomeScreen = observer(() => {
                                         variant={"outline-dark"}
                                         style={{width: 'calc(50% - 8px)'}}
                                         className="admin-additional-button"
-                                        onClick={() => setAllReviews(true)}
+                                        onClick={()=> setAllReviews(true)}
                                     >
                                         Читать все отзывы
                                     </Button>
@@ -516,7 +489,7 @@ const HomeScreen = observer(() => {
                                         variant={"outline-dark"}
                                         style={{width: 'calc(50% - 8px)'}}
                                         className="main-admin-button"
-                                        onClick={() => setLeaveReview(true)}
+                                        onClick={()=> setLeaveReview(true)}
                                     >
                                         Оставить отзыв
                                     </Button>
@@ -528,7 +501,9 @@ const HomeScreen = observer(() => {
                 </div>
                 <Footer/>
             </div>
+
         </>
     );
 })
+
 export default HomeScreen;
