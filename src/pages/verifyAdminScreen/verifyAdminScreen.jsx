@@ -68,7 +68,6 @@ const VerifyAdminScreen = () => {
             </div>
         </div>
     );
-
 };
 
 export default VerifyAdminScreen;

@@ -1,6 +1,6 @@
 import './headerNavBar.css';
 import logo from '../../img/applogo.svg';
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState, useContext} from "react";
 import searchBtn from "../../img/search.svg";
 import {observer} from "mobx-react-lite";
@@ -11,28 +11,45 @@ import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import {useLocation} from "react-router-dom";
 import {getAllCountries, getAllGenres} from "../../http/radioApi";
+import axios from "axios";
 
 const HeaderNavBar = observer(() => {
-
+    const param = useParams();
     const {radioStation} = useContext(Context)
     const [search, setSearch] = useState('')
     const history = useNavigate()
-    const location = useLocation()
-    const isAdminLoc = location.pathname === '/admin'
+    const location = useLocation();
+    const [validateToken, setValidateToken] = useState(false)
+    const isAdminLoc = location.pathname === '/'
     const handleKeyDown = (event) => {
         if(event.key === 'Enter'){
             event.preventDefault()
             click()
         }
     }
+
+    useEffect(() => {
+        const fetchLastToken = async () => {
+            try {
+                const { data } = await axios.get(`http://localhost:8081/getLastToken`);
+                if (data.token === param.token) {
+                    setValidateToken(true);
+                }
+                console.log(`${data.token} === ${param.token}`);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchLastToken();
+    }, []);
     const click = async () =>{
         try{
             radioStation.setSearchName(search)
             console.log(radioStation.searchName)
             if(isAdminLoc){
-                history("/admin")
-            }else {
                 history("/")
+            }else {
+                history(`/admin/${param.token}` )
             }
 
         }catch (e){
@@ -64,7 +81,7 @@ const HeaderNavBar = observer(() => {
     return (<div className={'navBarBlock'}>
         <Link to={"/"}>
             <img src={logo} alt={"logo"}
-            onClick={refresh}/>
+                 onClick={refresh}/>
         </Link>
         <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
             <div style={{width:'340px',height:'40px', backgroundColor:'#fff', display:'flex', marginRight:'15px', justifyContent:'flex-start', alignItems:'center', borderRadius:'10px'}}>
@@ -98,13 +115,12 @@ const HeaderNavBar = observer(() => {
                 </DropdownMenu>
             </Dropdown>
         </div>
-        {!isAdminLoc ?
-        <Link className={"logInBlock"} to={"/verifyAdminScreen"}>
-            <p className={"accountText"}>Админ</p>
-            <button className={"accountBtn"}></button>
-        </Link>
-            :null}
-
+        {isAdminLoc &&
+            <Link className={"logInBlock"} to={"/verifyAdminScreen"}>
+                <p className={"accountText"}>Админ</p>
+                <button className={"accountBtn"}></button>
+            </Link>
+        }
     </div>);
 })
 

@@ -51,12 +51,22 @@ const HomeScreen = observer(() => {
     const [ratingDesc, setRatingDesc] = useState({description: ""});
     const [ratingName, setRatingName] = useState({name: ""});
     const [volume, setVolume] = useState(50);
+    const [bgSize, setBgSize] = useState('50% 100%');
 
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
+    const input = document.getElementsByClassName("vertical-slider");
+
+    const lowerSound = () => {
+        setVolume(0);
+        setBgSize(`0% 100%`);
+    }
+    const upperSound = () => {
+        setVolume(50);
+        setBgSize(`50% 100%`);}
 
     useEffect(() => {
         radioStation.setSearchName('')
@@ -165,10 +175,10 @@ const HomeScreen = observer(() => {
         }
         setIsPlaying(!isPlaying);
     };
-    const handleVolumeChange = (event) => {
+    const handleVolumeChange = (event, num) => {
         const newValue = event.target.value;
         setVolume(newValue);
-        event.target.style.backgroundSize = `${newValue}% 100%`;
+        setBgSize(`${newValue}% 100%`);
     };
 
 
@@ -331,11 +341,11 @@ const HomeScreen = observer(() => {
                                         <div style={{ display: 'flex', flexDirection: 'row',transform: 'rotate(270deg)', alignItems:'center' }}>
                                             <div style={{ display: 'flex', flexDirection: 'row',transform: 'rotate(90deg)',marginRight:'10px', marginTop:'8px', width:'20px'}}>
                                                 {volume <= 1 ? (
-                                                    <img src={silently} alt="Stop" />
+                                                    <img onClick={upperSound} style={{}} src={silently} alt="Stop" />
                                                 ) : volume >= 80 ? (
-                                                    <img src={loud} alt="Play" />
+                                                    <img onClick={lowerSound} src={loud} alt="Play" />
                                                 ) : (
-                                                    <img src={quiet} alt="Play" />
+                                                    <img onClick={lowerSound} src={quiet} alt="Play" />
                                                 )}
                                             </div>
                                             <input
@@ -345,6 +355,7 @@ const HomeScreen = observer(() => {
                                                 value={volume}
                                                 onChange={handleVolumeChange}
                                                 className="vertical-slider"
+                                                style={{backgroundSize:bgSize}}
                                             />
                                         </div>
                                     </div>
