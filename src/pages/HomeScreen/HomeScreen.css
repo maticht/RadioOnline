@@ -7,7 +7,7 @@
 
 }
 .radioBlock{
-    width: 1045px;
+    width: 700px;
     background-color: #fff;
     border-radius: 8px;
     margin: 15px 0 0 20px;
@@ -179,3 +179,62 @@ textarea::placeholder{
     margin: 10px;
 }
 
+.audio-player {
+    display: flex;
+    align-items: center;
+}
+
+#audio {
+    display: none;
+}
+
+.audio-play-btn {
+    border: none;
+    border-radius: 50%;
+    background-color: #06B5AE;
+    padding: 0;
+    width: 60px;
+    height: 60px;
+}
+
+.audio-icon {
+    margin-left: 4px;
+    width: 24px;
+    height: 24px;
+}
+
+.vertical-slider {
+    -webkit-appearance: none;
+    width: 92px;
+    margin: 0 0 0 auto;
+
+    background: rgb(234, 234, 234);
+    border-radius: 5px;
+    background-image: linear-gradient(#06B5AE, #06B5AE);
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+}
+
+.vertical-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #007A76;
+    margin-top: -5px;
+}
+@keyframes marquee {
+    0% {
+        transform: translateX(110%);
+    }
+    100% {
+        transform: translateX(-150%);
+    }
+}
+
+.vertical-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    border: none;
+    border-radius: 10px;
+}

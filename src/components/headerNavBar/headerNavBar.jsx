@@ -79,7 +79,7 @@ const HeaderNavBar = observer(() => {
             </div>
             <Dropdown className="custom-dropdown" style={{width:'170px'}} onClick={getCountries}>
                 <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu" style={{width:'170px'}}>
+                <DropdownMenu className="custom-dropdown-menu" style={{width:'170px', maxHeight:'250px', overflowY: 'auto'}}>
                     {radioStation.countries.map(country =>
                         <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
                                        key={country.id}> {country.name} </Dropdown.Item>
@@ -90,7 +90,7 @@ const HeaderNavBar = observer(() => {
                 <DropdownToggle className="custom-dropdown-toggle"
                                 style={{backgroundColor: '#FFFFFF', color: '#909095'}}
                 >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu">
+                <DropdownMenu className="custom-dropdown-menu" style={{width:'160px', maxHeight:'250px', overflowY: 'auto'}}>
                     {radioStation.genres.map(genre =>
                         <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
                                        key={genre.id}> {genre.name} </Dropdown.Item>
@@ -99,7 +99,7 @@ const HeaderNavBar = observer(() => {
             </Dropdown>
         </div>
         {!isAdminLoc ?
-        <Link className={"logInBlock"} to={"/admin"}>
+        <Link className={"logInBlock"} to={"/verifyAdminScreen"}>
             <p className={"accountText"}>Админ</p>
             <button className={"accountBtn"}></button>
         </Link>

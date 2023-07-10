@@ -123,7 +123,6 @@ const CreateRadio = observer(({show, onHide}) => {
                             style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', marginBottom:'15px'}}
                         />
                     </Col>
-
                 </Form>
             </Modal.Body>
             <Modal.Footer  style={{backgroundColor:'#F4F4F4', width:'100%', justifyContent:'space-between'}}>
@@ -133,5 +132,4 @@ const CreateRadio = observer(({show, onHide}) => {
         </Modal>
     );
 });
-
 export default CreateRadio;

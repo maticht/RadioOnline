@@ -8,6 +8,7 @@ const {Language} = require("../models/language");
 const fs = require('fs');
 
 const icy = require('icy');
+const {log} = require("util");
 
 
 class RadioController {
@@ -109,23 +110,20 @@ class RadioController {
     }
 
     async getRadioMetadata(req, res) {
-        // const {url} = req.body;
-        let url = 'http://jazz-wr01.ice.infomaniak.ch/jazz-wr01-128.mp3';
-
+       const url = req.body.radio;
         try {
             const parsedMetadata = await new Promise((resolve, reject) => {
                 icy.get(url, (res) => {
                     res.on('metadata', (metadata) => {
                         const parsedMetadata = icy.parse(metadata);
                         resolve(parsedMetadata);
-                    });
 
+                    });
                     res.on('error', (err) => {
                         reject(err);
                     });
                 });
             });
-
             return res.json(parsedMetadata);
         } catch (err) {
             console.error('Ошибка при получении потока:', err);
@@ -190,6 +188,36 @@ class RadioController {
             radio.genre = req.body.genre_id
             radio.country = req.body.country_id
             radio.image = fileName
+            await radio.save()
+            return res.status(201).send({message: "Радиостанция обновлена успешно"});
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({message: "Внутренняя ошибка сервера"});
+        }
+    }
+
+    async onlineMinus(req, res) {
+        const id = req.params.id;
+        try {
+            let radio = await Radio.findById(id);
+            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
+            radio.online = radio.online - 1;
+            console.log('попал в минус ' + radio.online)
+            await radio.save()
+            return res.status(201).send({message: "Радиостанция обновлена успешно"});
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({message: "Внутренняя ошибка сервера"});
+        }
+    }
+
+    async onlinePlus(req, res) {
+        const id = req.params.id;
+        try {
+            let radio = await Radio.findById(id);
+            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
+            radio.online = radio.online + 1;
+            console.log('попал в плюс ' + radio.online)
             await radio.save()
             return res.status(201).send({message: "Радиостанция обновлена успешно"});
         } catch (error) {
