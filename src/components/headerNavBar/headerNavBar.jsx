@@ -89,7 +89,7 @@ const HeaderNavBar = observer(() => {
                 <input
                     style={{ border: 'none' }}
                     className="searchFld"
-                    placeholder="Введите запрос"
+                    placeholder="Введите название радиостанции"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     onKeyDown={handleKeyDown}/>
@@ -115,12 +115,12 @@ const HeaderNavBar = observer(() => {
                 </DropdownMenu>
             </Dropdown>
         </div>
-        {isAdminLoc &&
-            <Link className={"logInBlock"} to={"/verifyAdminScreen"}>
-                <p className={"accountText"}>Админ</p>
-                <button className={"accountBtn"}></button>
-            </Link>
-        }
+        {/*{isAdminLoc &&*/}
+        {/*    <Link className={"logInBlock"} to={"/verifyAdminScreen"}>*/}
+        {/*        <p className={"accountText"}>Админ</p>*/}
+        {/*        <button className={"accountBtn"}></button>*/}
+        {/*    </Link>*/}
+        {/*}*/}
     </div>);
 })
 

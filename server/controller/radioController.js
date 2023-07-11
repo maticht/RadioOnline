@@ -202,7 +202,7 @@ class RadioController {
             let radio = await Radio.findById(id);
             if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
             radio.online = radio.online - 1;
-            console.log('попал в минус ' + radio.online)
+            console.log('попал в минус ' + radio.online + ' ' + radio.title)
             await radio.save()
             return res.status(201).send({message: "Радиостанция обновлена успешно"});
         } catch (error) {
@@ -211,13 +211,29 @@ class RadioController {
         }
     }
 
+    async exitOnlineMinus(req, res) {
+        const id = req.params.id;
+        try {
+            let radio = await Radio.findById(id);
+            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
+            radio.online = radio.online - 1;
+            console.log('попал в минус ' + radio.online + ' ' + radio.title)
+            await radio.save()
+            return res.status(201).send({message: "Радиостанция обновлена успешно"});
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({message: "Внутренняя ошибка сервера"});
+        }
+    }
+
+
     async onlinePlus(req, res) {
         const id = req.params.id;
         try {
             let radio = await Radio.findById(id);
             if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
             radio.online = radio.online + 1;
-            console.log('попал в плюс ' + radio.online)
+            console.log('попал в плюс ' + radio.online + ' ' + radio.title)
             await radio.save()
             return res.status(201).send({message: "Радиостанция обновлена успешно"});
         } catch (error) {

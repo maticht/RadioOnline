@@ -15,6 +15,7 @@ import loud from '../../img/loud.svg'
 import silently from '../../img/silently.svg'
 import nonePrev from "../../img/noneprev.png";
 import {Context} from "../../index";
+
 import {
     fetchCurrentMusicName,
     fetchMinusOnline,
@@ -39,6 +40,7 @@ const HomeScreen = observer(() => {
     const [selectedRadio, setSelectedRadio] = useState(null);
     const [radioOnline, setRadioOnline] = useState('');
     const {radioStation} = useContext(Context);
+    const {user} = useContext(Context);
     const [selectGenre, setSelectGenre] = useState('');
     const [selectCountry, setSelectCountry] = useState('');
     const [selectLanguage, setSelectLanguage] = useState('');
@@ -53,12 +55,50 @@ const HomeScreen = observer(() => {
     const [volume, setVolume] = useState(50);
     const [bgSize, setBgSize] = useState('50% 100%');
 
+
+
+    // window.addEventListener('beforeunload', ()=>{
+    //     fetch(`http://localhost:8081/api/radio/onlineM/649cb37adaa2b68057e27947`, {method: 'GET'});
+    // });
+
+
+    window.onbeforeunload = function(e) {
+        fetch(`http://localhost:8081/api/radio/onlineM/${selectedRadio.id}`, {method: 'GET'});
+        return null;
+    };
+
+
+    // window.addEventListener('beforeunload', (event) => {
+    //     // Отмените событие, как указано в стандарте.
+    //
+    //     event.preventDefault();
+    //     fetch(`http://localhost:8081/api/radio/onlineM/${selectedRadio.id}`, {method: 'GET'});
+    //     // Chrome требует установки возвратного значения.
+    //     event.returnValue = '';
+    // });
+
+
+    // window.removeEventListener('beforeunload', ()=>{
+    //     fetchMinusOnline(selectedRadio.id)
+    // })
+
+    // useEffect(() => {
+    //     window.addEventListener('beforeunload', ()=>{
+    //         fetchMinusOnline(selectedRadio.id)
+    //     });
+    //
+    //     return () => {
+    //         window.removeEventListener('beforeunload', ()=>{
+    //             fetchMinusOnline(selectedRadio.id)
+    //         });
+    //     };
+    // }, []);
+
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
-    const input = document.getElementsByClassName("vertical-slider");
 
     const lowerSound = () => {
         setVolume(0);
@@ -66,7 +106,8 @@ const HomeScreen = observer(() => {
     }
     const upperSound = () => {
         setVolume(50);
-        setBgSize(`50% 100%`);}
+        setBgSize(`50% 100%`);
+    }
 
     useEffect(() => {
         radioStation.setSearchName('')
@@ -141,6 +182,15 @@ const HomeScreen = observer(() => {
         setRating(value);
     };
 
+
+    const openNewWindow = () =>{
+        window.onload = function() {
+            var w = window.open();			// Открыть новое пустое окно
+            w.location = "http://localhost:3000/649cb37adaa2b68057e27947";			// Установить св-во location
+        };
+    }
+
+
     const getOneRadio = (r) => {
         if (r !== selectedRadio) {
             if (selectedRadio !== null) {
@@ -184,6 +234,7 @@ const HomeScreen = observer(() => {
 
     return (
         <>
+
             <div className={classes.container}>
                 <HeaderNavBar/>
 
@@ -196,7 +247,12 @@ const HomeScreen = observer(() => {
                                 alignItems: 'center',
                                 justifyContent: 'space-between'
                             }}>
-                                <div style={{display:'flex', flexDirection:'row', alignItems:'center', marginRight:'20px'}}>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginRight: '20px'
+                                }}>
                                     <div>
                                         <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
                                             <div style={{
@@ -220,7 +276,7 @@ const HomeScreen = observer(() => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div style={{marginLeft:'20px'}}>
+                                    <div style={{marginLeft: '20px'}}>
                                         <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
 
 
@@ -302,17 +358,23 @@ const HomeScreen = observer(() => {
                                 <div>
                                     <div className="audio-player">
                                         <audio ref={audioRef} src={selectedRadio.radio}></audio>
-                                        <div style={{display:'flex', flexDirection:'row', alignItems:'center', marginRight:'-20px'}}>
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginRight: '-20px'
+                                        }}>
                                             <button className={`audio-play-btn `} onClick={togglePlayback}>
                                                 {isPlaying ? (
-                                                    <img src={stop} alt="Stop" className="audio-icon" />
+                                                    <img src={stop} alt="Stop" className="audio-icon"/>
                                                 ) : (
-                                                    <img src={play} alt="Play" className="audio-icon" />
+                                                    <img src={play} alt="Play" className="audio-icon"/>
                                                 )}
                                             </button>
-                                            <div style={{marginLeft:'15px'}}>
-                                                <p style={{fontSize: '12px', fontWeight: '400', margin:'1px 0'}}>Сейчас играет</p>
-                                                <div style={{ width: '200px', overflow: 'hidden' }}>
+                                            <div style={{marginLeft: '15px'}}>
+                                                <p style={{fontSize: '12px', fontWeight: '400', margin: '1px 0'}}>Сейчас
+                                                    играет</p>
+                                                <div style={{width: '200px', overflow: 'hidden'}}>
                                                     {currentMusicName.length > 32 ? (
                                                         <p style={{
                                                             fontSize: '12px',
@@ -338,14 +400,26 @@ const HomeScreen = observer(() => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div style={{ display: 'flex', flexDirection: 'row',transform: 'rotate(270deg)', alignItems:'center' }}>
-                                            <div style={{ display: 'flex', flexDirection: 'row',transform: 'rotate(90deg)',marginRight:'10px', marginTop:'8px', width:'20px'}}>
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            transform: 'rotate(270deg)',
+                                            alignItems: 'center'
+                                        }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                transform: 'rotate(90deg)',
+                                                marginRight: '10px',
+                                                marginTop: '8px',
+                                                width: '20px'
+                                            }}>
                                                 {volume <= 1 ? (
-                                                    <img onClick={upperSound} style={{}} src={silently} alt="Stop" />
+                                                    <img onClick={upperSound} style={{}} src={silently} alt="Stop"/>
                                                 ) : volume >= 80 ? (
-                                                    <img onClick={lowerSound} src={loud} alt="Play" />
+                                                    <img onClick={lowerSound} src={loud} alt="Play"/>
                                                 ) : (
-                                                    <img onClick={lowerSound} src={quiet} alt="Play" />
+                                                    <img onClick={lowerSound} src={quiet} alt="Play"/>
                                                 )}
                                             </div>
                                             <input
@@ -355,7 +429,7 @@ const HomeScreen = observer(() => {
                                                 value={volume}
                                                 onChange={handleVolumeChange}
                                                 className="vertical-slider"
-                                                style={{backgroundSize:bgSize}}
+                                                style={{backgroundSize: bgSize}}
                                             />
                                         </div>
                                     </div>
@@ -621,6 +695,7 @@ const HomeScreen = observer(() => {
                 </div>
                 <Footer/>
             </div>
+
         </>
     );
 })

@@ -87,6 +87,11 @@ export const fetchMinusOnline = async (id) =>{
     return data
 }
 
+export const fetchExitMinusOnline = async (id) =>{
+    const {data} = await $host.get('api/radio/ExitOnlineM/' + id)
+    return data
+}
+
 export const fetchPlusOnline = async (id) =>{
     const {data} = await $host.get('api/radio/onlineP/' + id)
     return data
