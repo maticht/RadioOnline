@@ -21,6 +21,8 @@ const Footer = observer(() => {
                 background: 'black',
                 marginTop: '60px',
                 justifyContent: 'center',
+                alignContent: 'space-between',
+                position: 'relative'
             }}
         >
             <div style={{
@@ -51,14 +53,31 @@ const Footer = observer(() => {
                     ))}
                 </div>
                 <div style={{flex: 1, marginTop: '99px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer'}}>
-                    {radioStation.genres.slice(3 * (Math.ceil(radioStation.genres.length / 4)), radioStation.genres.length+1).map((genre) => (
+                    {radioStation.genres.slice(3 * (Math.ceil(radioStation.genres.length / 4)), radioStation.genres.length + 1).map((genre) => (
                         <p key={genre.id} onClick={() => setGenreOnFooter(genre)}>
                             {genre.name}({genre.numberOfRS})</p>
                     ))}
-
                 </div>
             </div>
-
+            <div style={{
+                backgroundColor: 'white',
+                padding: '20px 150px',
+                alignItems: 'flex-start',
+                width: '100%',
+                height:'100px',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                bottom: 0,
+                overflow:'hidden',
+                position: 'absolute',
+                clipPath: 'ellipse(50% 60% at 50% 0%)',
+                transform: 'rotate(180deg)'
+            }}>
+                <p style={{transform: 'rotate(180deg)', marginRight:'80px'}}>Правообладателям</p>
+                <p style={{transform: 'rotate(180deg)', marginRight:'80px'}}>Политика конфеденциальности</p>
+                <p style={{transform: 'rotate(180deg)'}}>Контакты</p>
+            </div>
         </div>
     );
 });
