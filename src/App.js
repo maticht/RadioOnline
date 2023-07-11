@@ -12,6 +12,7 @@ function App() {
                     <Route path="/admin/:token" exact element={<Admin />} />
                     <Route path="/verifyAdminScreen" element={<VerifyAdminScreen/>}/>
                     <Route path='/' element={<HomeScreen />}/>
+                    <Route path='/:radioId' element={<HomeScreen />}/>
                     <Route path="*" element={<HomeScreen />}/>
                 </Routes>
             </BrowserRouter>

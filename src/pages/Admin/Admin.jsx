@@ -139,7 +139,7 @@ const Admin = observer(() => {
 
     const useStyles = createUseStyles({
         container: {
-            minHeight: "100vh",
+            minHeight: "100%",
             paddingBottom: '50px',
             backgroundColor: "#F1F1F1"
         },
