@@ -56,6 +56,7 @@ export const getRadios = async (country_id, genre_id, page, limit, searchName) =
                 country_id, genre_id, page, limit, searchName
             }
     })
+    console.log('запрос отработал')
     return data
 }
 

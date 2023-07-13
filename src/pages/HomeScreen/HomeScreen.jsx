@@ -46,7 +46,6 @@ const HomeScreen = observer(() => {
     const [selectedRadio, setSelectedRadio] = useState(null);
     const [radioOnline, setRadioOnline] = useState('');
     const {radioStation} = useContext(Context);
-    const {user} = useContext(Context);
     const [selectGenre, setSelectGenre] = useState('');
     const [selectCountry, setSelectCountry] = useState('');
     const [selectLanguage, setSelectLanguage] = useState('');
@@ -60,53 +59,15 @@ const HomeScreen = observer(() => {
     const [ratingName, setRatingName] = useState({name: ""});
     const [volume, setVolume] = useState(50);
     const [bgSize, setBgSize] = useState('50% 100%');
+    const [isReview, setIsReview] = useState(false);
     const navigation = useNavigate();
 
-
-
-    // window.addEventListener('beforeunload', ()=>{
-    //     fetch(`http://localhost:8081/api/radio/onlineM/649cb37adaa2b68057e27947`, {method: 'GET'});
-    // });
-
-
-    window.onbeforeunload = function(e) {
-        fetch(`http://localhost:8081/api/radio/onlineM/${selectedRadio.id}`, {method: 'GET'});
-        return null;
-    };
-
-
-    // window.addEventListener('beforeunload', (event) => {
-    //     // Отмените событие, как указано в стандарте.
-    //
-    //     event.preventDefault();
-    //     fetch(`http://localhost:8081/api/radio/onlineM/${selectedRadio.id}`, {method: 'GET'});
-    //     // Chrome требует установки возвратного значения.
-    //     event.returnValue = '';
-    // });
-
-
-    // window.removeEventListener('beforeunload', ()=>{
-    //     fetchMinusOnline(selectedRadio.id)
-    // })
-
-    // useEffect(() => {
-    //     window.addEventListener('beforeunload', ()=>{
-    //         fetchMinusOnline(selectedRadio.id)
-    //     });
-    //
-    //     return () => {
-    //         window.removeEventListener('beforeunload', ()=>{
-    //             fetchMinusOnline(selectedRadio.id)
-    //         });
-    //     };
-    // }, []);
 
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
-    const input = document.getElementsByClassName("vertical-slider");
 
     const lowerSound = () => {
         setVolume(0);
@@ -117,35 +78,39 @@ const HomeScreen = observer(() => {
         setBgSize(`50% 100%`);
     }
 
+    useEffect(()=>{
+
+    },[leaveReview, allReviews, isReview])
+
     useEffect(() => {
         radioStation.setSearchName('')
         radioStation.setSelectCountry({})
         radioStation.setSelectGenre({})
+        setIsReview(false)
         getAllCountries().then(data => radioStation.setCountries(data))
         getAllGenres().then(data => radioStation.setGenres(data))
         getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])
+            console.log('запрс из 1 useEffect')
             }
         )
-    }, [leaveReview, allReviews])
+    }, [])
 
     useEffect(() => {
             getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])
-                console.log('page:' + radioStation.page)
+                console.log('запрс из 2 useEffect')
             })
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
     )
 
-    console.log(params.radioId);
     useEffect(() => {
-        if (!params.radioId || true) {
+        if (typeof(params.radioId) !== "undefined"){
             fetchOneRadio(params.radioId).then(data => {
                 setSelectedRadio(data[0]);
-                setRadioOnline(data[0].online + 1) // почему
-                console.log(data[0].online)
+                setRadioOnline(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
@@ -156,21 +121,23 @@ const HomeScreen = observer(() => {
     }, [params.radioId]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            fetchCurrentMusicName(selectedRadio).then(data => {
-                setCurrentMusicName(data.StreamTitle);
-                console.log(data);
-            });
-        }, 5000);
+        if(selectedRadio!==null) {
+            const interval = setInterval(() => {
+                fetchCurrentMusicName(selectedRadio).then(data => {
+                    setCurrentMusicName(data.StreamTitle);
+                    console.log(data);
+                });
+            }, 5000);
 
-        return () => clearInterval(interval);
+            return () => clearInterval(interval);
+        }
     }, [selectedRadio]);
 
     const toggleRate = async (userid, rating, description, name) => {
         try {
             const url = `http://localhost:8081/addingRating/${userid}`;
             const {data: res} = await axios.put(url, {value: rating, description: description, name: name});
-            await getRadios(radioStation.country, radioStation.genre, radioStation.page, radioStation.limit, radioStation.searchName);
+            setIsReview(true)
         } catch (error) {
             console.log(error);
         }
@@ -205,23 +172,9 @@ const HomeScreen = observer(() => {
         setRating(value);
     };
     /* eslint-disable no-restricted-globals */
-
-
-    const openNewWindow = () =>{
-        window.onload = function() {
-            var w = window.open();			// Открыть новое пустое окно
-            w.location = "http://localhost:3000/649cb37adaa2b68057e27947";			// Установить св-во location
-        };
-    }
-
-
     const getOneRadio = (r) => {
         if (r !== selectedRadio) {
-            if (selectedRadio !== null) {
-                fetchMinusOnline(selectedRadio.id)
-            }
             setSelectedRadio(r)
-            fetchPlusOnline(r.id)
             setLeaveReview(false)
             setAllReviews(false)
             fetchCurrentMusicName(r).then(data => {
@@ -229,14 +182,13 @@ const HomeScreen = observer(() => {
                 console.log(data)
             })
             fetchOneRadio(r.id).then(data => {
-                setRadioOnline(data[0].online + 1) // почему
+                setRadioOnline(data[0].online)
                 console.log(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
                 setIsPlaying(true);
                 audioRef.current.play();
-                // console.log(data)
             });
             navigation(`/${r.id}`)
         }

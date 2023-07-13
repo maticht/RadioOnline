@@ -112,6 +112,9 @@ class RadioController {
     async getRadioMetadata(req, res) {
        const url = req.body.radio;
         try {
+            let radioStation = await Radio.findById(req.body.id);
+            radioStation.onlineCount =  radioStation.onlineCount + 1 ;
+            await radioStation.save()
             const parsedMetadata = await new Promise((resolve, reject) => {
                 icy.get(url, (res) => {
                     res.on('metadata', (metadata) => {
@@ -242,5 +245,6 @@ class RadioController {
         }
     }
 }
+
 
 module.exports = new RadioController()

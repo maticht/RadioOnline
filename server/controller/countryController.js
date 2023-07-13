@@ -13,7 +13,7 @@ class CountryController {
         }
     }
 
-    async delete(req, res){
+    async delete(req, res) {
         try {
             const deleted = await Country.findByIdAndRemove(req.params.id);
             return res.json(`DELETED SUCCESS ${deleted}`);
@@ -23,10 +23,13 @@ class CountryController {
         }
     }
 
-    async getAll(req, res){
+    async getAll(req, res) {
         try {
             let country = await Country.find();
             if (!country) return res.status(409).send({message: "Стран нет в базе данных!"});
+            country.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
             return res.json(country);
         } catch (error) {
             console.log(error);
