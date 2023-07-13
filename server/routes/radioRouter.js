@@ -9,6 +9,7 @@ router.post('/delete/:id', radioController.delete)
 router.post('/musicName/:id', radioController.getRadioMetadata)
 router.get('/onlineP/:id', radioController.onlinePlus)
 router.get('/onlineM/:id', radioController.onlineMinus)
+router.get('/ExitOnlineM/:id', radioController.exitOnlineMinus)
 router.post('/upd', radioController.update)
 
 module.exports = router

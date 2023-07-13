@@ -27,6 +27,9 @@ class GenreController {
         try {
             let genre = await Genre.find();
             if (!genre) return res.status(409).send({message: "Жанров нет в базе данных!"});
+            genre.sort((a,b) => {
+                return a.name.localeCompare(b.name);
+            });
             return res.json(genre);
         } catch (error) {
             console.log(error);

@@ -10,6 +10,7 @@ const getLastToken = require("./models/getLastToken");
 const fileUpload = require('express-fileupload');
 const connection = require("./db");
 const path = require("path");
+const onlineUpdater = require('./utils/onlineUpdater')
 
 connection();
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
+onlineUpdater();
 app.use("/addingRating", addingRating);
 app.use("/verifyAdmin", verifyAdmin);
 app.use("/getLastToken", getLastToken);

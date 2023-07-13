@@ -52,6 +52,7 @@
     align-items: center;
     border-radius: 8px;
     margin: 10px 9px 10px 8px;
+    box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
 }
 .inputTop {
     text-align: left;

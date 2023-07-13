@@ -18,6 +18,7 @@ import nofavorite from "../../img/nofavorite.svg";
 import errormsg from "../../img/errormsg.svg";
 import share from "../../img/share.svg";
 import {Context} from "../../index";
+
 import {
     fetchCurrentMusicName,
     fetchMinusOnline,
@@ -59,14 +60,15 @@ const HomeScreen = observer(() => {
     const [volume, setVolume] = useState(50);
     const [bgSize, setBgSize] = useState('50% 100%');
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
+    const [isReview, setIsReview] = useState(false);
     const navigation = useNavigate();
+
 
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
-    const input = document.getElementsByClassName("vertical-slider");
 
     const lowerSound = () => {
         setVolume(0);
@@ -77,35 +79,39 @@ const HomeScreen = observer(() => {
         setBgSize(`50% 100%`);
     }
 
+    useEffect(()=>{
+
+    },[leaveReview, allReviews, isReview])
+
     useEffect(() => {
         radioStation.setSearchName('')
         radioStation.setSelectCountry({})
         radioStation.setSelectGenre({})
+        setIsReview(false)
         getAllCountries().then(data => radioStation.setCountries(data))
         getAllGenres().then(data => radioStation.setGenres(data))
         getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])
+            console.log('запрс из 1 useEffect')
             }
         )
-    }, [leaveReview, allReviews])
+    }, [])
 
     useEffect(() => {
             getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])
-                console.log('page:' + radioStation.page)
+                console.log('запрс из 2 useEffect')
             })
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
     )
 
-    console.log(params.radioId);
     useEffect(() => {
-        if (!params.radioId || true) {
+        if (typeof(params.radioId) !== "undefined"){
             fetchOneRadio(params.radioId).then(data => {
                 setSelectedRadio(data[0]);
-                setRadioOnline(data[0].online + 1) // почему
-                console.log(data[0].online)
+                setRadioOnline(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
@@ -116,21 +122,23 @@ const HomeScreen = observer(() => {
     }, [params.radioId]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            fetchCurrentMusicName(selectedRadio).then(data => {
-                setCurrentMusicName(data.StreamTitle);
-                console.log(data);
-            });
-        }, 5000);
+        if(selectedRadio!==null) {
+            const interval = setInterval(() => {
+                fetchCurrentMusicName(selectedRadio).then(data => {
+                    setCurrentMusicName(data.StreamTitle);
+                    console.log(data);
+                });
+            }, 5000);
 
-        return () => clearInterval(interval);
+            return () => clearInterval(interval);
+        }
     }, [selectedRadio]);
 
     const toggleRate = async (userid, rating, description, name) => {
         try {
             const url = `http://localhost:8081/addingRating/${userid}`;
             const {data: res} = await axios.put(url, {value: rating, description: description, name: name});
-            await getRadios(radioStation.country, radioStation.genre, radioStation.page, radioStation.limit, radioStation.searchName);
+            setIsReview(true)
         } catch (error) {
             console.log(error);
         }
@@ -172,6 +180,7 @@ const HomeScreen = observer(() => {
             }
             setSelectedRadio(r)
             // fetchPlusOnline(r.id)
+            setSelectedRadio(r)
             setLeaveReview(false)
             setAllReviews(false)
             fetchCurrentMusicName(r).then(data => {
@@ -180,13 +189,13 @@ const HomeScreen = observer(() => {
             })
             fetchOneRadio(r.id).then(data => {
                 setRadioOnline(data[0].online) // почему
+                setRadioOnline(data[0].online)
                 console.log(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
                 setIsPlaying(true);
                 audioRef.current.play();
-                // console.log(data)
             });
             navigation(`/${r.id}`)
         }
@@ -218,6 +227,7 @@ const HomeScreen = observer(() => {
 
     return (
         <>
+
             <div className={classes.container}>
                 <HeaderNavBar/>
 

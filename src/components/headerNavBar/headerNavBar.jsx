@@ -21,6 +21,7 @@ const HeaderNavBar = observer(() => {
     const location = useLocation();
     const [validateToken, setValidateToken] = useState(false)
     const isAdminLoc = location.pathname === '/'
+    const loc = location.pathname==='/:radioId'
     const handleKeyDown = (event) => {
         if(event.key === 'Enter'){
             event.preventDefault()
@@ -48,8 +49,10 @@ const HeaderNavBar = observer(() => {
             console.log(radioStation.searchName)
             if(isAdminLoc){
                 history("/")
-            }else {
-                history(`/admin/${param.token}` )
+            }else if(`/${param.radioId}`){
+                history(`/${param.radioId}`)
+            }else{
+                history(`/admin/${param.token}`)
             }
 
         }catch (e){
@@ -59,6 +62,7 @@ const HeaderNavBar = observer(() => {
 
     const refresh = async ()=> {
         radioStation.setSearchName('')
+        radioStation.setPage(1)
         radioStation.setSelectGenre({})
         radioStation.setSelectCountry({})
         radioStation.setSelectLanguage({})
@@ -89,7 +93,7 @@ const HeaderNavBar = observer(() => {
                 <input
                     style={{ border: 'none' }}
                     className="searchFld"
-                    placeholder="Введите запрос"
+                    placeholder="Введите название радиостанции"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     onKeyDown={handleKeyDown}/>
@@ -115,12 +119,12 @@ const HeaderNavBar = observer(() => {
                 </DropdownMenu>
             </Dropdown>
         </div>
-        {isAdminLoc &&
-            <Link className={"logInBlock"} to={"/verifyAdminScreen"}>
-                <p className={"accountText"}>Админ</p>
-                <button className={"accountBtn"}></button>
-            </Link>
-        }
+        {/*{isAdminLoc &&*/}
+        {/*    <Link className={"logInBlock"} to={"/verifyAdminScreen"}>*/}
+        {/*        <p className={"accountText"}>Админ</p>*/}
+        {/*        <button className={"accountBtn"}></button>*/}
+        {/*    </Link>*/}
+        {/*}*/}
     </div>);
 })
 

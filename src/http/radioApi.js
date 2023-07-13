@@ -56,6 +56,7 @@ export const getRadios = async (country_id, genre_id, page, limit, searchName) =
                 country_id, genre_id, page, limit, searchName
             }
     })
+    console.log('запрос отработал')
     return data
 }
 
@@ -84,6 +85,11 @@ export const fetchCurrentMusicName = async (radio) =>{
 
 export const fetchMinusOnline = async (id) =>{
     const {data} = await $host.get('api/radio/onlineM/' + id)
+    return data
+}
+
+export const fetchExitMinusOnline = async (id) =>{
+    const {data} = await $host.get('api/radio/ExitOnlineM/' + id)
     return data
 }
 
