@@ -58,6 +58,8 @@ const HomeScreen = observer(() => {
     const [ratingName, setRatingName] = useState({name: ""});
     const [volume, setVolume] = useState(50);
     const [bgSize, setBgSize] = useState('50% 100%');
+    const [showCopiedMessage, setShowCopiedMessage] = useState(false);
+    const [isReview, setIsReview] = useState(false);
     const navigation = useNavigate();
 
 
@@ -78,7 +80,7 @@ const HomeScreen = observer(() => {
 
     useEffect(()=>{
 
-    },[leaveReview, allReviews])
+    },[leaveReview, allReviews, isReview])
 
     useEffect(() => {
         getAllCountries().then(data => radioStation.setCountries(data))
@@ -108,11 +110,11 @@ const HomeScreen = observer(() => {
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
-                setIsPlaying(true);
+                setIsPlaying(false);
                 audioRef.current.play();
             });
         }
-    }, [params.radioId]);
+    }, []);
 
     useEffect(() => {
         if(selectedRadio!==null) {
@@ -131,6 +133,7 @@ const HomeScreen = observer(() => {
         try {
             const url = `http://localhost:8081/addingRating/${userid}`;
             const {data: res} = await axios.put(url, {value: rating, description: description, name: name});
+            setIsReview(true)
         } catch (error) {
             console.log(error);
         }
@@ -160,9 +163,6 @@ const HomeScreen = observer(() => {
             .catch(error => {
                 console.log(error);
             });
-        // fetchOneRadio(selectedRadio.id).then(data =>{
-        //     setSelectedRadio(data[0]);
-        // })
     };
     const handleRate = (value) => {
         setRating(value);
@@ -183,6 +183,7 @@ const HomeScreen = observer(() => {
             })
             fetchOneRadio(r.id).then(data => {
                 setRadioOnline(data[0].online)
+                console.log(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
@@ -205,6 +206,15 @@ const HomeScreen = observer(() => {
         const newValue = event.target.value;
         setVolume(newValue);
         setBgSize(`${newValue}% 100%`);
+    };
+
+    const copyLinkAndShowMessage = () => {
+        const currentUrl = window.location.href;
+        navigator.clipboard.writeText(currentUrl).then(r => {});
+        setShowCopiedMessage(true);
+        setTimeout(() => {
+            setShowCopiedMessage(false);
+        }, 1200);
     };
 
 
@@ -424,9 +434,6 @@ const HomeScreen = observer(() => {
                                                 />
                                             </div>
                                         </div>
-                                        <div>
-                                            <p>Битрейт {selectedRadio.bitrate}</p>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -441,7 +448,8 @@ const HomeScreen = observer(() => {
                                 borderRadius:'10px',
                                 alignContent:'center',
                                 justifyContent:'space-between',
-                                alignItems:'center'
+                                alignItems:'center',
+                                cursor:'pointer'
                             }}>
                                 <img style={{width:'30px', height:'30px'}} src={nofavorite}/>
                                 <p style={{margin:' 0', fontSize:'12px', textAlign:'center'}}>Добавить <br /> в избранное</p>
@@ -456,25 +464,54 @@ const HomeScreen = observer(() => {
                                 flexDirection:'column',
                                 borderRadius:'10px',
                                 justifyContent:'space-between',
-                                alignItems:'center'
+                                alignItems:'center',
+                                cursor:'pointer'
                             }}>
                                 <img style={{width:'30px', height:'30px'}} src={errormsg}/>
                                 <p style={{margin:'0', fontSize:'12px', textAlign:'center'}}>Радио  <br /> не работает</p>
                             </div>
-                            <div style={{
-                                backgroundColor: '#fff',
-                                width: '100px',
-                                height: '100px',
-                                boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                display:'flex',
-                                padding:'15px 0 25px 0',
-                                flexDirection:'column',
-                                borderRadius:'10px',
-                                justifyContent:'space-between',
-                                alignItems:'center'
-                            }}>
-                                <img style={{width:'30px', height:'30px'}} src={share}/>
-                                <p style={{margin:'0', fontSize:'12px', textAlign:'center'}}>Поделиться</p>
+                            <div style={{width:'100px', display:'flex', flexDirection:'column'}}>
+                                <div style={{
+                                    backgroundColor: '#fff',
+                                    width: '100px',
+                                    height: '100px',
+                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                    display:'flex',
+                                    padding:'15px 0 25px 0',
+                                    flexDirection:'column',
+                                    borderRadius:'10px',
+                                    justifyContent:'space-between',
+                                    alignItems:'center',
+                                    cursor:'pointer',
+                                    position: 'relative',
+                                    zIndex: '1',
+                                }}
+                                     onClick={copyLinkAndShowMessage}
+                                >
+                                    <img style={{width:'30px', height:'30px'}} src={share}/>
+                                    <p style={{margin:'0', fontSize:'12px', textAlign:'center'}}>Поделиться</p>
+                                </div>
+                                <div>
+                                    {showCopiedMessage && (
+                                        <div style={{
+                                            backgroundColor: '#fff',
+                                            width: '100px',
+                                            borderRadius: '10px',
+                                            marginTop: '10px',
+                                            padding: '5px 10px',
+                                            boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2)',
+                                            fontSize: '12px',
+                                            textAlign: 'center',
+                                            position: 'absolute',
+                                            zIndex: '0',
+                                            animation: showCopiedMessage
+                                                ? 'slideIn 0.3s forwards'
+                                                : 'slideOut 0.3s backwards',
+                                        }}>
+                                            Ссылка скопирована!
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     )}
@@ -668,7 +705,7 @@ const HomeScreen = observer(() => {
                                         </div>
                                     ))
                                     :
-                                    selectedRadio.rating.slice(0, 5).map((rating, index) => (
+                                    selectedRadio.rating.slice(0, 2).map((rating, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
                                             alignItems: 'flex-start',
