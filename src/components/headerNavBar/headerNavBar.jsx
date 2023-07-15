@@ -21,7 +21,6 @@ const HeaderNavBar = observer(() => {
     const location = useLocation();
     const [validateToken, setValidateToken] = useState(false)
     const isAdminLoc = location.pathname === '/'
-    const loc = location.pathname==='/:radioId'
     const handleKeyDown = (event) => {
         if(event.key === 'Enter'){
             event.preventDefault()
@@ -43,9 +42,11 @@ const HeaderNavBar = observer(() => {
         };
         fetchLastToken();
     }, []);
+
     const click = async () =>{
         try{
             radioStation.setSearchName(search)
+            radioStation.setPage(1)
             console.log(radioStation.searchName)
             if(isAdminLoc){
                 history("/")

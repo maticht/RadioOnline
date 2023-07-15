@@ -21,33 +21,37 @@ const Pages = observer(() => {
         ));
     };
 
-    return (
-        <div className="pagination mt-5 mx-auto">
-            <button
-                onClick={handlePrevPage}
-                disabled={radioStation.page === 1}
-                className="pagination-button"
-            >
-                <img className="pagination-button-img" src={arrowLeft}></img>
-            </button>
-            {pages.map((page) => (
+    if(pages <= 0){
+        return null
+    }else {
+        return (
+            <div className="pagination mt-5 mx-auto">
                 <button
-                    key={page}
-                    onClick={() => radioStation.setPage(page)}
-                    className={`pagination-button pagination-page ${radioStation.page === page ? 'active' : ''}`}
+                    onClick={handlePrevPage}
+                    disabled={radioStation.page === 1}
+                    className="pagination-button"
                 >
-                    {page}
+                    <img className="pagination-button-img" src={arrowLeft}></img>
                 </button>
-            ))}
-            <button
-                onClick={handleNextPage}
-                disabled={radioStation.page === pageCount}
-                className="pagination-button "
-            >
-                <img className="pagination-button-img" src={arrowRight}></img>
-            </button>
-        </div>
-    );
+                {pages.map((page) => (
+                    <button
+                        key={page}
+                        onClick={() => radioStation.setPage(page)}
+                        className={`pagination-button pagination-page ${radioStation.page === page ? 'active' : ''}`}
+                    >
+                        {page}
+                    </button>
+                ))}
+                <button
+                    onClick={handleNextPage}
+                    disabled={radioStation.page === pageCount}
+                    className="pagination-button "
+                >
+                    <img className="pagination-button-img" src={arrowRight}></img>
+                </button>
+            </div>
+        );
+    }
 });
 
 export default Pages;

@@ -20,10 +20,9 @@ import share from "../../img/share.svg";
 import {Context} from "../../index";
 
 import {
+    calculateAudioBitrate,
     fetchCurrentMusicName,
-    fetchMinusOnline,
     fetchOneRadio,
-    fetchPlusOnline,
     getAllCountries,
     getAllGenres,
     getRadios
@@ -59,7 +58,6 @@ const HomeScreen = observer(() => {
     const [ratingName, setRatingName] = useState({name: ""});
     const [volume, setVolume] = useState(50);
     const [bgSize, setBgSize] = useState('50% 100%');
-    const [isReview, setIsReview] = useState(false);
     const navigation = useNavigate();
 
 
@@ -80,13 +78,9 @@ const HomeScreen = observer(() => {
 
     useEffect(()=>{
 
-    },[leaveReview, allReviews, isReview])
+    },[leaveReview, allReviews])
 
     useEffect(() => {
-        radioStation.setSearchName('')
-        radioStation.setSelectCountry({})
-        radioStation.setSelectGenre({})
-        setIsReview(false)
         getAllCountries().then(data => radioStation.setCountries(data))
         getAllGenres().then(data => radioStation.setGenres(data))
         getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
@@ -137,7 +131,6 @@ const HomeScreen = observer(() => {
         try {
             const url = `http://localhost:8081/addingRating/${userid}`;
             const {data: res} = await axios.put(url, {value: rating, description: description, name: name});
-            setIsReview(true)
         } catch (error) {
             console.log(error);
         }
@@ -167,14 +160,21 @@ const HomeScreen = observer(() => {
             .catch(error => {
                 console.log(error);
             });
+        // fetchOneRadio(selectedRadio.id).then(data =>{
+        //     setSelectedRadio(data[0]);
+        // })
     };
     const handleRate = (value) => {
         setRating(value);
     };
+
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
         if (r !== selectedRadio) {
             setSelectedRadio(r)
+            calculateAudioBitrate(selectedRadio).then(data=>{
+                console.log(data)
+            })
             setLeaveReview(false)
             setAllReviews(false)
             fetchCurrentMusicName(r).then(data => {
@@ -183,7 +183,6 @@ const HomeScreen = observer(() => {
             })
             fetchOneRadio(r.id).then(data => {
                 setRadioOnline(data[0].online)
-                console.log(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
@@ -424,6 +423,9 @@ const HomeScreen = observer(() => {
                                                     style={{backgroundSize: bgSize}}
                                                 />
                                             </div>
+                                        </div>
+                                        <div>
+                                            <p>Битрейт {selectedRadio.bitrate}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -666,7 +668,7 @@ const HomeScreen = observer(() => {
                                         </div>
                                     ))
                                     :
-                                    selectedRadio.rating.slice(0, 2).map((rating, index) => (
+                                    selectedRadio.rating.slice(0, 5).map((rating, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
                                             alignItems: 'flex-start',
