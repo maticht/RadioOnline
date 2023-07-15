@@ -115,11 +115,11 @@ const HomeScreen = observer(() => {
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
-                setIsPlaying(true);
+                setIsPlaying(false);
                 audioRef.current.play();
             });
         }
-    }, [params.radioId]);
+    }, []);
 
     useEffect(() => {
         if(selectedRadio!==null) {
