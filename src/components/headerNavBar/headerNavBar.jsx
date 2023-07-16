@@ -82,7 +82,8 @@ const HeaderNavBar = observer(() => {
 
 
 
-    return (<div className={'navBarBlock'}>
+    return (
+        <div className={'navBarBlock'}>
         <Link to={"/"}>
             <img src={logo} alt={"logo"}
                  onClick={refresh}/>
