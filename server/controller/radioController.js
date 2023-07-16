@@ -5,6 +5,7 @@ const {Types} = require("mongoose");
 const {Genre} = require("../models/genre");
 const {Country} = require("../models/country");
 const {Language} = require("../models/language");
+
 const fs = require('fs');
 
 const icy = require('icy');
@@ -38,65 +39,71 @@ class RadioController {
     }
 
     async getAll(req, res) {
-        let {country_id, genre_id, page, limit, searchName} = req.query
-        let offset = page * limit - limit
-        let radioStations
-        let resultCount
-        if (searchName === '') {
-            if (!country_id && !genre_id) {
-                radioStations = await Radio.find().skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments();
-            } else if (country_id && !genre_id) {
-                radioStations = await Radio.find({country: Types.ObjectId(country_id)}).skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments({country: Types.ObjectId(country_id)});
-            } else if (!country_id && genre_id) {
-                radioStations = await Radio.find({genre: Types.ObjectId(genre_id)}).skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments({genre: Types.ObjectId(genre_id)});
-            } else if (country_id && genre_id) {
-                radioStations = await Radio.find({
-                    country: Types.ObjectId(country_id),
-                    genre: Types.ObjectId(genre_id)
-                }).skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments({
-                    country: Types.ObjectId(country_id),
-                    genre: Types.ObjectId(genre_id)
-                });
+        try {
+            let {country_id, genre_id, page, limit, searchName} = req.query
+            let offset = page * limit - limit
+            let radioStations
+            let resultCount
+            if (searchName === '') {
+                if (!country_id && !genre_id) {
+                    radioStations = await Radio.find().skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments();
+                } else if (country_id && !genre_id) {
+                    radioStations = await Radio.find({country: Types.ObjectId(country_id)}).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments({country: Types.ObjectId(country_id)});
+                } else if (!country_id && genre_id) {
+                    radioStations = await Radio.find({genre: Types.ObjectId(genre_id)}).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments({genre: Types.ObjectId(genre_id)});
+                } else if (country_id && genre_id) {
+                    radioStations = await Radio.find({
+                        country: Types.ObjectId(country_id),
+                        genre: Types.ObjectId(genre_id)
+                    }).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments({
+                        country: Types.ObjectId(country_id),
+                        genre: Types.ObjectId(genre_id)
+                    });
+                }
+            } else {
+                if (!country_id && !genre_id) {
+                    let query = {title: {$regex: searchName, $options: 'i'}};
+                    radioStations = await Radio.find(query).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments(query);
+                } else if (country_id && !genre_id) {
+                    let query = {
+                        title: {$regex: searchName, $options: 'i'},
+                        country: Types.ObjectId(country_id)
+                    };
+                    radioStations = await Radio.find(query).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments(query);
+                } else if (!country_id && genre_id) {
+                    let query = {
+                        title: {$regex: searchName, $options: 'i'},
+                        genre: Types.ObjectId(genre_id)
+                    };
+                    radioStations = await Radio.find(query).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments(query);
+                } else if (country_id && genre_id) {
+                    let query = {
+                        title: {$regex: searchName, $options: 'i'},
+                        country: Types.ObjectId(country_id),
+                        genre: Types.ObjectId(genre_id)
+                    };
+                    radioStations = await Radio.find(query).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments(query);
+                }
             }
-        } else {
-            if (!country_id && !genre_id) {
-                let query = {title: {$regex: searchName, $options: 'i'}};
-                radioStations = await Radio.find(query).skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments(query);
-            } else if (country_id && !genre_id) {
-                let query = {
-                    title: {$regex: searchName, $options: 'i'},
-                    country: Types.ObjectId(country_id)
-                };
-                radioStations = await Radio.find(query).skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments(query);
-            } else if (!country_id && genre_id) {
-                let query = {
-                    title: {$regex: searchName, $options: 'i'},
-                    genre: Types.ObjectId(genre_id)
-                };
-                radioStations = await Radio.find(query).skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments(query);
-            } else if (country_id && genre_id) {
-                let query = {
-                    title: {$regex: searchName, $options: 'i'},
-                    country: Types.ObjectId(country_id),
-                    genre: Types.ObjectId(genre_id)
-                };
-                radioStations = await Radio.find(query).skip(offset).limit(limit);
-                resultCount = await Radio.countDocuments(query);
-            }
+            const count = resultCount
+            return res.json([radioStations, count])
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({message: "Внутренняя ошибка сервера"});
         }
-        const count = resultCount
-        return res.json([radioStations, count])
     }
 
     async getOne(req, res) {
         const id = req.params.id;
+        if (!id) res.status(400).json('None Id')
         try {
             let radioStation = await Radio.findById(id)
             let genre = await Genre.findById(radioStation.genre.toString())
@@ -110,10 +117,11 @@ class RadioController {
     }
 
     async getRadioMetadata(req, res) {
-       const url = req.body.radio;
         try {
+            const url = req.body.radio;
+            if (!url) res.status(400).json('None url')
             let radioStation = await Radio.findById(req.body.id);
-            radioStation.onlineCount =  radioStation.onlineCount + 1 ;
+            radioStation.onlineCount = radioStation.onlineCount + 1;
             await radioStation.save()
             const parsedMetadata = await new Promise((resolve, reject) => {
                 icy.get(url, (res) => {
@@ -130,13 +138,37 @@ class RadioController {
             return res.json(parsedMetadata);
         } catch (err) {
             console.error('Ошибка при получении потока:', err);
-            return res.status(500).json({ success: false, error: 'Internal server error' });
+            return res.status(500).json({success: false, error: 'Internal server error'});
         }
     }
-    async delete(req, res) {
-        const {id} = req.body
-        if (!id) res.status(400).json('None Id')
+
+    async getAudioBitrate(req, res) {
         try {
+            console.log('попал в бит')
+            const url = req.body.radio
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+
+            const context = new AudioContext();
+            const audioBuffer = await context.decodeAudioData(arrayBuffer);
+
+            const totalBits = audioBuffer.length * audioBuffer.numberOfChannels * audioBuffer.sampleRate * 16; // 16 bits per sample
+            const duration = audioBuffer.duration;
+            const bitrate = totalBits / duration;
+
+            return res.json(bitrate);
+
+        } catch (err) {
+            console.error('Ошибка при получении потока:', err);
+            return res.status(500).json({success: false, error: 'Internal server error'});
+        }
+    }
+
+
+    async delete(req, res) {
+        try {
+            const {id} = req.body
+            if (!id) res.status(400).json('None Id')
             const deletedDocument = await Radio.findByIdAndDelete(id);
             let genre = await Genre.findById(deletedDocument.genre);
             genre.numberOfRS = genre.numberOfRS - 1;
@@ -163,7 +195,7 @@ class RadioController {
             let radio = await Radio.findById(req.body.id);
             if (!radio) return res.status(409).send({message: "Радиостанция с данным названием не существует!"});
             let fileName = req.body.imageName
-            if(req.files !==null){
+            if (req.files !== null) {
                 fs.unlink(path.resolve(__dirname, '..', 'static', fileName), (err) => {
                     if (err) {
                         console.error(err);
@@ -176,7 +208,7 @@ class RadioController {
                 await image.mv(path.resolve(__dirname, '..', 'static', fileName))
 
             }
-            if(radio.genre !== req.body.genre){
+            if (radio.genre !== req.body.genre) {
                 let genre = await Genre.findById(radio.genre);
                 genre.numberOfRS = genre.numberOfRS - 1;
                 await genre.save();
@@ -191,52 +223,6 @@ class RadioController {
             radio.genre = req.body.genre_id
             radio.country = req.body.country_id
             radio.image = fileName
-            await radio.save()
-            return res.status(201).send({message: "Радиостанция обновлена успешно"});
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({message: "Внутренняя ошибка сервера"});
-        }
-    }
-
-    async onlineMinus(req, res) {
-        const id = req.params.id;
-        try {
-            let radio = await Radio.findById(id);
-            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
-            radio.online = radio.online - 1;
-            console.log('попал в минус ' + radio.online + ' ' + radio.title)
-            await radio.save()
-            return res.status(201).send({message: "Радиостанция обновлена успешно"});
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({message: "Внутренняя ошибка сервера"});
-        }
-    }
-
-    async exitOnlineMinus(req, res) {
-        const id = req.params.id;
-        try {
-            let radio = await Radio.findById(id);
-            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
-            radio.online = radio.online - 1;
-            console.log('попал в минус ' + radio.online + ' ' + radio.title)
-            await radio.save()
-            return res.status(201).send({message: "Радиостанция обновлена успешно"});
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({message: "Внутренняя ошибка сервера"});
-        }
-    }
-
-
-    async onlinePlus(req, res) {
-        const id = req.params.id;
-        try {
-            let radio = await Radio.findById(id);
-            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
-            radio.online = radio.online + 1;
-            console.log('попал в плюс ' + radio.online + ' ' + radio.title)
             await radio.save()
             return res.status(201).send({message: "Радиостанция обновлена успешно"});
         } catch (error) {

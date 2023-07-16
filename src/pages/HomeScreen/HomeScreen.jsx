@@ -22,10 +22,9 @@ import {Context} from "../../index";
 import SendErrorMessage from "../../components/modals/SendErrorMessage";
 
 import {
+    calculateAudioBitrate,
     fetchCurrentMusicName,
-    fetchMinusOnline,
     fetchOneRadio,
-    fetchPlusOnline,
     getAllCountries,
     getAllGenres,
     getRadios
@@ -89,10 +88,6 @@ const HomeScreen = observer(() => {
     },[leaveReview, allReviews, isReview])
 
     useEffect(() => {
-        radioStation.setSearchName('')
-        radioStation.setSelectCountry({})
-        radioStation.setSelectGenre({})
-        setIsReview(false)
         getAllCountries().then(data => radioStation.setCountries(data))
         getAllGenres().then(data => radioStation.setGenres(data))
         getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
@@ -177,15 +172,14 @@ const HomeScreen = observer(() => {
     const handleRate = (value) => {
         setRating(value);
     };
+
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
         if (r !== selectedRadio) {
-            if (selectedRadio !== null) {
-                // fetchMinusOnline(selectedRadio.id)
-            }
             setSelectedRadio(r)
-            // fetchPlusOnline(r.id)
-            setSelectedRadio(r)
+            calculateAudioBitrate(selectedRadio).then(data=>{
+                console.log(data)
+            })
             setLeaveReview(false)
             setAllReviews(false)
             fetchCurrentMusicName(r).then(data => {
@@ -193,7 +187,6 @@ const HomeScreen = observer(() => {
                 console.log(data)
             })
             fetchOneRadio(r.id).then(data => {
-                setRadioOnline(data[0].online) // почему
                 setRadioOnline(data[0].online)
                 console.log(data[0].online)
                 setSelectGenre(data[1])
