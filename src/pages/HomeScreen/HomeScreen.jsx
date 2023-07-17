@@ -78,9 +78,6 @@ const HomeScreen = observer(() => {
         setBgSize(`50% 100%`);
     }
 
-    useEffect(()=>{
-
-    },[leaveReview, allReviews, isReview])
 
     useEffect(() => {
         getAllCountries().then(data => radioStation.setCountries(data))

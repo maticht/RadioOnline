@@ -20,9 +20,11 @@ const HeaderNavBar = observer(() => {
     const history = useNavigate()
     const location = useLocation();
     const [validateToken, setValidateToken] = useState(false)
-    const isAdminLoc = location.pathname === '/'
+    const isAdminLoc = location.pathname === `/admin/${param.token}`
+    const isHomeScreen = location.pathname === '/'
+    const isHomeScreenWithId = location.pathname === `/${param.radioId}`
     const handleKeyDown = (event) => {
-        if(event.key === 'Enter'){
+        if (event.key === 'Enter') {
             event.preventDefault()
             click()
         }
@@ -31,7 +33,7 @@ const HeaderNavBar = observer(() => {
     useEffect(() => {
         const fetchLastToken = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:8081/getLastToken`);
+                const {data} = await axios.get(`http://localhost:8081/getLastToken`);
                 if (data.token === param.token) {
                     setValidateToken(true);
                 }
@@ -43,25 +45,26 @@ const HeaderNavBar = observer(() => {
         fetchLastToken();
     }, []);
 
-    const click = async () =>{
-        try{
+    const click = async () => {
+        try {
             radioStation.setSearchName(search)
             radioStation.setPage(1)
             console.log(radioStation.searchName)
-            if(isAdminLoc){
-                history("/")
-            }else if(`/${param.radioId}`){
-                history(`/${param.radioId}`)
-            }else{
-                history(`/admin/${param.token}`)
+            if (isAdminLoc) {
+                history(isAdminLoc)
+            } else if (isHomeScreen) {
+                history(isHomeScreen)
+            } else if (isHomeScreenWithId) {
+                history(isHomeScreenWithId)
+            } else {
+                history(`/`)
             }
-
-        }catch (e){
+        } catch (e) {
             alert(e.response.data.message)
         }
     }
 
-    const refresh = async ()=> {
+    const refresh = async () => {
         radioStation.setSearchName('')
         radioStation.setPage(1)
         radioStation.setSelectGenre({})
@@ -69,18 +72,17 @@ const HeaderNavBar = observer(() => {
         radioStation.setSelectLanguage({})
     }
 
-    const getCountries = async() =>{
-        if(isAdminLoc){
+    const getCountries = async () => {
+        if (isAdminLoc) {
             getAllCountries().then(data => radioStation.setCountries(data))
         }
     }
 
-    const getGenres = async() =>{
-        if(isAdminLoc) {
+    const getGenres = async () => {
+        if (isAdminLoc) {
             getAllGenres().then(data => radioStation.setGenres(data))
         }
     }
-
 
 
     return (<div className={'navBarBlock'}>
@@ -88,20 +90,35 @@ const HeaderNavBar = observer(() => {
             <img src={logo} alt={"logo"}
                  onClick={refresh}/>
         </Link>
-        <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-            <div style={{width:'340px',height:'40px', backgroundColor:'#fff', display:'flex', marginRight:'15px', justifyContent:'flex-start', alignItems:'center', borderRadius:'10px'}}>
-                <img style={{width:'30px'}} src={searchBtn} alt="logo" />
+        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <div style={{
+                width: '340px',
+                height: '40px',
+                backgroundColor: '#fff',
+                display: 'flex',
+                marginRight: '15px',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                borderRadius: '10px'
+            }}>
+                <img style={{width: '30px'}} src={searchBtn} alt="logo"/>
                 <input
-                    style={{ border: 'none' }}
+                    style={{border: 'none'}}
                     className="searchFld"
                     placeholder="Введите название радиостанции"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     onKeyDown={handleKeyDown}/>
             </div>
-            <Dropdown className="custom-dropdown" style={{width:'170px'}} onClick={getCountries}>
-                <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu" style={{width:'170px', maxHeight:'250px', overflowY: 'auto'}}>
+            <Dropdown className="custom-dropdown" style={{width: '170px'}} onClick={getCountries}>
+                <DropdownToggle className="custom-dropdown-toggle" style={{
+                    width: '170px',
+                    marginRight: '25px',
+                    backgroundColor: '#FFFFFF',
+                    color: '#909095'
+                }}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
+                <DropdownMenu className="custom-dropdown-menu"
+                              style={{width: '170px', maxHeight: '250px', overflowY: 'auto'}}>
                     {radioStation.countries.map(country =>
                         <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
                                        key={country.id}> {country.name} </Dropdown.Item>
@@ -112,7 +129,8 @@ const HeaderNavBar = observer(() => {
                 <DropdownToggle className="custom-dropdown-toggle"
                                 style={{backgroundColor: '#FFFFFF', color: '#909095'}}
                 >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu" style={{width:'160px', maxHeight:'250px', overflowY: 'auto'}}>
+                <DropdownMenu className="custom-dropdown-menu"
+                              style={{width: '160px', maxHeight: '250px', overflowY: 'auto'}}>
                     {radioStation.genres.map(genre =>
                         <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
                                        key={genre.id}> {genre.name} </Dropdown.Item>
