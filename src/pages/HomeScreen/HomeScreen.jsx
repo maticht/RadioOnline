@@ -15,9 +15,11 @@ import loud from '../../img/loud.svg'
 import silently from '../../img/silently.svg'
 import nonePrev from "../../img/noneprev.png";
 import nofavorite from "../../img/nofavorite.svg";
+import favorite from "../../img/favorite.svg";
 import errormsg from "../../img/errormsg.svg";
 import share from "../../img/share.svg";
 import {Context} from "../../index";
+import SendErrorMessage from "../../components/modals/SendErrorMessage";
 
 import {
     calculateAudioBitrate,
@@ -30,6 +32,7 @@ import {
 import Pages from "../../components/Pages/Pages";
 import {observer} from "mobx-react-lite";
 import Footer from "../../components/Footer/Footer";
+import CreateGenre from "../../components/modals/CreateGenre";
 
 
 
@@ -61,6 +64,8 @@ const HomeScreen = observer(() => {
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
     const [isReview, setIsReview] = useState(false);
     const navigation = useNavigate();
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [sendError, setSendError] = useState(false)
 
 
     useEffect(() => {
@@ -212,6 +217,27 @@ const HomeScreen = observer(() => {
         setTimeout(() => {
             setShowCopiedMessage(false);
         }, 1200);
+    };
+    const storedFavorites = localStorage.getItem('favorites');
+    let favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+    // useEffect(() => {
+    //     setIsFavorite(favorites.includes(selectedRadioId));
+    // }, [favorites, selectedRadioId]);
+    const handleAddToFavorites = (selectedRadioId) => {
+
+        try {
+            const index = favorites.indexOf(selectedRadioId);
+            if (index !== -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(selectedRadioId);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            setIsFavorite(favorites.includes(selectedRadioId));
+            console.log(favorites);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
 
@@ -412,7 +438,7 @@ const HomeScreen = observer(() => {
                                                     width: '20px',
                                                     cursor: 'pointer'
                                                 }}>
-                                                    {volume <= 1 ? (
+                                                    {volume <= 0 ? (
                                                         <img onClick={upperSound} style={{}} src={silently} alt="Stop"/>
                                                     ) : volume >= 80 ? (
                                                         <img onClick={lowerSound} src={loud} alt="Play"/>
@@ -434,7 +460,7 @@ const HomeScreen = observer(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{
+                            <div onClick={() => handleAddToFavorites(selectedRadio._id)} style={{
                                 backgroundColor: '#fff',
                                 width: '100px',
                                 height: '100px',
@@ -448,10 +474,10 @@ const HomeScreen = observer(() => {
                                 alignItems:'center',
                                 cursor:'pointer'
                             }}>
-                                <img style={{width:'30px', height:'30px'}} src={nofavorite}/>
+                                <img style={{width:'30px', height:'30px'}} src={favorites.includes(selectedRadio._id) ? favorite : nofavorite}/>
                                 <p style={{margin:' 0', fontSize:'12px', textAlign:'center'}}>Добавить <br /> в избранное</p>
                             </div>
-                            <div style={{
+                            <div onClick={() => setSendError(true)} style={{
                                 backgroundColor: '#fff',
                                 width: '100px',
                                 height: '100px',
@@ -509,6 +535,7 @@ const HomeScreen = observer(() => {
                                         </div>
                                     )}
                                 </div>
+                                <SendErrorMessage show={sendError} onHide={() => setSendError(false)} title={selectedRadio.title}/>
                             </div>
                         </div>
                     )}

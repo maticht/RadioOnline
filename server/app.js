@@ -6,6 +6,7 @@ const router = require('./routes/index')
 const radioRoutes = require("./models/createRadio");
 const addingRating = require("./models/addingRating");
 const verifyAdmin = require("./models/verifyAdmin");
+const sendErrorMessage = require("./models/sendErrorMessage");
 const getLastToken = require("./models/getLastToken");
 const fileUpload = require('express-fileupload');
 const connection = require("./db");
@@ -21,6 +22,7 @@ app.use(fileUpload({}))
 onlineUpdater();
 app.use("/addingRating", addingRating);
 app.use("/verifyAdmin", verifyAdmin);
+app.use("/sendErrorMessage", sendErrorMessage);
 app.use("/getLastToken", getLastToken);
 app.use('/api', router);
 
