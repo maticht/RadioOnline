@@ -13,7 +13,7 @@ import {useLocation} from "react-router-dom";
 import {getAllCountries, getAllGenres} from "../../http/radioApi";
 import axios from "axios";
 
-const HeaderNavBar = observer(() => {
+const HeaderNavBar = observer(({setSelectedRadio}) => {
     const param = useParams();
     const {radioStation} = useContext(Context)
     const [search, setSearch] = useState('')
@@ -23,6 +23,8 @@ const HeaderNavBar = observer(() => {
     const isAdminLoc = location.pathname === `/admin/${param.token}`
     const isHomeScreen = location.pathname === '/'
     const isHomeScreenWithId = location.pathname === `/${param.radioId}`
+    const isFav = location.pathname === '/favorites'
+    const isFavWithId = location.pathname === `/favorites/${param.radioId}`
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault()
@@ -64,12 +66,20 @@ const HeaderNavBar = observer(() => {
         }
     }
 
+    const goToFav = () => {
+        // Добавляем параметр запроса isFav со значением true
+        window.location = '/favorites';
+    }
+
     const refresh = async () => {
+        setSelectedRadio()//убирает значение выбранного радио это колбек функция
         radioStation.setSearchName('')
         radioStation.setPage(1)
+        radioStation.setLimit(42)
         radioStation.setSelectGenre({})
         radioStation.setSelectCountry({})
         radioStation.setSelectLanguage({})
+        history(`/`)
     }
 
     const getCountries = async () => {
@@ -90,6 +100,7 @@ const HeaderNavBar = observer(() => {
             <img src={logo} alt={"logo"}
                  onClick={refresh}/>
         </Link>
+        {!isFav && !isFavWithId ?
         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <div style={{
                 width: '340px',
@@ -137,14 +148,16 @@ const HeaderNavBar = observer(() => {
                     )}
                 </DropdownMenu>
             </Dropdown>
-        </div>
-        {/*{isAdminLoc &&*/}
-        {/*    <Link className={"logInBlock"} to={"/verifyAdminScreen"}>*/}
-        {/*        <p className={"accountText"}>Админ</p>*/}
-        {/*        <button className={"accountBtn"}></button>*/}
-        {/*    </Link>*/}
-        {/*}*/}
+        </div>        : null}
+        {!isAdminLoc && !isFav && !isFavWithId ?
+            <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                <p className={"accountText"} >Избранное</p>
+                <button className={"accountBtn"}></button>
+            </Link>
+        : null}
+
+
     </div>);
-})
+});
 
 export default HeaderNavBar;

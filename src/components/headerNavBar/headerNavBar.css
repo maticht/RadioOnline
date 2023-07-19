@@ -29,10 +29,10 @@
 .accountBtn{
     background-color: rgba(255, 255, 255, 0);
     border: none;
-    width: 24px;
+    width: 29px;
     margin-left: 5px;
-    height: 24px;
-    background-image: url('../../img/Frame.svg');
+    height: 29px;
+    background-image: url('../../img/nofavorite.svg');
     background-repeat: no-repeat;
 }
 .searchBlock{

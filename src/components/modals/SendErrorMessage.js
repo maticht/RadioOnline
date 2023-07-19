@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {createGenre} from "../../http/radioApi";
-import successErrMsg from "../../img/successErrMsg.svg";
+//import successErrMsg from "../../img/successErrMsg.svg";
 import axios from "axios";
 
 const SendErrorMessage = ({show, onHide, title}) => {
@@ -38,7 +38,7 @@ const SendErrorMessage = ({show, onHide, title}) => {
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body  style={{backgroundColor:'#F4F4F4', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', textAlign:'center'}}>
-                            <img src={successErrMsg} alt="success" style={{width:'100px', height:'100px', margin:'20px'}}/>
+                            {/*<img src={successErrMsg} alt="success" style={{width:'100px', height:'100px', margin:'20px'}}/>*/}
                             Ваше сообщение отправлено
                         </Modal.Body>
                         <Modal.Footer  style={{backgroundColor:'#F4F4F4', width:'100%', justifyContent:'space-between', borderTop:'0'}}>

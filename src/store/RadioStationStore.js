@@ -5,96 +5,114 @@ export default class RadioStationStore {
         this._searchName = ''
         this._countries = []
         this._genres = []
-        this._languages =[]
+        this._languages = []
         this._radios = []
         this._selectedCountry = {}
         this._selectedGenre = {}
         this._selectedLanguage = {}
         this._page = 1
         this._totalCount = 0
-        this._limit = 18
+        this._limit = 42
+        this._fav = false
         makeAutoObservable(this)
     }
 
-    setGenres(genres){
+    setGenres(genres) {
         this._genres = genres
     }
-    setCountries(countries){
+
+    setCountries(countries) {
         this._countries = countries
     }
 
-    setLanguages(languages){
+    setLanguages(languages) {
         this._languages = languages
     }
 
-    setRadios(radios){
+    setRadios(radios) {
         this._radios = radios
     }
 
-    setSelectCountry(country){
+    setSelectCountry(country) {
         this.setPage(1)
         this._selectedCountry = country
     }
 
-    setSelectGenre(genre){
+    setSelectGenre(genre) {
         this.setPage(1)
         this._selectedGenre = genre
     }
 
-    setSelectLanguage(language){
+    setSelectLanguage(language) {
         this.setPage(1)
         this._selectedLanguage = language
     }
 
-    setPage(page){
+    setPage(page) {
         this._page = page
     }
 
-    setTotalCount(totalCount){
+    setTotalCount(totalCount) {
         this._totalCount = totalCount
     }
 
-    setSearchName(searchName){
+    setSearchName(searchName) {
         this._searchName = searchName
     }
 
-    get genres(){
+    setLimit(limit) {
+        this._limit = limit
+    }
+
+    // setFav(fav) {
+    //     this._fav = fav
+    // }
+    //
+    // get fav() {
+    //     return this._fav
+    // }
+
+    get genres() {
         return this._genres
     }
-    get countries(){
+
+    get countries() {
         return this._countries
     }
 
-    get radios(){
+    get radios() {
         return this._radios
     }
 
-    get languages(){
+    get languages() {
         return this._languages
     }
 
-    get selectedCountry(){
+    get selectedCountry() {
         return this._selectedCountry
     }
 
-    get selectedGenre(){
+    get selectedGenre() {
         return this._selectedGenre
     }
 
-    get selectedLanguage(){
+    get selectedLanguage() {
         return this._selectedLanguage
     }
-    get page(){
+
+    get page() {
         return this._page
     }
-    get totalCount(){
+
+    get totalCount() {
         return this._totalCount
     }
-    get limit(){
+
+    get limit() {
         return this._limit
     }
 
-    get searchName(){
+    get searchName() {
         return this._searchName
     }
 

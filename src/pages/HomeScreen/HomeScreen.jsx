@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Button, Col, Image} from "react-bootstrap";
 import HeaderNavBar from '../../components/headerNavBar/headerNavBar';
 import {createUseStyles} from "react-jss";
-import {Link, useParams, useNavigate} from "react-router-dom";
+import {Link, useParams, useNavigate, useLocation} from "react-router-dom";
 import axios from "axios";
 import goldStar from "../../img/goldStar.svg";
 import online from "../../img/online.svg";
@@ -26,14 +26,13 @@ import {
     fetchCurrentMusicName,
     fetchOneRadio,
     getAllCountries,
-    getAllGenres,
+    getAllGenres, getFavoritesRadios,
     getRadios
 } from "../../http/radioApi";
 import Pages from "../../components/Pages/Pages";
 import {observer} from "mobx-react-lite";
 import Footer from "../../components/Footer/Footer";
-import CreateGenre from "../../components/modals/CreateGenre";
-
+import {log} from "util";
 
 
 const useStyles = createUseStyles({
@@ -64,8 +63,12 @@ const HomeScreen = observer(() => {
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
     const [isReview, setIsReview] = useState(false);
     const navigation = useNavigate();
+    const location = useLocation();
     const [isFavorite, setIsFavorite] = useState(false);
     const [sendError, setSendError] = useState(false)
+
+    const isFav = location.pathname === '/favorites'
+    const isFavWithId = location.pathname === `/favorites/${params.radioId}`
 
 
     useEffect(() => {
@@ -87,39 +90,50 @@ const HomeScreen = observer(() => {
     useEffect(() => {
         getAllCountries().then(data => radioStation.setCountries(data))
         getAllGenres().then(data => radioStation.setGenres(data))
-        getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
+        if (isFav || isFavWithId) {
+            getFavoritesRadios(localStorage.getItem('favorites')).then(data => {
+                radioStation.setRadios(data)
+                radioStation.setTotalCount(data.length)
+                console.log('юз эффект с фав')
+            })
+        } else {
+            getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])
-            console.log('запрс из 1 useEffect')
-            }
-        )
-    }, [])
+                console.log('запрс из 1 useEffect')
+                }
+            )
+        }
+    }, [location.search])
 
     useEffect(() => {
-            getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
-                radioStation.setRadios(data[0])
-                radioStation.setTotalCount(data[1])
-                console.log('запрс из 2 useEffect')
-            })
+            if (!isFav && !isFavWithId) {
+                getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
+                    radioStation.setRadios(data[0])
+                    radioStation.setTotalCount(data[1])
+                    console.log('запрс из 2 useEffect')
+                })
+            }
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
     )
 
     useEffect(() => {
-        if (typeof(params.radioId) !== "undefined"){
+        if (typeof (params.radioId) !== "undefined") {
             fetchOneRadio(params.radioId).then(data => {
                 setSelectedRadio(data[0]);
                 setRadioOnline(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
-                setIsPlaying(false);
+                radioStation.setSelectGenre(data[1])
+                setIsPlaying(true);
                 audioRef.current.play();
             });
         }
     }, []);
 
     useEffect(() => {
-        if(selectedRadio!==null) {
+        if (selectedRadio !== null) {
             const interval = setInterval(() => {
                 fetchCurrentMusicName(selectedRadio).then(data => {
                     setCurrentMusicName(data.StreamTitle);
@@ -172,27 +186,32 @@ const HomeScreen = observer(() => {
 
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
-        if (r !== selectedRadio) {
+        if (selectedRadio === null || r.title !== selectedRadio.title) {
             setSelectedRadio(r)
-            calculateAudioBitrate(selectedRadio).then(data=>{
-                console.log(data)
-            })
             setLeaveReview(false)
             setAllReviews(false)
+            radioStation.setLimit(18)
+            // calculateAudioBitrate(r).then(data=>{
+            //     selectedRadio.bitrate = data.bitRate
+            // })
             fetchCurrentMusicName(r).then(data => {
                 setCurrentMusicName(data.StreamTitle)
                 console.log(data)
             })
             fetchOneRadio(r.id).then(data => {
                 setRadioOnline(data[0].online)
-                console.log(data[0].online)
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
-                setIsPlaying(true);
-                audioRef.current.play();
+                radioStation.setSelectGenre(data[1])
+                setIsPlaying(false);
             });
-            navigation(`/${r.id}`)
+            if (isFav || isFavWithId) {
+                navigation(`/favorites/${r.id}`)
+            } else {
+                navigation(`/${r.id}`)
+            }
+
         }
     }
 
@@ -212,7 +231,8 @@ const HomeScreen = observer(() => {
 
     const copyLinkAndShowMessage = () => {
         const currentUrl = window.location.href;
-        navigator.clipboard.writeText(currentUrl).then(r => {});
+        navigator.clipboard.writeText(currentUrl).then(r => {
+        });
         setShowCopiedMessage(true);
         setTimeout(() => {
             setShowCopiedMessage(false);
@@ -240,14 +260,37 @@ const HomeScreen = observer(() => {
         }
     };
 
+    const removeSelectedRadio = () => {
+        setSelectedRadio(null)
+    }
+
+
 
     return (
         <>
 
             <div className={classes.container}>
-                <HeaderNavBar/>
-
+                <HeaderNavBar setSelectedRadio={removeSelectedRadio}/>
                 <div className={'bestSpecialists'}>
+                    {selectedRadio === null
+                        ?
+                        <p style={{
+                            fontSize: '20px',
+                            margin: '20px 0 10px 10px',
+                            fontFamily: 'Inter',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            lineHeight: 'normal'
+                        }}>{isFav || isFavWithId ? 'Избранные радиостанции' : `Слушать радио онлайн бесплатно`}</p>
+                        :
+                        <p style={{
+                            fontSize: '20px',
+                            margin: '20px 0 10px 10px',
+                            fontFamily: 'Inter',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            lineHeight: 'normal'
+                        }}>{`${selectedRadio.title} — слушать бесплатно`}</p>}
                     {selectedRadio && (
                         <div style={{
                             width: "1060px",
@@ -294,8 +337,6 @@ const HomeScreen = observer(() => {
                                         </div>
                                         <div style={{marginLeft: '20px'}}>
                                             <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
-
-
                                                 <div style={{
                                                     backgroundColor: '#ffffff',
                                                     display: 'flex',
@@ -457,6 +498,7 @@ const HomeScreen = observer(() => {
                                                 />
                                             </div>
                                         </div>
+                                        <p>Битрейт {selectedRadio.bitrate}</p>
                                     </div>
                                 </div>
                             </div>
@@ -465,54 +507,57 @@ const HomeScreen = observer(() => {
                                 width: '100px',
                                 height: '100px',
                                 boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                display:'flex',
-                                padding:'15px 0',
-                                flexDirection:'column',
-                                borderRadius:'10px',
-                                alignContent:'center',
-                                justifyContent:'space-between',
-                                alignItems:'center',
-                                cursor:'pointer'
+                                display: 'flex',
+                                padding: '15px 0',
+                                flexDirection: 'column',
+                                borderRadius: '10px',
+                                alignContent: 'center',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                cursor: 'pointer'
                             }}>
-                                <img style={{width:'30px', height:'30px'}} src={favorites.includes(selectedRadio._id) ? favorite : nofavorite}/>
-                                <p style={{margin:' 0', fontSize:'12px', textAlign:'center'}}>Добавить <br /> в избранное</p>
+                                <img style={{width: '30px', height: '30px'}}
+                                     src={favorites.includes(selectedRadio._id) ? favorite : nofavorite}/>
+                                <p style={{margin: ' 0', fontSize: '12px', textAlign: 'center'}}>Добавить <br/> в
+                                    избранное</p>
                             </div>
                             <div onClick={() => setSendError(true)} style={{
                                 backgroundColor: '#fff',
                                 width: '100px',
                                 height: '100px',
                                 boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                display:'flex',
-                                padding:'15px 0',
-                                flexDirection:'column',
-                                borderRadius:'10px',
-                                justifyContent:'space-between',
-                                alignItems:'center',
-                                cursor:'pointer'
+                                display: 'flex',
+                                padding: '15px 0',
+                                flexDirection: 'column',
+                                borderRadius: '10px',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                cursor: 'pointer'
                             }}>
-                                <img style={{width:'30px', height:'30px'}} src={errormsg}/>
-                                <p style={{margin:'0', fontSize:'12px', textAlign:'center'}}>Радио  <br /> не работает</p>
+                                <img style={{width: '30px', height: '30px'}} src={errormsg}/>
+                                <p style={{margin: '0', fontSize: '12px', textAlign: 'center'}}>Радио <br/> не работает
+                                </p>
                             </div>
-                            <div style={{width:'100px', display:'flex', flexDirection:'column'}}>
+                            <div style={{width: '100px', display: 'flex', flexDirection: 'column'}}>
                                 <div style={{
                                     backgroundColor: '#fff',
                                     width: '100px',
                                     height: '100px',
                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                    display:'flex',
-                                    padding:'15px 0 25px 0',
-                                    flexDirection:'column',
-                                    borderRadius:'10px',
-                                    justifyContent:'space-between',
-                                    alignItems:'center',
-                                    cursor:'pointer',
+                                    display: 'flex',
+                                    padding: '15px 0 25px 0',
+                                    flexDirection: 'column',
+                                    borderRadius: '10px',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
                                     position: 'relative',
                                     zIndex: '1',
                                 }}
                                      onClick={copyLinkAndShowMessage}
                                 >
-                                    <img style={{width:'30px', height:'30px'}} src={share}/>
-                                    <p style={{margin:'0', fontSize:'12px', textAlign:'center'}}>Поделиться</p>
+                                    <img style={{width: '30px', height: '30px'}} src={share}/>
+                                    <p style={{margin: '0', fontSize: '12px', textAlign: 'center'}}>Поделиться</p>
                                 </div>
                                 <div>
                                     {showCopiedMessage && (
@@ -535,11 +580,19 @@ const HomeScreen = observer(() => {
                                         </div>
                                     )}
                                 </div>
-                                <SendErrorMessage show={sendError} onHide={() => setSendError(false)} title={selectedRadio.title}/>
+                                <SendErrorMessage show={sendError} onHide={() => setSendError(false)}
+                                                  title={selectedRadio.title}/>
                             </div>
                         </div>
                     )}
-                    <h2 style={{margin: '20px 0 10px 10px'}}>{`Похожие станции`}</h2>
+                    {selectedRadio !== null ? <p style={{
+                        fontSize: '18px',
+                        margin: '20px 0 10px 10px',
+                        fontFamily: 'Inter',
+                        fontStyle: 'normal',
+                        fontWeight: '700',
+                        lineHeight: 'normal'
+                    }}>{isFav || isFavWithId ? `Избранные радиостанции`: `Похожие радиостанции`}</p> : null}
                     <div
                         style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                         {radioStation.radios.map((radio) => (
@@ -799,5 +852,4 @@ const HomeScreen = observer(() => {
         </>
     );
 })
-
 export default HomeScreen;

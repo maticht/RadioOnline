@@ -13,6 +13,8 @@ function App() {
                     <Route path="/verifyAdminScreen" element={<VerifyAdminScreen/>}/>
                     <Route path='/' element={<HomeScreen />}/>
                     <Route path='/:radioId' element={<HomeScreen />}/>
+                    <Route path='/favorites' element={<HomeScreen/>}/>
+                    <Route path='/favorites/:radioId' element={<HomeScreen/>}/>
                     <Route path="*" element={<HomeScreen />}/>
                 </Routes>
             </BrowserRouter>

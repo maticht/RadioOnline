@@ -5,11 +5,10 @@ const {Types} = require("mongoose");
 const {Genre} = require("../models/genre");
 const {Country} = require("../models/country");
 const {Language} = require("../models/language");
-
 const fs = require('fs');
+const http = require('http');
 
 const icy = require('icy');
-const {log} = require("util");
 
 
 class RadioController {
@@ -116,6 +115,23 @@ class RadioController {
         }
     }
 
+    async getFavorites(req, res) {
+        let ids = req.body.ids; // ids - это массив id, переданный из клиента, разделенный запятыми
+        try {
+            const regex = /[\[\]"]/g;
+            ids = ids.replace(regex, '');
+            // Преобразуем массив строковых id в массив чисел
+            const idArray = ids.split(',').map(id => Types.ObjectId(id));
+
+            // Находим записи в MongoDB по переданным id
+            const records = await Radio.find({_id: {$in: idArray}});
+            res.json(records);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({message: 'Internal server error'});
+        }
+    }
+
     async getRadioMetadata(req, res) {
         try {
             const url = req.body.radio;
@@ -135,6 +151,8 @@ class RadioController {
                     });
                 });
             });
+
+            console.log(parsedMetadata)
             return res.json(parsedMetadata);
         } catch (err) {
             console.error('Ошибка при получении потока:', err);
@@ -142,27 +160,48 @@ class RadioController {
         }
     }
 
-    async getAudioBitrate(req, res) {
-        try {
-            console.log('попал в бит')
-            const url = req.body.radio
-            const response = await fetch(url);
-            const arrayBuffer = await response.arrayBuffer();
 
-            const context = new AudioContext();
-            const audioBuffer = await context.decodeAudioData(arrayBuffer);
-
-            const totalBits = audioBuffer.length * audioBuffer.numberOfChannels * audioBuffer.sampleRate * 16; // 16 bits per sample
-            const duration = audioBuffer.duration;
-            const bitrate = totalBits / duration;
-
-            return res.json(bitrate);
-
-        } catch (err) {
-            console.error('Ошибка при получении потока:', err);
-            return res.status(500).json({success: false, error: 'Internal server error'});
-        }
-    }
+    // async getAudioBitrate(req, res) {
+    //     const url = req.body.radio;
+    //     if (!url) res.status(400).json('None url');
+    //
+    //     try {
+    //         const request = http.get(url, (response) => {
+    //             const icyMetaInt = response.headers['icy-metaint'];
+    //             let icyMetadata = '';
+    //             let bitRate = null;
+    //
+    //             response.on('data', (chunk) => {
+    //                 if (!bitRate && icyMetaInt && icyMetadata.length < icyMetaInt) {
+    //                     icyMetadata += chunk.toString();
+    //                 } else if (!bitRate && icyMetaInt && icyMetadata.length === icyMetaInt) {
+    //                     // Обработка метаданных
+    //
+    //                     const metadataStr = icyMetadata.slice(icyMetadata.indexOf('StreamTitle=') + 12);
+    //                     const metadataArr = metadataStr.split(';');
+    //                     const title = metadataArr[0].trim();
+    //                     const artist = metadataArr[1] ? metadataArr[1].trim() : '';
+    //                     console.log('Title:', title);
+    //                     console.log('Artist:', artist);
+    //
+    //                     // Получение битрейта из метаданных (если предоставлен)
+    //                     const bitrateMatch = /bitrate=(\d+)/i.exec(metadataArr.join(';'));
+    //                     bitRate = bitrateMatch ? parseInt(bitrateMatch[1]) : null;
+    //                     console.log('Bitrate:', bitRate, 'kbps');
+    //                     return res.json(bitRate);
+    //                 }
+    //             });
+    //         });
+    //
+    //         request.on('error', (error) => {
+    //             console.error('Ошибка при получении метаданных:', error);
+    //             return res.status(500).json({ success: false, error: 'Error getting metadata' });
+    //         });
+    //     } catch (err) {
+    //         console.error('Ошибка при получении потока:', err);
+    //         return res.status(500).json({ success: false, error: 'Internal server error' });
+    //     }
+    // }
 
 
     async delete(req, res) {
