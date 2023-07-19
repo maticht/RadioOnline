@@ -5,10 +5,11 @@ import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import {createRadio, getAllCountries, getAllGenres, getAllLanguages} from "../../http/radioApi";
 import {observer} from "mobx-react-lite";
-import {useLocation} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 
 const CreateRadio = observer(({show, onHide}) => {
     const {radioStation} = useContext(Context)
+    const param = useParams()
     const [title, setTitle] = useState('')
     const [radio, setRadio] = useState('')
     const [genreToAdd, setGenreToAdd] =useState('')
@@ -16,7 +17,7 @@ const CreateRadio = observer(({show, onHide}) => {
     const[languageToAdd, setLanguageToAdd] = useState('')
     const [file, setFile] = useState(null)
     const location = useLocation()
-    const isAdminLoc = location.pathname === '/admin'
+    const isAdminLoc = location.pathname === `/admin/${param.token}`
 
     useEffect(() => {
         getAllGenres().then(data => radioStation.setGenres(data))

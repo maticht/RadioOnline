@@ -65,19 +65,20 @@ const Admin = observer(() => {
 
 
     useEffect(() => {
-        radioStation.setSearchName('')
-        radioStation.setSelectCountry({})
-        radioStation.setSelectGenre({})
-        getAllCountries().then(data => radioStation.setCountries(data))
-        getAllGenres().then(data => radioStation.setGenres(data))
-        getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
-                radioStation.setRadios(data[0])
-                radioStation.setTotalCount(data[1])
-            }
-        )
-    }, [])
+        if(radioVisible===false) {
+            console.log('a ue 1')
+            getAllCountries().then(data => radioStation.setCountries(data))
+            getAllGenres().then(data => radioStation.setGenres(data))
+            getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
+                    radioStation.setRadios(data[0])
+                    radioStation.setTotalCount(data[1])
+                }
+            )
+        }
+    }, [radioVisible])
 
     useEffect(() => {
+        console.log('a ue 2')
             getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])

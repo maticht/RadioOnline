@@ -61,11 +61,15 @@ const HomeScreen = observer(() => {
     const [volume, setVolume] = useState(50);
     const [bgSize, setBgSize] = useState('50% 100%');
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
-    const [isReview, setIsReview] = useState(false);
     const navigation = useNavigate();
     const location = useLocation();
     const [isFavorite, setIsFavorite] = useState(false);
     const [sendError, setSendError] = useState(false)
+    const storedFavorites = localStorage.getItem('favorites');
+    let favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+    const [favoritesUS, setFavoritesUS] = useState(favorites);
+    const [ratingArrUS, setRatingArrUs] = useState([]);
+
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -98,9 +102,9 @@ const HomeScreen = observer(() => {
             })
         } else {
             getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
-                radioStation.setRadios(data[0])
-                radioStation.setTotalCount(data[1])
-                console.log('запрс из 1 useEffect')
+                    radioStation.setRadios(data[0])
+                    radioStation.setTotalCount(data[1])
+                    console.log('запрс из 1 useEffect')
                 }
             )
         }
@@ -149,7 +153,8 @@ const HomeScreen = observer(() => {
         try {
             const url = `http://localhost:8081/addingRating/${userid}`;
             const {data: res} = await axios.put(url, {value: rating, description: description, name: name});
-            setIsReview(true)
+            const nemRatingArr = [...ratingArrUS, {value: rating, description: description, name: name}]
+            setRatingArrUs(nemRatingArr)
         } catch (error) {
             console.log(error);
         }
@@ -190,6 +195,7 @@ const HomeScreen = observer(() => {
             setSelectedRadio(r)
             setLeaveReview(false)
             setAllReviews(false)
+            setRatingArrUs(r.rating)
             radioStation.setLimit(18)
             // calculateAudioBitrate(r).then(data=>{
             //     selectedRadio.bitrate = data.bitRate
@@ -230,7 +236,10 @@ const HomeScreen = observer(() => {
     };
 
     const copyLinkAndShowMessage = () => {
-        const currentUrl = window.location.href;
+        let currentUrl = window.location.href;
+        if (location.pathname === `/favorites/${params.radioId}`) {
+            currentUrl = currentUrl.replace('/favorites', '')
+        }
         navigator.clipboard.writeText(currentUrl).then(r => {
         });
         setShowCopiedMessage(true);
@@ -238,23 +247,21 @@ const HomeScreen = observer(() => {
             setShowCopiedMessage(false);
         }, 1200);
     };
-    const storedFavorites = localStorage.getItem('favorites');
-    let favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
     // useEffect(() => {
     //     setIsFavorite(favorites.includes(selectedRadioId));
     // }, [favorites, selectedRadioId]);
     const handleAddToFavorites = (selectedRadioId) => {
-
         try {
             const index = favorites.indexOf(selectedRadioId);
+            let newFavorites = [];
             if (index !== -1) {
-                favorites.splice(index, 1);
+                newFavorites = favorites.filter((radioId) => radioId !== selectedRadioId);
             } else {
-                favorites.push(selectedRadioId);
+                newFavorites = [...favorites, selectedRadioId];
             }
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            setIsFavorite(favorites.includes(selectedRadioId));
-            console.log(favorites);
+            setFavoritesUS(newFavorites);
+            localStorage.setItem('favorites', JSON.stringify(newFavorites));
+            console.log(newFavorites);
         } catch (error) {
             console.log(error);
         }
@@ -263,7 +270,6 @@ const HomeScreen = observer(() => {
     const removeSelectedRadio = () => {
         setSelectedRadio(null)
     }
-
 
 
     return (
@@ -350,7 +356,7 @@ const HomeScreen = observer(() => {
                                                         width: '150px',
                                                         borderBottom: '1px solid #E9E9E9'
                                                     }}>
-                                                        {selectedRadio.rating && selectedRadio.rating.length > 0 && selectedRadio.rating[0] !== '' && (
+                                                        {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
                                                             <div style={{
                                                                 display: 'flex',
                                                                 flexDirection: 'row',
@@ -362,10 +368,10 @@ const HomeScreen = observer(() => {
                                                                     fontSize: '13px',
                                                                     fontWeight: '500'
                                                                 }}>
-                                                                    {(selectedRadio.rating.reduce((acc, rating) => acc + rating.value, 0) / selectedRadio.rating.length).toFixed(1)}
+                                                                    {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
                                                                 </p>
                                                                 <p style={{margin: '0 0 0 5px', fontSize: '12px'}}>
-                                                                    ({selectedRadio.rating.length} отзывов)
+                                                                    ({ratingArrUS.length} отзывов)
                                                                 </p>
                                                             </div>
                                                         )}
@@ -517,7 +523,7 @@ const HomeScreen = observer(() => {
                                 cursor: 'pointer'
                             }}>
                                 <img style={{width: '30px', height: '30px'}}
-                                     src={favorites.includes(selectedRadio._id) ? favorite : nofavorite}/>
+                                     src={favoritesUS.includes(selectedRadio._id) ? favorite : nofavorite}/>
                                 <p style={{margin: ' 0', fontSize: '12px', textAlign: 'center'}}>Добавить <br/> в
                                     избранное</p>
                             </div>
@@ -592,7 +598,7 @@ const HomeScreen = observer(() => {
                         fontStyle: 'normal',
                         fontWeight: '700',
                         lineHeight: 'normal'
-                    }}>{isFav || isFavWithId ? `Избранные радиостанции`: `Похожие радиостанции`}</p> : null}
+                    }}>{isFav || isFavWithId ? `Избранные радиостанции` : `Похожие радиостанции`}</p> : null}
                     <div
                         style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                         {radioStation.radios.map((radio) => (
@@ -738,7 +744,7 @@ const HomeScreen = observer(() => {
                                 : null}
                             <div style={{margin: '10px 0 13px 10px', width: '1050px', overflow: 'auto'}}>
                                 {allReviews ?
-                                    selectedRadio.rating.map((rating, index) => (
+                                    ratingArrUS.map((rating, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
                                             alignItems: 'flex-start',
@@ -782,7 +788,7 @@ const HomeScreen = observer(() => {
                                         </div>
                                     ))
                                     :
-                                    selectedRadio.rating.slice(0, 2).map((rating, index) => (
+                                    ratingArrUS.slice(0, 2).map((rating, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
                                             alignItems: 'flex-start',

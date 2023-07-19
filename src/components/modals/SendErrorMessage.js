@@ -7,9 +7,17 @@ import axios from "axios";
 const SendErrorMessage = ({show, onHide, title}) => {
     const [value, setValue] = useState('');
     const [isSend, setIsSend] = useState(false);
+
     useEffect(() => {
-        setIsSend(false);
-    }, []);
+        const timerId = setTimeout(()=>
+        {
+            setIsSend(false)
+        }, 500);
+
+        return()=>{
+            clearTimeout(timerId)
+        };
+    }, [onHide]);
 
     const sendMessage = async () => {
         try {

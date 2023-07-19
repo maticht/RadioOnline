@@ -27,6 +27,9 @@ class LanguageController {
         try {
             let language = await Language.find();
             if (!language) return res.status(409).send({message: "Языков нет в базе данных!"});
+            language.sort((a,b) => {
+                return a.name.localeCompare(b.name);
+            });
             return res.json(language);
         } catch (error) {
             console.log(error);
