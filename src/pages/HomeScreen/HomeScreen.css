@@ -1,18 +1,24 @@
 .bestSpecialists {
+    z-index: 1;
     display:flex;
     flex-direction:column;
     justify-content:center;
-    margin:5px 10px 0 10px;
-    max-width: 100px;
+    margin:5px 0 0 0;
 
 }
 .radioBlock{
     width: 700px;
     background-color: #fff;
     border-radius: 8px;
-    margin: 15px 0 0 20px;
-    padding: 15px;
+    margin: 15px 0 0 0;
+    padding-left: 10px;
     box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+}
+.selectedRadio{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
 }
 @keyframes slideIn {
     0% {
@@ -51,7 +57,7 @@
     justify-content: flex-start;
     align-items: center;
     border-radius: 8px;
-    margin: 10px 9px 10px 8px;
+    margin: 10px 0 10px 0;
     box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
 }
 .inputTop {
@@ -59,7 +65,7 @@
     resize: none;
     height: 300px;
     border: none;
-    width: 80vw;
+    width: 100%;
     padding: 15px;
     border-radius: 8px;
     background-color: #ffffff;
@@ -70,29 +76,26 @@
 .input {
     outline: none;
     border: none;
-    width: 80vw;
+    width: 100%;
     padding: 15px;
     border-radius: 8px;
     background-color: #ffffff;
     margin: 5px 0;
     font-size: 14px;
     box-shadow: 0 0 9px rgba(0, 0, 0, 0.05);
+    -webkit-tap-highlight-color: transparent;
 }
+
 .input-top {
     text-align: left;
     resize: none;
     height: 300px;
 }
-@media screen and (min-width: 1100px) {
-    .bestSpecialists {
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        margin:0 auto;
-        max-width: 1100px;
-        width: 100%
-    }
+.inputTop:focus {
+    outline: none;
+    border: none;
 }
+
 .signup_container {
     width: 100%;
     height: 100vh;
@@ -202,8 +205,10 @@ textarea::placeholder{
 }
 
 .audio-player {
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 #audio {
@@ -260,4 +265,142 @@ textarea::placeholder{
     height: 6px;
     border: none;
     border-radius: 10px;
+}
+.radioInfoBlock{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.btnsBlock{
+    margin-left: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.selectedRadioInfo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 20px;
+}
+.musicName{
+    width: 200px;
+    overflow: hidden;
+}
+.audio-player-block{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 10px;
+}
+.bitrate{
+    margin: 23px 0 0;
+    font-size: 14px;
+}
+.audio-info {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top: 40px;
+}
+.rate-btns-block{
+
+}
+.admin-additional-button {
+    width: calc(50% - 8px);
+}
+
+@media screen and (min-width: 1100px) {
+    .bestSpecialists {
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        margin:0 auto;
+        max-width: 1100px;
+        width: 100%
+    }
+}
+@media screen and (max-width: 360px) {
+    .selectedRadio{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+    }
+    .radioInfoBlock{
+        display: flex;
+        flex-direction: column;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        margin: 5px 0 0 0;
+        box-shadow: 0px 0px 0px;
+        padding-left: 0;
+    }
+    .btnsBlock{
+        margin-left: 0px;
+    }
+    .bestSpecialists {
+        padding: 0 10px;
+
+    }
+    .selectedRadioInfo{
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        margin-right: 0;
+        margin-top: 10px;
+    }
+    .musicName{
+        width: 180px;
+        overflow: hidden;
+    }
+    .audio-player {
+        padding: 0;
+        height: 120px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .audio-player-block{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 5px 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    }
+    .vertical-slider {
+        -webkit-appearance: none;
+        width: 75px;
+    }
+    .bitrate{
+        margin: 15px 0 0;
+        font-size: 14px;
+    }
+    .audio-info {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+    .rate-btns-block{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        width: 100%;
+    }
+
 }

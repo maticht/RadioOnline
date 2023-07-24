@@ -25,7 +25,7 @@ const Pages = observer(() => {
         return null
     }else {
         return (
-            <div className="pagination mt-5 mx-auto">
+            <div className="pagination mx-auto" style={{marginTop:'20px'}}>
                 <button
                     onClick={handlePrevPage}
                     disabled={radioStation.page === 1}

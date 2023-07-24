@@ -19,6 +19,7 @@
     border-radius: 10px;
 }
 .main-admin-button {
+    width: calc(50% - 8px);
     cursor: pointer;
     background-color: #06B5AE;
     border: 2px solid #06B5AE;
@@ -44,6 +45,16 @@
 .pagination-button-img{
     width: 9px;
     margin-bottom: 2px;
+}
+@media screen and (max-width: 360px) {
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        margin-top: 10px;
+        width: 100%;
+    }
+
 }
 
 

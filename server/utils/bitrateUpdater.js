@@ -4,8 +4,8 @@ const ffmpeg = require('fluent-ffmpeg');
 
 
 // Указываем пути к исполняемым файлам FFmpeg и ffprobe
-const ffmpegPath = 'C:/FFmpeg/bin/ffmpeg';
-const ffprobePath = 'C:/FFmpeg/bin/ffprobe';
+const ffmpegPath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffmpeg';
+const ffprobePath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);

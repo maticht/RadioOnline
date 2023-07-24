@@ -1,15 +1,13 @@
 import './headerNavBar.css';
 import logo from '../../img/applogo.svg';
-import {Link, useParams} from "react-router-dom";
-import React, {useEffect, useState, useContext} from "react";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import React, {useContext, useEffect, useState} from "react";
 import searchBtn from "../../img/search.svg";
 import {observer} from "mobx-react-lite";
-import {useNavigate} from "react-router-dom";
 import {Context} from "../../index";
 import {Dropdown} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
-import {useLocation} from "react-router-dom";
 import {getAllCountries, getAllGenres} from "../../http/radioApi";
 import axios from "axios";
 
@@ -95,69 +93,82 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
     }
 
 
-    return (<div className={'navBarBlock'}>
-        <Link to={"/"}>
-            <img src={logo} alt={"logo"}
-                 onClick={refresh}/>
-        </Link>
-        {!isFav && !isFavWithId ?
-        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            <div style={{
-                width: '340px',
-                height: '40px',
-                backgroundColor: '#fff',
-                display: 'flex',
-                marginRight: '15px',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                borderRadius: '10px'
-            }}>
-                <img style={{width: '30px'}} src={searchBtn} alt="logo"/>
-                <input
-                    style={{border: 'none'}}
-                    className="searchFld"
-                    placeholder="Введите название радиостанции"
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    onKeyDown={handleKeyDown}/>
+    return (
+        <div className={'navBarBlock'}>
+            <div className={'navBarBlock-logo'}>
+                <Link to={"/"}>
+                    <img src={logo} alt={"logo"}
+                         onClick={refresh}/>
+                </Link>
+                <div className={'navBarBlock-fav'}>
+                    {!isAdminLoc && !isFav && !isFavWithId ?
+                        <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                            <button className={"accountBtn"}></button>
+                        </Link>
+                        : null}
+                </div>
             </div>
-            <Dropdown className="custom-dropdown" style={{width: '170px'}} onClick={getCountries}>
-                <DropdownToggle className="custom-dropdown-toggle" style={{
-                    width: '170px',
-                    marginRight: '25px',
-                    backgroundColor: '#FFFFFF',
-                    color: '#909095'
-                }}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu"
-                              style={{width: '170px', maxHeight: '250px', overflowY: 'auto'}}>
-                    {radioStation.countries.map(country =>
-                        <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
-                                       key={country.id}> {country.name} </Dropdown.Item>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
-            <Dropdown className="custom-dropdown" onClick={getGenres}>
-                <DropdownToggle className="custom-dropdown-toggle"
-                                style={{backgroundColor: '#FFFFFF', color: '#909095'}}
-                >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu"
-                              style={{width: '160px', maxHeight: '250px', overflowY: 'auto'}}>
-                    {radioStation.genres.map(genre =>
-                        <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
-                                       key={genre.id}> {genre.name} </Dropdown.Item>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
-        </div>        : null}
-        {!isAdminLoc && !isFav && !isFavWithId ?
-            <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
-                <p className={"accountText"} >Избранное</p>
-                <button className={"accountBtn"}></button>
-            </Link>
-        : null}
-
-
-    </div>);
+            <div>
+                {!isFav && !isFavWithId ?
+                    <div className={'filter-block'}>
+                        <div className={'search-block'}>
+                            <img style={{width: '30px'}} src={searchBtn} alt="logo"/>
+                            <input
+                                style={{border: 'none'}}
+                                className="searchFld"
+                                placeholder="Введите название радиостанции"
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                                onKeyDown={handleKeyDown}/>
+                        </div>
+                        <div className={'dropdown-block'}
+                             style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                            <Dropdown className="custom-dropdown" style={{width: '170px', marginRight:'10px'}} onClick={getCountries}>
+                                <DropdownToggle className="custom-dropdown-toggle" style={{
+                                    width: '170px',
+                                    marginRight: '25px',
+                                    backgroundColor: '#FFFFFF',
+                                    color: '#909095'
+                                }}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
+                                <DropdownMenu className="custom-dropdown-menu"
+                                              style={{width: '170px', maxHeight: '250px', overflowY: 'auto'}}>
+                                    {radioStation.countries.map(country =>
+                                        <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
+                                                       key={country.id}> {country.name} </Dropdown.Item>
+                                    )}
+                                </DropdownMenu>
+                            </Dropdown>
+                            <Dropdown className="custom-dropdown" onClick={getGenres}>
+                                <DropdownToggle className="custom-dropdown-toggle"
+                                                style={{backgroundColor: '#FFFFFF', color: '#909095'}}
+                                >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
+                                <DropdownMenu className="custom-dropdown-menu"
+                                              style={{width: '160px', maxHeight: '250px', overflowY: 'auto'}}>
+                                    {radioStation.genres.map(genre =>
+                                        <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
+                                                       key={genre.id}> {genre.name} </Dropdown.Item>
+                                    )}
+                                </DropdownMenu>
+                            </Dropdown>
+                        </div>
+                    </div> : null}
+            </div>
+            <div className={'fav-btn'}>
+                {!isAdminLoc && !isFav && !isFavWithId ?
+                    <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                        <p className={"accountText"}>Избранное</p>
+                        <button className={"accountBtn"}></button>
+                    </Link>
+                    : <p style={{
+                        fontSize: '20px',
+                        margin: '0 0 px 0',
+                        fontStyle: 'normal',
+                        fontWeight: '700',
+                        lineHeight: 'normal'
+                    }}>{isFav || isFavWithId ? 'Избранное' : ` `}</p>}
+            </div>
+        </div>
+    );
 });
 
 export default HeaderNavBar;
