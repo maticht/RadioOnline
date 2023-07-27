@@ -202,9 +202,6 @@ const HomeScreen = observer(() => {
             setAllReviews(false)
             setRatingArrUs(r.rating)
             radioStation.setLimit(18)
-            // calculateAudioBitrate(r).then(data=>{
-            //     selectedRadio.bitrate = data.bitRate
-            // })
             fetchCurrentMusicName(r).then(data => {
                 setCurrentMusicName(data.StreamTitle)
                 console.log(data)
