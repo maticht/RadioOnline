@@ -175,15 +175,20 @@ const HomeScreen = observer(() => {
     };
 
     const handleAddRating = () => {
-        toggleRate(selectedRadio._id, rating, ratingDesc.description, ratingName.name)
-            .then(() => {
-                setRating(0);
-                setRatingDesc({description: ""});
-                setRatingName({name: ""});
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        if (ratingDesc.description === '' || ratingName.name === '') {
+            alert('Заполните поля ввода для добавления отзыва')
+        } else {
+            toggleRate(selectedRadio._id, rating, ratingDesc.description, ratingName.name)
+                .then(() => {
+                    setRating(0);
+                    setRatingDesc({description: ""});
+                    setRatingName({name: ""});
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            setLeaveReview(false)
+        }
     };
     const handleRate = (value) => {
         setRating(value);
