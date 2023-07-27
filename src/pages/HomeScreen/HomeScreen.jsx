@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Button, Col, Image} from "react-bootstrap";
 import HeaderNavBar from '../../components/headerNavBar/headerNavBar';
 import {createUseStyles} from "react-jss";
-import {Link, useParams, useNavigate, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import goldStar from "../../img/goldStar.svg";
 import online from "../../img/online.svg";
@@ -22,22 +22,25 @@ import {Context} from "../../index";
 import SendErrorMessage from "../../components/modals/SendErrorMessage";
 
 import {
-    calculateAudioBitrate,
     fetchCurrentMusicName,
     fetchOneRadio,
     getAllCountries,
-    getAllGenres, getFavoritesRadios,
+    getAllGenres,
+    getFavoritesRadios,
     getRadios
 } from "../../http/radioApi";
 import Pages from "../../components/Pages/Pages";
 import {observer} from "mobx-react-lite";
 import Footer from "../../components/Footer/Footer";
-import {log} from "util";
 
 
 const useStyles = createUseStyles({
     container: {
-        minHeight: "100vh",
+        backgroundColor: "#F1F1F1"
+    },
+    maxWidthContainer: {
+        maxWidth: '1060px',
+        margin: '0 auto',
         backgroundColor: "#F1F1F1"
     },
 });
@@ -69,7 +72,7 @@ const HomeScreen = observer(() => {
     let favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
     const [favoritesUS, setFavoritesUS] = useState(favorites);
     const [ratingArrUS, setRatingArrUs] = useState([]);
-
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -80,6 +83,23 @@ const HomeScreen = observer(() => {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    const handleMarginRight = (index) => {
+        if (windowWidth < 400) {
+            return index % 2 === 1 ? '0px' : '18px';
+        } else {
+            return index % 6 === 5 ? '0px' : '20px';
+        }
+    };
+
 
     const lowerSound = () => {
         setVolume(0);
@@ -125,11 +145,12 @@ const HomeScreen = observer(() => {
         if (typeof (params.radioId) !== "undefined") {
             fetchOneRadio(params.radioId).then(data => {
                 setSelectedRadio(data[0]);
-                setRadioOnline(data[0].online)
-                setSelectGenre(data[1])
-                setSelectCountry(data[2])
-                setSelectLanguage(data[3])
-                radioStation.setSelectGenre(data[1])
+                setRadioOnline(data[0].online);
+                setRatingArrUs(data[0].rating);
+                setSelectGenre(data[1]);
+                setSelectCountry(data[2]);
+                setSelectLanguage(data[3]);
+                radioStation.setSelectGenre(data[1]);
                 setIsPlaying(true);
                 audioRef.current.play();
             });
@@ -275,17 +296,15 @@ const HomeScreen = observer(() => {
 
 
     return (
-        <>
-
-            <div className={classes.container}>
+        <div className={classes.container}>
+            <div className={classes.maxWidthContainer}>
                 <HeaderNavBar setSelectedRadio={removeSelectedRadio}/>
                 <div className={'bestSpecialists'}>
                     {selectedRadio === null
                         ?
                         <p style={{
                             fontSize: '20px',
-                            margin: '20px 0 10px 10px',
-                            fontFamily: 'Inter',
+                            margin: '0 0 px 0',
                             fontStyle: 'normal',
                             fontWeight: '700',
                             lineHeight: 'normal'
@@ -293,33 +312,16 @@ const HomeScreen = observer(() => {
                         :
                         <p style={{
                             fontSize: '20px',
-                            margin: '20px 0 10px 10px',
-                            fontFamily: 'Inter',
+                            margin: '0 0 5px 0',
                             fontStyle: 'normal',
                             fontWeight: '700',
                             lineHeight: 'normal'
                         }}>{`${selectedRadio.title} — слушать бесплатно`}</p>}
                     {selectedRadio && (
-                        <div style={{
-                            width: "1060px",
-                            display: 'flex',
-                            justifyContent: "space-between",
-                            alignItems: 'center',
-                            flexDirection: 'row'
-                        }}>
+                        <div className='selectedRadio'>
                             <div className="radioBlock">
-                                <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between'
-                                }}>
-                                    <div style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        marginRight: '20px'
-                                    }}>
+                                <div className='radioInfoBlock'>
+                                    <div className='selectedRadioInfo'>
                                         <div>
                                             <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
                                                 <div style={{
@@ -372,13 +374,16 @@ const HomeScreen = observer(() => {
                                                                 }}>
                                                                     {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
                                                                 </p>
-                                                                <p style={{margin: '0 0 0 5px', fontSize: '12px'}}>
+                                                                <p style={{margin: '2px 0 0 5px', fontSize: '12px'}}>
                                                                     ({ratingArrUS.length} отзывов)
                                                                 </p>
                                                             </div>
                                                         )}
                                                         <div>
-                                                            <h6 style={{fontWeight: 'bold'}}>{selectedRadio.title}</h6>
+                                                            <h6 style={{
+                                                                fontWeight: 'bold',
+                                                                fontSize: '14px'
+                                                            }}>{selectedRadio.title}</h6>
                                                         </div>
                                                     </div>
                                                     <div style={{
@@ -424,59 +429,68 @@ const HomeScreen = observer(() => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div className="audio-player-block">
                                         <div className="audio-player">
                                             <audio ref={audioRef} src={selectedRadio.radio}></audio>
-                                            <div style={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                marginRight: '-20px'
-                                            }}>
-                                                <button className={`audio-play-btn `} onClick={togglePlayback}>
-                                                    {isPlaying ? (
-                                                        <img src={stop} alt="Stop" className="audio-icon"/>
-                                                    ) : (
-                                                        <img src={play} alt="Play" className="audio-icon"/>
-                                                    )}
-                                                </button>
-                                                <div style={{marginLeft: '15px'}}>
-                                                    <p style={{
-                                                        fontSize: '12px',
-                                                        fontWeight: '400',
-                                                        margin: '1px 0'
-                                                    }}>Сейчас играет</p>
-                                                    <div style={{width: '200px', overflow: 'hidden'}}>
-                                                        {currentMusicName.length > 32 ? (
-                                                            <p style={{
-                                                                fontSize: '12px',
-                                                                fontWeight: 'bold',
-                                                                margin: '1px 0',
-                                                                animation: 'marquee 8s linear infinite',
-                                                                whiteSpace: 'nowrap',
-                                                                overflow: 'visible',
-                                                                textOverflow: 'unset'
-                                                            }}>
-                                                                {currentMusicName}
-                                                            </p>
+                                            <div className='audio-info'>
+                                                <div style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent:'space-between',
+                                                    alignItems: 'flex-start',
+                                                    marginRight: '-20px'
+                                                }}>
+                                                    <button className={`audio-play-btn `} onClick={togglePlayback}>
+                                                        {isPlaying ? (
+                                                            <img src={stop} alt="Stop" className="audio-icon"/>
                                                         ) : (
-                                                            <p style={{
-                                                                fontSize: '12px',
-                                                                fontWeight: 'bold',
-                                                                margin: '1px 0',
-                                                            }}>
-                                                                {currentMusicName}
-                                                            </p>
+                                                            <img src={play} alt="Play" className="audio-icon"/>
                                                         )}
+                                                    </button>
+                                                    <div style={{marginLeft: '15px'}}>
+                                                        <p style={{
+                                                            fontSize: '12px',
+                                                            fontWeight: '400',
+                                                            margin: '1px 0'
+                                                        }}>Сейчас играет</p>
+                                                        <div className='musicName' >
+                                                            {currentMusicName.length > 32 ? (
+                                                                <p style={{
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 'bold',
+                                                                    margin: '1px 0',
+                                                                    animation: 'marquee 8s linear infinite',
+                                                                    whiteSpace: 'nowrap',
+                                                                    overflow: 'visible',
+                                                                    textOverflow: 'unset'
+                                                                }}>
+                                                                    {currentMusicName}
+                                                                </p>
+                                                            ) : (
+                                                                <p style={{
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 'bold',
+                                                                    margin: '1px 0',
+                                                                }}>
+                                                                    {currentMusicName}
+                                                                </p>
+                                                            )}
+
+                                                        </div>
 
                                                     </div>
                                                 </div>
+                                                <p className='bitrate'>Битрейт: <span style={{
+                                                    color: '#06B5AE',
+                                                    margin: '0'
+                                                }}>{selectedRadio.bitrate}</span></p>
                                             </div>
+
                                             <div style={{
                                                 display: 'flex',
                                                 flexDirection: 'row',
                                                 transform: 'rotate(270deg)',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
                                             }}>
                                                 <div style={{
                                                     display: 'flex',
@@ -506,106 +520,112 @@ const HomeScreen = observer(() => {
                                                 />
                                             </div>
                                         </div>
-                                        <p>Битрейт {selectedRadio.bitrate}</p>
                                     </div>
                                 </div>
                             </div>
-                            <div onClick={() => handleAddToFavorites(selectedRadio._id)} style={{
-                                backgroundColor: '#fff',
-                                width: '100px',
-                                height: '100px',
-                                boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                display: 'flex',
-                                padding: '15px 0',
-                                flexDirection: 'column',
-                                borderRadius: '10px',
-                                alignContent: 'center',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                cursor: 'pointer'
-                            }}>
-                                <img style={{width: '30px', height: '30px'}}
-                                     src={favoritesUS.includes(selectedRadio._id) ? favorite : nofavorite}/>
-                                <p style={{margin: ' 0', fontSize: '12px', textAlign: 'center'}}>Добавить <br/> в
-                                    избранное</p>
-                            </div>
-                            <div onClick={() => setSendError(true)} style={{
-                                backgroundColor: '#fff',
-                                width: '100px',
-                                height: '100px',
-                                boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                display: 'flex',
-                                padding: '15px 0',
-                                flexDirection: 'column',
-                                borderRadius: '10px',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                cursor: 'pointer'
-                            }}>
-                                <img style={{width: '30px', height: '30px'}} src={errormsg}/>
-                                <p style={{margin: '0', fontSize: '12px', textAlign: 'center'}}>Радио <br/> не работает
-                                </p>
-                            </div>
-                            <div style={{width: '100px', display: 'flex', flexDirection: 'column'}}>
-                                <div style={{
+                            <div className='btnsBlock'>
+                                <div onClick={() => handleAddToFavorites(selectedRadio._id)} style={{
                                     backgroundColor: '#fff',
                                     width: '100px',
                                     height: '100px',
                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                     display: 'flex',
-                                    padding: '15px 0 25px 0',
+                                    padding: '15px 0',
+                                    flexDirection: 'column',
+                                    borderRadius: '10px',
+                                    alignContent: 'center',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    cursor: 'pointer'
+                                }}>
+                                    <img style={{width: '30px', height: '30px'}}
+                                         src={favoritesUS.includes(selectedRadio._id) ? favorite : nofavorite}/>
+                                    <p style={{margin: ' 0', fontSize: '12px', textAlign: 'center'}}>Добавить <br/> в
+                                        избранное</p>
+                                </div>
+                                <div onClick={() => setSendError(true)} style={{
+                                    backgroundColor: '#fff',
+                                    width: '100px',
+                                    height: '100px',
+                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2)',
+                                    display: 'flex',
+                                    padding: '15px 0',
                                     flexDirection: 'column',
                                     borderRadius: '10px',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    cursor: 'pointer',
-                                    position: 'relative',
-                                    zIndex: '1',
-                                }}
-                                     onClick={copyLinkAndShowMessage}
-                                >
-                                    <img style={{width: '30px', height: '30px'}} src={share}/>
-                                    <p style={{margin: '0', fontSize: '12px', textAlign: 'center'}}>Поделиться</p>
+                                    cursor: 'pointer'
+                                }}>
+                                    <img style={{width: '30px', height: '30px'}} src={errormsg}/>
+                                    <p style={{margin: '0', fontSize: '12px', textAlign: 'center'}}>Радио <br/> не работает
+                                    </p>
                                 </div>
-                                <div>
-                                    {showCopiedMessage && (
-                                        <div style={{
-                                            backgroundColor: '#fff',
-                                            width: '100px',
-                                            borderRadius: '10px',
-                                            marginTop: '10px',
-                                            padding: '5px 10px',
-                                            boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2)',
-                                            fontSize: '12px',
-                                            textAlign: 'center',
-                                            position: 'absolute',
-                                            zIndex: '0',
-                                            animation: showCopiedMessage
-                                                ? 'slideIn 0.3s forwards'
-                                                : 'slideOut 0.3s backwards',
-                                        }}>
-                                            Ссылка скопирована!
-                                        </div>
-                                    )}
+                                <div style={{width: '100px', display: 'flex', flexDirection: 'column'}}>
+                                    <div style={{
+                                        backgroundColor: '#fff',
+                                        width: '100px',
+                                        height: '100px',
+                                        boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                        display: 'flex',
+                                        padding: '15px 0 25px 0',
+                                        flexDirection: 'column',
+                                        borderRadius: '10px',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        zIndex: '1',
+                                    }}
+                                         onClick={copyLinkAndShowMessage}
+                                    >
+                                        <img style={{width: '30px', height: '30px'}} src={share}/>
+                                        <p style={{margin: '0', fontSize: '12px', textAlign: 'center'}}>Поделиться</p>
+                                    </div>
+                                    <div>
+                                        {showCopiedMessage && (
+                                            <div style={{
+                                                backgroundColor: '#fff',
+                                                width: '100px',
+                                                borderRadius: '10px',
+                                                marginTop: '10px',
+                                                padding: '5px 10px',
+                                                boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2)',
+                                                fontSize: '12px',
+                                                textAlign: 'center',
+                                                position: 'absolute',
+                                                zIndex: '0',
+                                                animation: showCopiedMessage
+                                                    ? 'slideIn 0.3s forwards'
+                                                    : 'slideOut 0.3s backwards',
+                                            }}>
+                                                Ссылка скопирована!
+                                            </div>
+                                        )}
+                                    </div>
+                                    <SendErrorMessage show={sendError} onHide={() => setSendError(false)}
+                                                      title={selectedRadio.title}/>
                                 </div>
-                                <SendErrorMessage show={sendError} onHide={() => setSendError(false)}
-                                                  title={selectedRadio.title}/>
                             </div>
                         </div>
                     )}
                     {selectedRadio !== null ? <p style={{
-                        fontSize: '18px',
-                        margin: '20px 0 10px 10px',
-                        fontFamily: 'Inter',
-                        fontStyle: 'normal',
-                        fontWeight: '700',
-                        lineHeight: 'normal'
-                    }}>{isFav || isFavWithId ? `Избранные радиостанции` : `Похожие радиостанции`}</p> : null}
-                    <div
-                        style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-                        {radioStation.radios.map((radio) => (
-                            <div className={'oneBestSpecialistsBlock'} key={radio.id}
-                                 onClick={() => getOneRadio(radio)}>
+                            fontSize: '18px',
+                            fontStyle: 'normal',
+                            margin: '30px 0 10px 0',
+                            fontWeight: '700',
+                            lineHeight: 'normal'
+                        }}>{isFav || isFavWithId ? `Избранные радиостанции` : `Похожие радиостанции`}</p>
+                        : null}
+                    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
+                        {radioStation.radios.map((radio, index) => (
+                            <div
+                                className={'oneBestSpecialistsBlock'}
+                                key={radio.id}
+                                onClick={() => getOneRadio(radio)}
+                                style={{
+                                    marginRight: handleMarginRight(index),
+                                }}
+                            >
                                 <Link style={{
                                     textDecoration: "none",
                                     color: "#000",
@@ -660,8 +680,8 @@ const HomeScreen = observer(() => {
                                         justifyContent: 'space-between',
                                         alignContent: 'space-around'
                                     }}>
-                                        <p className="mx-auto" style={{fontWeight: '500', margin: '5px 0 0 0'}}>
-                                            {radio.title}
+                                        <p className="mx-auto" style={{fontWeight: '500', margin: '5px 0 0 0',}}>
+                                            {(radio.title).length > 15 ? (radio.title).slice(0, 15) + '...' : radio.title}
                                         </p>
                                     </div>
 
@@ -672,12 +692,10 @@ const HomeScreen = observer(() => {
                     <Pages/>
                     {selectedRadio && (
                         <div className="largeRadioBlock">
-                            <h2 style={{margin: '20px 0 10px 10px'}}>{`Отзывы`}</h2>
                             {leaveReview ?
-                                <div style={{position: 'relative', zIndex: 99, marginBottom: '10px'}}>
+                                <div style={{position: 'relative', zIndex: 1, marginBottom: '10px', marginTop:'15px'}}>
                                     <div style={{
-                                        margin: '0 10px 0 10px',
-                                        width: '1050px',
+                                        margin: '0',
                                         display: 'flex',
                                         alignItems: 'center',
                                         flexDirection: 'column'
@@ -688,7 +706,12 @@ const HomeScreen = observer(() => {
                                             justifyContent: 'space-between',
                                             alignItems: 'center'
                                         }}>
-                                            <h4 style={{margin: '0'}}>Оценить:</h4>
+                                            <p style={{
+                                                fontSize: '18px',
+                                                fontStyle: 'normal',
+                                                margin: '30px 0 10px 0',
+                                                fontWeight: '700',
+                                                lineHeight: 'normal'}}>Оценить:</p>
                                             <div>
                                                 <img onClick={() => handleRate(1)} style={{marginRight: '15px',}}
                                                      src={rating >= 1 ? goldStar : Star} alt={'Star'}/>
@@ -718,6 +741,7 @@ const HomeScreen = observer(() => {
                                                 value={ratingName.name}
                                                 required
                                                 className="input"
+                                                style={{width:'100%'}}
                                             />
                                         </div>
                                         <div style={{
@@ -733,7 +757,7 @@ const HomeScreen = observer(() => {
                                             value={ratingDesc.description}
                                             required
                                             className="inputTop"
-                                            style={{height: '50px', margin: '10px 0 0 0'}}
+                                            style={{height: '50px', margin: '10px 0 0 0', width:'100%'}}
                                             disabled={rating === 0}
                                         />
                                         </div>
@@ -744,7 +768,14 @@ const HomeScreen = observer(() => {
                                     </div>
                                 </div>
                                 : null}
-                            <div style={{margin: '10px 0 13px 10px', width: '1050px', overflow: 'auto'}}>
+                            <div style={{margin: '10px 0 13px 0', overflow: 'auto'}}>
+                                <p style={{
+                                    fontSize: '20px',
+                                    fontStyle: 'normal',
+                                    margin: '0 0 10px 0',
+                                    fontWeight: '700',
+                                    lineHeight: 'normal'}}
+                                >{`Отзывы`}</p>
                                 {allReviews ?
                                     ratingArrUS.map((rating, index) => (
                                         <div key={index} style={{
@@ -832,19 +863,17 @@ const HomeScreen = observer(() => {
                                             </p>
                                         </div>))
                                 }
-                                <Col className="d-flex justify-content-between">
+                                <Col className="d-flex justify-content-between rate-btns-block">
                                     <Button
                                         variant={"outline-dark"}
-                                        style={{width: 'calc(50% - 8px)'}}
-                                        className="admin-additional-button"
+                                        className="admin-additional-button submit_btn"
                                         onClick={() => setAllReviews(true)}
                                     >
                                         Читать все отзывы
                                     </Button>
                                     <Button
                                         variant={"outline-dark"}
-                                        style={{width: 'calc(50% - 8px)'}}
-                                        className="main-admin-button"
+                                        className="main-admin-button submit_btn"
                                         onClick={() => setLeaveReview(true)}
                                     >
                                         Оставить отзыв
@@ -855,9 +884,10 @@ const HomeScreen = observer(() => {
                     )}
 
                 </div>
-                <Footer/>
+
             </div>
-        </>
+            <Footer/>
+        </div>
     );
 })
 export default HomeScreen;
