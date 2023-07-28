@@ -18,6 +18,8 @@
     width: 100%;
     white-space: nowrap;
     text-align: center;
+    color: black;
+    text-decoration: none;
 }
 
 @media screen and (max-width: 360px) {
