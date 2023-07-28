@@ -7,7 +7,7 @@ const ContactsScreen = () => {
     const contactAddress = '123 Main Street, City, Country';
 
     return (
-        <div>
+        <div style={{padding:'15px 20px'}}>
             <h2>Контакты</h2>
             <p>
                 Добро пожаловать на страницу контактов компании Radio-Online.me.
@@ -16,7 +16,7 @@ const ContactsScreen = () => {
                 Если у вас возникли вопросы, пожелания или предложения, свяжитесь с нами по указанным ниже
                 контактным данным.
             </p>
-            <h3>Контактная информация</h3>
+            <h5>Контактная информация</h5>
             <ul>
                 <li>Имя: {contactName}</li>
                 <li>Email: {contactEmail}</li>
