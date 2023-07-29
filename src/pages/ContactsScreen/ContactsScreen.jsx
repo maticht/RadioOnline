@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useCallback} from 'react';
+import arrLeft from "../../img/arrowleft.svg";
 
 const ContactsScreen = () => {
     const contactName = 'Сергей Соколов';
@@ -6,9 +7,19 @@ const ContactsScreen = () => {
     const contactPhone = '+1 (555) 123-4567';
     const contactAddress = '123 Main Street, City, Country';
 
+    const handleBack = useCallback(() => {
+        window.history.back();
+    }, []);
+
     return (
-        <div style={{padding:'15px 20px'}}>
-            <h2>Контакты</h2>
+        <div className={'mainFooterNavBarBlock'}>
+            <div className={'footerNavBarBlock'}>
+                <div className={'navBarImgBlock'}  onClick={handleBack}>
+                    <img className={'navBarImg'} src={arrLeft}/>
+                </div>
+
+                <p className={'footerTitle'}>Контакты</p>
+            </div>
             <p>
                 Добро пожаловать на страницу контактов компании Radio-Online.me.
             </p>
@@ -16,7 +27,7 @@ const ContactsScreen = () => {
                 Если у вас возникли вопросы, пожелания или предложения, свяжитесь с нами по указанным ниже
                 контактным данным.
             </p>
-            <h5>Контактная информация</h5>
+            <p className={'footerTextTitle'}>Контактная информация</p>
             <ul>
                 <li>Имя: {contactName}</li>
                 <li>Email: {contactEmail}</li>

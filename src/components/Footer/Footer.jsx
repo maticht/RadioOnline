@@ -82,8 +82,8 @@ const Footer = observer(() => {
                     className='contact-info'
                 >
                     <Link to="/contacts" className='contact-info-text'>Контакты</Link>
-                    <Link to="/owners" className='contact-info-text'>Правообладателям</Link>
                     <Link to="/privacy-policy" className='contact-info-text'>Политика конфиденциальности</Link>
+                    <Link to="/owners" className='contact-info-text'>Правообладателям</Link>
                 </div>
             </div>
         </div>

@@ -1,0 +1,54 @@
+.mainFooterNavBarBlock{
+    padding:15px 20px;
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+}
+.footerNavBarBlock {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.navBarImgBlock{
+    display: flex;
+    flex-direction: row;
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+.navBarImg{
+    width: 12px;
+}
+.navBarText{
+    margin: 0;
+    color: #5B5B5B;
+}
+
+.footerTitle {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+}
+.footerTextTitle {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+
+@media screen and (max-width: 360px) {
+    .footerTitle {
+        font-size: 25px;
+        font-weight: bold;
+        margin: 0 0 5px 0;
+    }
+
+}
+
+
+
+

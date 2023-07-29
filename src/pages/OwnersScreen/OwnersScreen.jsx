@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import "./owners.css";
+import arrLeft from '../../img/arrowleft.svg'
 
 const OwnersScreen = () => {
+
+    const handleBack = useCallback(() => {
+        window.history.back();
+    }, []);
+
     return (
-        <div style={{padding:'15px 20px'}}>
-            <h2>Правообладателям</h2>
+        <div className={'mainFooterNavBarBlock'}>
+            <div className={'footerNavBarBlock'}>
+                <div className={'navBarImgBlock'}  onClick={handleBack}>
+                    <img className={'navBarImg'} src={arrLeft}/>
+                </div>
+
+                <p className={'footerTitle'}>Правообладателям</p>
+            </div>
+
             <p>
                 Добро пожаловать на страницу для правообладателей компании Radio-Online.me.
             </p>
@@ -11,7 +25,7 @@ const OwnersScreen = () => {
                 В Radio-Online.me мы уважаем права интеллектуальной собственности и стремимся соблюдать авторские
                 права и интересы правообладателей.
             </p>
-            <h5>Уведомление о нарушении авторских прав</h5>
+            <p className={'footerTextTitle'}>Уведомление о нарушении авторских прав</p>
             <p>
                 Если вы являетесь правообладателем и считаете, что контент нашего сайта или приложений нарушает ваши
                 авторские права, пожалуйста, обратитесь к нам с соответствующим уведомлением.
@@ -32,7 +46,7 @@ const OwnersScreen = () => {
                 Мы примем все необходимые меры в соответствии с применимым законодательством для рассмотрения и
                 решения вашего уведомления.
             </p>
-            <h5>Сотрудничество с правообладателями</h5>
+            <p className={'footerTextTitle'}>Сотрудничество с правообладателями</p>
             <p>
                 Мы ценим открытость и готовы сотрудничать с правообладателями для защиты авторских прав и
                 предотвращения нарушений.
