@@ -103,6 +103,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                 <div className={'navBarBlock-fav'}>
                     {!isAdminLoc && !isFav && !isFavWithId ?
                         <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                            <p className={"accountText"}>Избранное</p>
                             <button className={"accountBtn"}></button>
                         </Link>
                         : null}
@@ -110,7 +111,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
             </div>
             <div>
                 {!isFav && !isFavWithId ?
-                    <div className={'filter-block'}>
+                    <div className={'main-filter-block'}>
                         <div className={'search-block'}>
                             <img style={{width: '30px'}} src={searchBtn} alt="logo"/>
                             <input
@@ -121,17 +122,12 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                                 onChange={e => setSearch(e.target.value)}
                                 onKeyDown={handleKeyDown}/>
                         </div>
-                        <div className={'dropdown-block'}
-                             style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                            <Dropdown className="custom-dropdown" style={{width: '170px', marginRight:'10px'}} onClick={getCountries}>
-                                <DropdownToggle className="custom-dropdown-toggle" style={{
-                                    width: '170px',
-                                    marginRight: '25px',
-                                    backgroundColor: '#FFFFFF',
-                                    color: '#909095'
-                                }}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
-                                <DropdownMenu className="custom-dropdown-menu"
-                                              style={{width: '170px', maxHeight: '250px', overflowY: 'auto'}}>
+                        <div className={'dropdown-block'}>
+                            <Dropdown className="custom-dropdown" onClick={getCountries}>
+                                <DropdownToggle className="custom-dropdown-toggle"
+                                                style={{backgroundColor: '#FFFFFF', color: '#909095'}}
+                                >{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
+                                <DropdownMenu className="custom-dropdown-menu">
                                     {radioStation.countries.map(country =>
                                         <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
                                                        key={country.id}> {country.name} </Dropdown.Item>
@@ -142,8 +138,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                                 <DropdownToggle className="custom-dropdown-toggle"
                                                 style={{backgroundColor: '#FFFFFF', color: '#909095'}}
                                 >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
-                                <DropdownMenu className="custom-dropdown-menu"
-                                              style={{width: '160px', maxHeight: '250px', overflowY: 'auto'}}>
+                                <DropdownMenu className="custom-dropdown-menu">
                                     {radioStation.genres.map(genre =>
                                         <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
                                                        key={genre.id}> {genre.name} </Dropdown.Item>

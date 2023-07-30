@@ -1,3 +1,6 @@
+html, body {
+    background-color: #F1F1F1;
+}
 .pagination {
     display: flex;
     justify-content: center;
@@ -46,6 +49,9 @@
     width: 9px;
     margin-bottom: 2px;
 }
+.adminComtainer{
+    margin-left: 10px;
+}
 @media screen and (max-width: 360px) {
     .admin-additional-button {
         width: 100%;
@@ -55,6 +61,61 @@
         width: 100%;
     }
 
+}
+
+/* Стили для мобильных устройств */
+@media screen and (max-width: 544px) {
+    /* Ваш CSS для мобильных устройств здесь */
+    /*.maxWidthContainer{*/
+    /*    max-width: 360px;*/
+    /*    margin: 0 auto;*/
+
+    /*}*/
+    .main-admin-button {
+        width: 100%;
+    }
+    .filter-block{
+        width:360px
+    }
+}
+@media screen and (min-width: 544px) and (max-width: 736px) {
+    /*.maxWidthContainer{*/
+    /*    max-width: 540px;*/
+    /*    margin: 0 auto;*/
+
+    /*}*/
+    .main-admin-button {
+        width: 100%;
+    }
+    .filter-block{
+        width:540px
+    }
+}
+
+@media screen and (min-width: 736px) and (max-width: 932px) {
+    /*.maxWidthContainer{*/
+    /*    max-width: 720px;*/
+    /*    margin: 0 auto;*/
+
+    /*}*/
+}
+/* Стили для планшетов */
+@media screen and (min-width: 932px) and (max-width: 1096px) {
+    /* Ваш CSS для планшетов здесь */
+    /*.maxWidthContainer{*/
+    /*    max-width: 900px;*/
+    /*    margin: 0 auto;*/
+
+    /*}*/
+}
+
+/* Стили для десктопов */
+@media screen and (min-width: 1060px) {
+    /* Ваш CSS для десктопов здесь */
+    /*.maxWidthContainer{*/
+    /*    max-width: 1060px;*/
+    /*    margin: 0 auto;*/
+    /*}*/
 }
 
 

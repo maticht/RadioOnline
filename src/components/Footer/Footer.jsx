@@ -78,12 +78,10 @@ const Footer = observer(() => {
                 ))}
             </div>
             <div style={{ position: 'relative' }}>
-                <div
-                    className='contact-info'
-                >
+                <div className='contact-info'>
                     <Link to="/contacts" className='contact-info-text'>Контакты</Link>
-                    <Link to="/privacy-policy" className='contact-info-text'>Политика конфиденциальности</Link>
                     <Link to="/owners" className='contact-info-text'>Правообладателям</Link>
+                    <Link to="/privacy-policy" className='contact-info-text'>Политика конфиденциальности</Link>
                 </div>
             </div>
         </div>
