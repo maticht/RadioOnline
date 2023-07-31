@@ -1,5 +1,6 @@
 import {observer} from "mobx-react-lite";
 import React, {useContext, useState, useEffect} from "react";
+import { Link } from 'react-router-dom';
 import {Context} from "../../index";
 import './Footer.css';
 
@@ -77,12 +78,10 @@ const Footer = observer(() => {
                 ))}
             </div>
             <div style={{ position: 'relative' }}>
-                <div
-                    className='contact-info'
-                >
-                    <p className='contact-info-text'>Контакты</p>
-                    <p className='contact-info-text'>Правообладателям</p>
-                    <p className='contact-info-text'>Политика конфиденциальности</p>
+                <div className='contact-info'>
+                    <Link to="/contacts" className='contact-info-text'>Контакты</Link>
+                    <Link to="/owners" className='contact-info-text'>Правообладателям</Link>
+                    <Link to="/privacy-policy" className='contact-info-text'>Политика конфиденциальности</Link>
                 </div>
             </div>
         </div>
