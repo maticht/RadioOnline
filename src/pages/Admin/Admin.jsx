@@ -26,6 +26,16 @@ import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import "./admin.css";
 
+const useStyles = createUseStyles({
+    container: {
+        backgroundColor: "#F1F1F1"
+    },
+    maxWidthContainer: {
+        maxWidth: '1060px',
+        margin: '0 auto',
+        backgroundColor: "#F1F1F1"
+    },
+});
 
 const Admin = observer(() => {
     const param = useParams();
@@ -44,6 +54,7 @@ const Admin = observer(() => {
     const {radioStation} = useContext(Context)
     const [showButtons, setShowButtons] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const classes = useStyles();
 
     const toggleButtons = () => {
         setShowButtons(!showButtons);
@@ -168,20 +179,14 @@ const Admin = observer(() => {
         updateRadio(formData).then(response => refreshPage())
     }
 
-    const useStyles = createUseStyles({
-        container: {
-            minHeight: "100%",
-            paddingBottom: '50px',
-            backgroundColor: "#F1F1F1"
-        }
-    });
-    const classes = useStyles();
+
+
 
     return (
         <>
             {validateToken === true ? (
                 <div className={classes.container}>
-                    <div className={'maxWidthContainer'}>
+                    <div className={classes.maxWidthContainer}>
                         <HeaderNavBar/>
                         <div className={'bestSpecialists'}>
                             <div className="adminBlock">

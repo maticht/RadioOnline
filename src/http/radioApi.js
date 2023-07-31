@@ -6,7 +6,7 @@ export const createCountry = async (country) => {
 }
 
 export const deleteCountry = async (id) => {
-    const {data} = await $authHost.get('api/country/' + id)
+    const {data} = await $authHost.get('api/country/delete/:id' + id)
     return data
 }
 

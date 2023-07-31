@@ -355,7 +355,7 @@ const HomeScreen = observer(() => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div style={{marginLeft: '20px'}}>
+                                        <div className={"sl-radio-info"}>
                                             <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
                                                 <div className={'radioInfo'} >
                                                     <div style={{
@@ -658,13 +658,7 @@ const HomeScreen = observer(() => {
                                         alignItems: 'center',
                                         flexDirection: 'column'
                                     }}>
-                                        <div style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            flexDirection:'row',
-                                            alignItems: 'center'
-                                        }}>
+                                        <div className={'rate-star'}>
                                             <p style={{
                                                 fontSize: '18px',
                                                 fontStyle: 'normal',

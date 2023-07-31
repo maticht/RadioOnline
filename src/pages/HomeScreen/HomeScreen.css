@@ -374,6 +374,27 @@ textarea::placeholder{
 .music-title{
     margin-left: 15px;
 }
+.main-admin-button {
+    width: calc(50% - 8px);
+    cursor: pointer;
+    background-color: #06B5AE;
+    border: 2px solid #06B5AE;
+    color: #F4F4F4;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+.rate-star{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction:row;
+    align-items: center;
+}
+.sl-radio-info{
+    margin-left: 20px;
+}
 
 @media screen and (max-width: 1060px) {
     .bestSpecialists {
@@ -413,7 +434,7 @@ textarea::placeholder{
         margin-left: 40px;
     }
 }
-@media screen and (max-width: 737px) {
+@media screen and (max-width: 742px) {
     .selectedRadio{
         display: flex;
         justify-content: space-between;
@@ -495,6 +516,14 @@ textarea::placeholder{
         margin: 5px 0 0 0;
         box-shadow: 0px 0px 0px;
         padding-left: 0;
+    }
+    .rate-btns-block{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .main-admin-button {
+        width: 100%;
     }
 }
 @media screen and (max-width: 600px) {
@@ -588,7 +617,7 @@ textarea::placeholder{
         padding-left: 0;
     }
 }
-@media screen and (max-width: 488px) {
+@media screen and (max-width: 510px) {
     .selectedRadio{
         display: flex;
         justify-content: space-between;
@@ -779,6 +808,72 @@ textarea::placeholder{
     }
     .music-title{
         margin-left: 40px;
+    }
+
+}
+@media screen and (max-width: 345px) {
+    .radioInfo{
+        width: 100px;
+        background-color: #ffffff;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+        border-radius: 8px;
+    }
+    .sound-radio{
+        display: none;
+    }
+    .musicName{
+        width: 120px;
+        overflow: hidden;
+    }
+    .music-title{
+        margin-left: 40px;
+    }
+
+}
+@media screen and (max-width: 300px) {
+    .rate-star{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction:column;
+        align-items: flex-start;
+    }
+    .selectedRadioInfo{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: space-between;
+        margin-right: 20px;
+    }
+    .sl-radio-info{
+        margin-top: 20px;
+        margin-right: 20px;
+    }
+    .btnsBlock{
+        margin-left: 0px;
+        flex-direction: row;
+        height: 50px;
+        width: 100%;
+    }
+    .btnContainer {
+        background-color: #fff;
+        width: 70px;
+        height: 40px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        display: flex;
+        padding: 15px 0;
+        margin-top: 5px;
+        flex-direction: row;
+        border-radius: 10px;
+        align-items: center;
+        cursor: pointer;
+        justify-content: center;
+    }
+    .textContainer {
+        display: none;
     }
 
 }
