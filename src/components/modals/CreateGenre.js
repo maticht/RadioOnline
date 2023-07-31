@@ -1,15 +1,38 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {createGenre} from "../../http/radioApi";
+import {
+    createGenre,
+    deleteGenre,
+    getAllGenres,
+} from "../../http/radioApi";
+import {Context} from "../../index";
 
 const CreateGenre = ({show, onHide}) => {
-    const [value, setValue] = useState('')
+    const {radioStation} = useContext(Context);
+    const [genres, setGenres] = useState([])
 
-    const addGenre = () => {
-        createGenre({name: value}).then(data => {
+    useEffect(() => {
+        getAllGenres().then(data => {
+            radioStation.setGenres(data)
+            setGenres(data)
+        });
+    }, [])
+
+    const [value, setValue] = useState('')
+    const addGenre = async () => {
+        await createGenre({name: value}).then(data => {
             setValue('')
             onHide()
-        })
+        });
+        await getAllGenres().then(data => {
+            radioStation.setGenres(data)
+            setGenres(data)
+        });
+    }
+
+    const handleDeleteGenre = (id) => {
+        deleteGenre({id:id});
+        setGenres(genres.filter((genre)=> genre.id!==id));
     }
 
     return (
@@ -25,6 +48,22 @@ const CreateGenre = ({show, onHide}) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body  style={{backgroundColor:'#F4F4F4'}}>
+                <div>
+                    {genres.map(genre => <div
+                        key={genre.id}
+                        style={{
+                            display: 'flex', alignItems: 'center', marginBottom: '10px',
+                        }}
+                    >
+                        <p style={{marginRight: '10px'}}>{genre.name}</p>
+                        <span
+                            style={{cursor: 'pointer', color: 'red', marginLeft: '5px'}}
+                            onClick={() => handleDeleteGenre(genre.id)}
+                        >
+                    &times;
+                    </span>
+                    </div>)}
+                </div>
                 <Form>
                     <Form.Control
                         value={value}

@@ -15,7 +15,8 @@ class LanguageController {
 
     async delete(req, res){
         try {
-            const deleted = await Language.findByIdAndRemove(req.params.id);
+            const {id} = req.body
+            const deleted = await Language.findByIdAndRemove(id);
             return res.json(`DELETED SUCCESS ${deleted}`);
         } catch (error) {
             console.log(error);

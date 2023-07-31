@@ -6,7 +6,7 @@ export const createCountry = async (country) => {
 }
 
 export const deleteCountry = async (id) => {
-    const {data} = await $authHost.get('api/country/delete/:id' + id)
+    const {data} = await $authHost.post('api/country/delete', id)
     return data
 }
 
@@ -21,7 +21,7 @@ export const createLanguage = async (language) => {
 }
 
 export const deleteLanguage = async (id) => {
-    const {data} = await $authHost.get('api/language/' + id)
+    const {data} = await $authHost.post('api/language/delete', id)
     return data
 }
 
@@ -41,7 +41,7 @@ export const getAllGenres = async () => {
 }
 
 export const deleteGenre = async (id) => {
-    const {data} = await $authHost.get('api/genre/' + id)
+    const {data} = await $authHost.post('api/genre/delete', id)
     return data
 }
 

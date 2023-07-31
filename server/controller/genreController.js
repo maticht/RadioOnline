@@ -15,7 +15,8 @@ class GenreController {
 
     async delete(req, res){
         try {
-            const deleted = await Genre.findByIdAndRemove(req.params.id);
+            const {id} = req.body
+            const deleted = await Genre.findByIdAndRemove(id);
             return res.json(`DELETED SUCCESS ${deleted}`);
         } catch (error) {
             console.log(error);

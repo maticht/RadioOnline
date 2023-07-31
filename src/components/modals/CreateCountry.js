@@ -1,32 +1,42 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {createCountry, deleteCountry, getAllCountries, getAllGenres, getAllLanguages} from "../../http/radioApi";
+import {
+    createCountry,
+    deleteCountry,
+    getAllCountries,
+
+} from "../../http/radioApi";
 import "../../pages/Admin/admin.css";
 import {Context} from "../../index";
 
 const CreateCountry = ({show, onHide}) => {
     const {radioStation} = useContext(Context);
+    const [countries, setCountries] = useState([])
+
+
     useEffect(() => {
-        getAllCountries().then(data => radioStation.setCountries(data));
-        getAllGenres().then(data => radioStation.setGenres(data));
-        getAllLanguages().then(data => radioStation.setLanguages(data));
+        getAllCountries().then(data => {
+            radioStation.setCountries(data)
+            setCountries(data)
+        });
     }, [])
 
     const [value, setValue] = useState('')
-
-    const addCountry = () => {
-        createCountry({name: value}).then(data => {
+    const addCountry = async () => {
+        await createCountry({name: value}).then(data => {
             setValue('')
             onHide()
-        })
+        });
+        await getAllCountries().then(data => {
+            radioStation.setCountries(data)
+            setCountries(data)
+        });
     }
-    const handleDeleteCountry = async (countryId) => {
-        try {
-            await deleteCountry(countryId);
-        } catch (error) {
-            console.log(error)
-        }
-    };
+    const handleDeleteCountry = (id) => {
+        deleteCountry({id: id});
+        setCountries(countries.filter((country) => country.id !== id));
+    }
+
     return (<Modal
         show={show}
         onHide={onHide}
@@ -40,7 +50,7 @@ const CreateCountry = ({show, onHide}) => {
         </Modal.Header>
         <Modal.Body style={{backgroundColor: '#F4F4F4'}}>
             <div>
-                {radioStation.countries.map(country => <div
+                {countries.map(country => <div
                     key={country.id}
                     style={{
                         display: 'flex', alignItems: 'center', marginBottom: '10px',
@@ -49,10 +59,10 @@ const CreateCountry = ({show, onHide}) => {
                     <p style={{marginRight: '10px'}}>{country.name}</p>
                     <span
                         style={{cursor: 'pointer', color: 'red', marginLeft: '5px'}}
-                        onClick={() => deleteCountry(country._id)}
+                        onClick={() => handleDeleteCountry(country.id)}
                     >
-            &times;
-          </span>
+                    &times;
+                    </span>
                 </div>)}
             </div>
             <Form>

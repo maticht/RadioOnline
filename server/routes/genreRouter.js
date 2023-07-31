@@ -4,6 +4,6 @@ const genreController = require('../controller/genreController')
 
 router.get('/', genreController.getAll)
 router.post('/', genreController.create)
-router.get('/delete/:id', genreController.delete)
+router.post('/delete', genreController.delete)
 
 module.exports = router
