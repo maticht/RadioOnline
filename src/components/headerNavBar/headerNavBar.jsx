@@ -91,17 +91,42 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
             getAllGenres().then(data => radioStation.setGenres(data))
         }
     }
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    const handleMarginBottom = () => {
+        if (isFav || isFavWithId) {
+            if (windowWidth <= 360) {
+                return  '20px';
+            }else if (windowWidth <= 720) {
+                return  '20px';
+            }else if (windowWidth <= 1060) {
+                return '20px';
+            } else {
+                return  '20px';
+            }
+        }
+    };
 
 
     return (
-        <div className={'navBarBlock'}>
+        <div className={'navBarBlock'} style={{
+            marginBottom: handleMarginBottom(),
+        }}>
             <div className={'navBarBlock-logo'}>
                 <Link to={"/"}>
                     <img src={logo} alt={"logo"}
                          onClick={refresh}/>
                 </Link>
                 <div className={'navBarBlock-fav'}>
-                    {!isAdminLoc && !isFav && !isFavWithId ?
+                    {!isFav && !isFavWithId ?
                         <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
                             <p className={"accountText"}>Избранное</p>
                             <button className={"accountBtn"}></button>
@@ -149,7 +174,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                     </div> : null}
             </div>
             <div className={'fav-btn'}>
-                {!isAdminLoc && !isFav && !isFavWithId ?
+                {!isFav && !isFavWithId ?
                     <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
                         <p className={"accountText"}>Избранное</p>
                         <button className={"accountBtn"}></button>

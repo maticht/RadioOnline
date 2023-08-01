@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {createGenre} from "../../http/radioApi";
-//import successErrMsg from "../../img/successErrMsg.svg";
+import successErrMsg from "../../img/successErrMsg.svg";
 import axios from "axios";
 
 const SendErrorMessage = ({show, onHide, title}) => {
@@ -41,12 +41,12 @@ const SendErrorMessage = ({show, onHide, title}) => {
                 <div>
                     <div>
                         <Modal.Header closeButton  style={{backgroundColor:'#F4F4F4'}}>
-                            <Modal.Title id="contained-modal-title-vcenter">
+                            <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'20px', fontWeight:'bold'}}>
                                 Ошибка с радио "{title}"
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body  style={{backgroundColor:'#F4F4F4', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', textAlign:'center'}}>
-                            {/*<img src={successErrMsg} alt="success" style={{width:'100px', height:'100px', margin:'20px'}}/>*/}
+                            <img src={successErrMsg} alt="success" style={{width:'100px', height:'100px', margin:'20px'}}/>
                             Ваше сообщение отправлено
                         </Modal.Body>
                         <Modal.Footer  style={{backgroundColor:'#F4F4F4', width:'100%', justifyContent:'space-between', borderTop:'0'}}>
@@ -56,7 +56,7 @@ const SendErrorMessage = ({show, onHide, title}) => {
             ) : (
                 <>
                     <Modal.Header closeButton  style={{backgroundColor:'#F4F4F4'}}>
-                        <Modal.Title id="contained-modal-title-vcenter">
+                        <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'20px', fontWeight:'bold'}}>
                             Ошибка с радио "{title}"
                         </Modal.Title>
                     </Modal.Header>
@@ -71,8 +71,8 @@ const SendErrorMessage = ({show, onHide, title}) => {
                         </Form>
                     </Modal.Body>
                     <Modal.Footer  style={{backgroundColor:'#F4F4F4', width:'100%', justifyContent:'space-between'}}>
-                        <Button variant={"outline-danger"} style={{width:'375px'}} className='admin-additional-button' onClick={onHide}>Закрыть</Button>
-                        <Button variant={"outline-success"}  style={{width:'375px'}} className='main-admin-button' onClick={sendMessage}>Добавить</Button>
+                        <Button variant={"outline-danger"} className='admin-additional-button' onClick={onHide}>Закрыть</Button>
+                        <Button variant={"outline-success"} className='main-admin-button' onClick={sendMessage}>Добавить</Button>
                     </Modal.Footer>
                 </>
             )}

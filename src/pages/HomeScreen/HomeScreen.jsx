@@ -576,7 +576,7 @@ const HomeScreen = observer(() => {
                             lineHeight: 'normal'
                         }}>{isFav || isFavWithId ? `Избранные радиостанции` : `Похожие радиостанции`}</p>
                         : null}
-                    <div  className={'allRadios'}>
+                    <div className={'allRadios'}>
                         {radioStation.radios.map((radio, index) => (
                             <div
                                 className={'oneBestSpecialistsBlock'}

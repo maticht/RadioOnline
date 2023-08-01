@@ -42,10 +42,10 @@
 }
 
 .largeRadioBlockAdmin {
-    width: 1045px;
+    width: 100%;
     background-color: #fff;
     border-radius: 8px;
-    margin: 15px 0 0 20px;
+    margin: 15px 0 0 0;
     padding: 15px;
 }
 .oneBestSpecialistsBlock {
@@ -432,6 +432,15 @@ textarea::placeholder{
     }
     .music-title{
         margin-left: 40px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        width: 100%;
     }
 }
 @media screen and (max-width: 742px) {

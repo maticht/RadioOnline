@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
-import {Button, Col, Container, Dropdown, Form, Image, Row} from "react-bootstrap";
+import {Button, Col, Dropdown, Form, Image} from "react-bootstrap";
 import CreateGenre from "../../components/modals/CreateGenre";
 import CreateCountry from "../../components/modals/CreateCountry";
 import CreateRadio from "../../components/modals/CreateRadio";
@@ -63,7 +63,7 @@ const Admin = observer(() => {
     useEffect(() => {
         const fetchLastToken = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:8081/getLastToken`);
+                const {data} = await axios.get(`http://localhost:8081/getLastToken`);
                 if (data.token === param.token) {
                     setValidateToken(true);
                 }
@@ -77,7 +77,7 @@ const Admin = observer(() => {
 
 
     useEffect(() => {
-        if(radioVisible===false) {
+        if (radioVisible === false) {
             console.log('a ue 1')
             getAllCountries().then(data => radioStation.setCountries(data))
             getAllGenres().then(data => radioStation.setGenres(data))
@@ -110,14 +110,14 @@ const Admin = observer(() => {
 
     const handleMarginRight = (index) => {
         if (windowWidth <= 339) {
-            return  index % 1 === index || 0 ? '0px' : '0px';
-        }else if (windowWidth <= 355) {
+            return index % 1 === index || 0 ? '0px' : '0px';
+        } else if (windowWidth <= 355) {
             return index % 2 === 1 ? '0px' : '6px';
-        }else if (windowWidth <= 360) {
+        } else if (windowWidth <= 360) {
             return index % 2 === 1 ? '0px' : '10px';
-        }else if (windowWidth <= 535) {
+        } else if (windowWidth <= 535) {
             return index % 2 === 1 ? '0px' : '18px';
-        }else if (windowWidth <= 713) {
+        } else if (windowWidth <= 713) {
             return index % 3 === 2 ? '0px' : '18px';
         } else if (windowWidth <= 891) {
             return index % 4 === 3 ? '0px' : '18px';
@@ -180,8 +180,6 @@ const Admin = observer(() => {
     }
 
 
-
-
     return (
         <>
             {validateToken === true ? (
@@ -190,21 +188,57 @@ const Admin = observer(() => {
                         <HeaderNavBar/>
                         <div className={'bestSpecialists'}>
                             <div className="adminBlock">
-                                <div className="adminComtainer d-flex align-items-center justify-content-between" style={{display:'flex', alignItems:'center'}}>
-                                    <h2 className="mt-2 text-left my-2">Админ панель</h2>
-                                    <Button
+                                <div className="adminComtainer d-flex align-items-center justify-content-between"
+                                     style={{display: 'flex', alignItems: 'center', margin: '0px'}}>
+                                    <h2 className="mt-2 text-left my-2"
+                                        style={{fontSize: '20px', fontWeight: 'bold', margin: '0px'}}>Админ панель</h2>
+                                    <button
                                         variant={"outline-dark"}
                                         className={`${showButtons ? 'active' : ''}`}
                                         onClick={toggleButtons}
-                                        style={{ borderRadius: '50%', width: '50px', height: '50px',backgroundColor:'#06B5AE', border:'0', fontSize:'30px', fontWeight:'bold', padding:'0 0 6px 0', color:'#fff',marginRight:'25px' }}
+                                        style={{
+                                            borderRadius: '50%',
+                                            width: '50px',
+                                            height: '50px',
+                                            backgroundColor: '#06B5AE',
+                                            border: '0',
+                                            fontSize: '30px',
+                                            fontWeight: 'bold',
+                                            padding: '0 0 6px 0',
+                                            color: '#fff',
+                                            position: 'relative'
+                                        }}
                                     >
-                                        {showButtons ? "-" : "+"}
-                                    </Button>
+                                        <span style={{
+                                            display: 'inline-block',
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            width: '3px',
+                                            height: '15px',
+                                            background: '#fff',
+                                            borderRadius: '2px',
+                                            transition: 'transform 0.3s',
+                                            transform: `translate(-50%, -50%) rotate(${showButtons ? '90deg' : '90deg'})`
+                                        }}></span>
+                                        <span style={{
+                                            display: 'inline-block',
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            width: '3px',
+                                            height: '15px',
+                                            background: '#fff',
+                                            borderRadius: '2px',
+                                            transition: 'transform 0.3s',
+                                            transform: `translate(-50%, -50%) rotate(${showButtons ? '-90deg' : '180deg'})`
+                                        }}></span>
+                                    </button>
 
                                 </div>
                                 {showButtons && (
                                     <>
-                                        <Col className="d-flex justify-content-between">
+                                        <div className="d-flex justify-content-between admin-additional-button-block">
                                             <Button
                                                 variant={"outline-dark"}
                                                 className="mt-3 p-2 flex-fill admin-additional-button"
@@ -214,7 +248,7 @@ const Admin = observer(() => {
                                             </Button>
                                             <Button
                                                 variant={"outline-dark"}
-                                                className="mt-3 p-2 flex-fill mx-4 admin-additional-button"
+                                                className="mt-3 p-2 flex-fill admin-additional-button center-additional-button"
                                                 onClick={() => setGenreVisible(true)}
                                             >
                                                 Добавить жанр
@@ -226,10 +260,10 @@ const Admin = observer(() => {
                                             >
                                                 Добавить язык
                                             </Button>
-                                        </Col>
+                                        </div>
                                         <Button
                                             variant={"outline-dark"}
-                                            className="mt-3 p-2 main-admin-button"
+                                            className="mt-3 p-2 main-admin-button main-admin-button-screen"
                                             onClick={() => setRadioVisible(true)}
                                         >
                                             Добавить радиостанцию
@@ -244,103 +278,80 @@ const Admin = observer(() => {
 
                             {selectedRadio && (
                                 <div className="largeRadioBlockAdmin">
-                                    <div style={{display:'flex', justifyContent:'space-between', flexDirection:'row'}}>
-                                        <div className="d-flex justify-content-between"
-                                             style={{display: 'flex', flexDirection: 'column'}}>
-                                            <Dropdown className="custom-dropdown" style={{
-                                                boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                                width: '170px'
-                                            }} onClick={getGenres}>
-                                                <DropdownToggle className="custom-dropdown-toggle" style={{
-                                                    width: '170px',
-                                                    marginRight: '25px',
-                                                    backgroundColor: '#FFFFFF',
-                                                    color: '#909095'
-                                                }}>{updGenre.name || 'жанр'}</DropdownToggle>
-                                                <DropdownMenu className="custom-dropdown-menu"
-                                                              style={{width: '170px', maxHeight: '250px', overflowY: 'auto'}}>
-                                                    {radioStation.genres.map(genre =>
-                                                        <Dropdown.Item onClick={() => setUpdGenre(genre)}
-                                                                       key={genre.id}> {genre.name} </Dropdown.Item>
-                                                    )}
-                                                </DropdownMenu>
-                                            </Dropdown>
-                                            <Dropdown className="custom-dropdown" style={{
-                                                boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                                width: '170px'
-                                            }} onClick={getCountries}>
-                                                <DropdownToggle className="custom-dropdown-toggle" style={{
-                                                    width: '170px',
-                                                    marginRight: '25px',
-                                                    backgroundColor: '#FFFFFF',
-                                                    color: '#909095'
-                                                }}>{updCountry.name || 'страна'}</DropdownToggle>
-                                                <DropdownMenu className="custom-dropdown-menu"
-                                                              style={{width: '170px', maxHeight: '250px', overflowY: 'auto'}}>
-                                                    {radioStation.countries.map(country =>
-                                                        <Dropdown.Item onClick={() => setUpdCountry(country)}
-                                                                       key={country.id}> {country.name} </Dropdown.Item>
-                                                    )}
-                                                </DropdownMenu>
-                                            </Dropdown>
-                                            <Dropdown className="custom-dropdown" style={{
-                                                boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                                width: '170px'
-                                            }} onClick={getLanguages}>
-                                                <DropdownToggle className="custom-dropdown-toggle" style={{
-                                                    width: '170px',
-                                                    marginRight: '25px',
-                                                    backgroundColor: '#FFFFFF',
-                                                    color: '#909095'
-                                                }}>{updLanguage.name || 'язык'}</DropdownToggle>
-                                                <DropdownMenu className="custom-dropdown-menu"
-                                                              style={{width: '170px', maxHeight: '250px', overflowY: 'auto'}}>
-                                                    {radioStation.languages.map(language =>
-                                                        <Dropdown.Item onClick={() => setUpdLanguage(language)}
-                                                                       key={language.id}> {language.name} </Dropdown.Item>
-                                                    )}
-                                                </DropdownMenu>
-                                            </Dropdown>
-                                        </div>
-                                        <div className="d-flex justify-content-between"
-                                             style={{display: 'flex', flexDirection: 'column',alignItems: 'flex-end'}}>
-                                            <Form style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-
-                                                <p style={{margin:'0 15px 0 0', fontWeight:'500'}}>Название:</p>
+                                    <div className={'select-admin-radio-info'}>
+                                        <div className="d-flex justify-content-between select-admin-radio-inputs" >
+                                            <Form className='admin-input-block'>
+                                                <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Название:</p>
                                                 <Form.Control
                                                     value={title}
                                                     onChange={e => setTitle(e.target.value)}
                                                     placeholder={selectedRadio.title ? selectedRadio.title : "Введите название"}
-                                                    style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2', width:'500px'}}
+                                                    className='admin-input'
                                                 />
                                             </Form>
-                                            <Form style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-                                                <p style={{margin:'0 15px 0 0', fontWeight:'500'}}>Ссылка:</p>
+                                            <Form className='admin-input-block'>
+                                                <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Ссылка:</p>
                                                 <Form.Control
                                                     value={radioWave}
                                                     onChange={e => setRadioWave(e.target.value)}
                                                     placeholder={selectedRadio.radio}
-                                                    style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2', width:'500px'}}
+                                                    className='admin-input'
                                                 />
                                             </Form>
-                                            <Form style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-                                                <p style={{margin:'0 15px 0 0', fontWeight:'500'}}>Файл:</p>
+                                            <Form className='admin-input-block'>
+                                                <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Файл:</p>
                                                 <Form.Control
                                                     type="file"
                                                     onChange={selectFile}
-                                                    className='fileBtn'
-                                                    style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2', width:'500px'}}
+                                                    className='fileBtn admin-input'
                                                 />
                                             </Form>
-
                                         </div>
-                                        <div>
-                                            <Image
-                                                width={150}
-                                                height={150}
-                                                style={{borderRadius:'8px'}}
-                                                src={selectedRadio.image !== 'image' ? 'http://localhost:8081/' + selectedRadio.image : nonePrev}
-                                            />
+                                        <div className={'dropdown-image-block'}>
+                                            <div className="d-flex justify-content-between custom-dropdown-block"
+                                                 style={{display: 'flex', flexDirection: 'column'}}>
+                                                <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
+                                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                                }} onClick={getGenres}>
+                                                    <DropdownToggle className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updGenre.name || 'жанр'}</DropdownToggle>
+                                                    <DropdownMenu className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                        {radioStation.genres.map(genre =>
+                                                            <Dropdown.Item onClick={() => setUpdGenre(genre)}
+                                                                           key={genre.id}> {genre.name} </Dropdown.Item>
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                                <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
+                                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                                }} onClick={getCountries}>
+                                                    <DropdownToggle className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updCountry.name || 'страна'}</DropdownToggle>
+                                                    <DropdownMenu className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                        {radioStation.countries.map(country =>
+                                                            <Dropdown.Item onClick={() => setUpdCountry(country)}
+                                                                           key={country.id}> {country.name} </Dropdown.Item>
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                                <Dropdown className="custom-dropdown custom-admin-dropdown"  style={{
+                                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                                }} onClick={getLanguages}>
+                                                    <DropdownToggle className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updLanguage.name || 'язык'}</DropdownToggle>
+                                                    <DropdownMenu className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                        {radioStation.languages.map(language =>
+                                                            <Dropdown.Item onClick={() => setUpdLanguage(language)}
+                                                                           key={language.id}> {language.name} </Dropdown.Item>
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            </div>
+                                            <div>
+                                                <Image
+                                                    width={150}
+                                                    height={150}
+                                                    style={{borderRadius: '8px'}}
+                                                    src={selectedRadio.image !== 'image' ? 'http://localhost:8081/' + selectedRadio.image : nonePrev}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                     <Col className="d-flex justify-content-between">
@@ -365,16 +376,20 @@ const Admin = observer(() => {
 
                                 </div>
                             )}
-
-                            <div className={'continerCard'}
-                                 style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start', marginTop:'15px'}}>
+                            <p style={{
+                                fontSize: '18px',
+                                fontStyle: 'normal',
+                                margin: '20px 0 10px 0',
+                                fontWeight: '700',
+                                lineHeight: 'normal'
+                            }}>{`Все радиостанции`}</p>
+                            <div className={'allRadios'}>
                                 {radioStation.radios.map((radio, index) => (
                                     <div className={'oneBestSpecialistsBlock'}
                                          key={radio.id}
                                          onClick={() => getOneRadio(radio)}
                                          style={{
-                                             marginRight: '10px',
-                                             marginLeft: '10px'
+                                             marginRight: handleMarginRight(index),
                                          }}
                                     >
                                         <Link style={{
@@ -389,7 +404,11 @@ const Admin = observer(() => {
                                                 flexDirection: 'column',
                                                 alignContent: 'space-between'
                                             }}>
-                                                <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
+                                                <div style={{
+                                                    position: 'relative',
+                                                    display: 'flex',
+                                                    flexDirection: 'row'
+                                                }}>
                                                     {radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (
                                                         <div style={{
                                                             position: 'absolute',
@@ -445,7 +464,44 @@ const Admin = observer(() => {
                     </div>
                 </div>
             ) : (
-                <h1>404 Not Found</h1>
+                <div style={{
+                    display: "flex",
+                    height: '100vh',
+                    backgroundColor: '#F4F4F4',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    alignContent: 'center'
+                }}>
+                    <div style={{
+                        display: "flex",
+                        padding:"30px 50px",
+                        backgroundColor: '#fff',
+                        borderRadius:'10px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        alignContent: 'center',
+                        margin:'10px 20px'
+                    }}>
+                        <h1 style={{fontWeight: '900', color: '#06B5AE', marginBottom:'20px', fontSize: '100px', textAlign:'center'}}>404</h1>
+                        <h4 style={{fontWeight: '700', color: '#000000', marginBottom:'20px', textAlign:'center'}}>Страница не найдена</h4>
+                        <p style={{fontSize: '18px', fontWeight: '400', color: '#000000', marginBottom:'20px', textAlign:'center'}}>Перейдите на главную или подтвердите, что вы администратор ещё раз</p>
+                        <Link to="/" style={{
+                            border: 'none',
+                            borderRadius: '10px',
+                            backgroundColor: '#06B5AE',
+                            color: '#fff',
+                            fontWeight: "500",
+                            padding: '10px 20px',
+                            marginBottom:'20px',
+                            textDecoration:"none"
+                        }}>
+                            На главную
+                        </Link>
+
+                    </div>
+                </div>
             )};
         </>
     );

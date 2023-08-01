@@ -21,6 +21,9 @@ html, body {
     padding: 10px 15px;
     border-radius: 10px;
 }
+.center-additional-button{
+    margin: 0 15px;
+}
 .main-admin-button {
     width: calc(50% - 8px);
     cursor: pointer;
@@ -31,6 +34,9 @@ html, body {
     font-weight: 500;
     padding: 10px 15px;
     border-radius: 10px;
+}
+.main-admin-button-screen{
+    width: 100%;
 }
 .pagination-button.active {
     color: #fff;
@@ -52,6 +58,170 @@ html, body {
 .adminComtainer{
     margin-left: 10px;
 }
+.dropdown-modal-block{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.admin-additional-button-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.dropdown-image-block{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 60px;
+}
+.select-admin-radio-info{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.admin-input{
+    background-color: #fff;
+    outline: none;
+    border: 0;
+    height: 42px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    width: 500px;
+}
+.select-admin-radio-inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.admin-input-block{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.custom-dropdown-block{
+    width: 100%;
+}
+
+@media screen and (max-width: 1030px) {
+    .dropdown-image-block{
+        margin-left: 15px;
+    }
+}
+@media screen and (max-width: 992px) {
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        width: 100%;
+    }
+    .main-admin-button-screen{
+        width: 100%;
+    }
+    .dropdown-modal-block{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .dropdown-modal-toggle{
+        margin-top: 15px;
+        width: 100%;
+    }
+    .custom-dropdown-toggle2{
+        text-align: left;
+        width: 100%;
+    }
+    .custom-dropdown-menu2{
+        width: 100%;
+    }
+    .dropdown-image-block{
+        margin-left: 40px;
+    }
+    .admin-input{
+        width: 400px;
+    }
+}
+@media screen and (max-width: 915px) {
+    .dropdown-image-block{
+        margin-left: 40px;
+    }
+    .admin-input{
+        width: 300px;
+    }
+}
+@media screen and (max-width: 810px) {
+    .dropdown-image-block{
+        margin-left: 20px;
+    }
+    .admin-input{
+        width: 270px;
+    }
+}
+@media screen and (max-width: 765px) {
+    .admin-input{
+        width: 100%;
+        margin-top: 10px;
+    }
+    .select-admin-radio-info{
+        flex-direction: column-reverse;
+    }
+    .dropdown-image-block{
+        margin-left: 0;
+        flex-direction: row-reverse;
+    }
+    .select-admin-radio-inputs{
+        width: 100%;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .admin-input-block{
+        width: 100%;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .custom-admin-dropdown{
+        width: 100%;
+    }
+    .custom-dropdown-block{
+        width: 100%;
+        margin-left: 15px;
+    }
+    .custom-admin-dropdown-toggle{
+        width: 100%;
+        text-align: left;
+    }
+    .custom-admin-dropdown-menu{
+        width: 100%;
+    }
+}
+@media screen and (max-width: 720px) {
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        width: 100%;
+    }
+    .dropdown-modal-block{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .dropdown-modal-toggle{
+        margin: 15px 0 0 0;
+        width: 100%;
+    }
+    .custom-dropdown-toggle2{
+        text-align: left;
+        width: 100%;
+    }
+    .custom-dropdown-menu2{
+        width: 100%;
+    }
+}
 @media screen and (max-width: 360px) {
     .admin-additional-button {
         width: 100%;
@@ -62,15 +232,7 @@ html, body {
     }
 
 }
-
-/* Стили для мобильных устройств */
-@media screen and (max-width: 544px) {
-    /* Ваш CSS для мобильных устройств здесь */
-    /*.maxWidthContainer{*/
-    /*    max-width: 360px;*/
-    /*    margin: 0 auto;*/
-
-    /*}*/
+@media screen and (max-width: 340px) {
     .admin-additional-button {
         width: 100%;
     }
@@ -78,16 +240,40 @@ html, body {
         margin-top: 10px;
         width: 100%;
     }
+    .dropdown-image-block{
+        width: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+    .custom-dropdown-block{
+        width: 100%;
+        margin-top: 10px;
+        margin-left: -10px;
+    }
+}
+
+@media screen and (max-width: 544px) {
+    .admin-additional-button {
+        width: 100%;
+    }
+    .center-additional-button{
+        margin: 0;
+    }
+    .main-admin-button {
+        margin-top: 10px;
+        width: 100%;
+    }
     .filter-block{
         width:540px
+    }
+    .admin-additional-button-block{
+        display: flex;
+        flex-direction: column;
     }
 }
 @media screen and (min-width: 544px) and (max-width: 742px) {
-    /*.maxWidthContainer{*/
-    /*    max-width: 540px;*/
-    /*    margin: 0 auto;*/
 
-    /*}*/
     .admin-additional-button {
         width: 100%;
     }
@@ -100,30 +286,5 @@ html, body {
     }
 }
 
-@media screen and (min-width: 736px) and (max-width: 932px) {
-    /*.maxWidthContainer{*/
-    /*    max-width: 720px;*/
-    /*    margin: 0 auto;*/
-
-    /*}*/
-}
-/* Стили для планшетов */
-@media screen and (min-width: 932px) and (max-width: 1096px) {
-    /* Ваш CSS для планшетов здесь */
-    /*.maxWidthContainer{*/
-    /*    max-width: 900px;*/
-    /*    margin: 0 auto;*/
-
-    /*}*/
-}
-
-/* Стили для десктопов */
-@media screen and (min-width: 1060px) {
-    /* Ваш CSS для десктопов здесь */
-    /*.maxWidthContainer{*/
-    /*    max-width: 1060px;*/
-    /*    margin: 0 auto;*/
-    /*}*/
-}
 
 
