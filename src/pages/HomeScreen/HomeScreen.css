@@ -252,6 +252,14 @@ textarea::placeholder{
     background: #007A76;
     margin-top: -5px;
 }
+@keyframes gradientAnimation {
+    0% {
+        background-position: 80% 50%;
+    }
+    100% {
+        background-position: -100% 50%;
+    }
+}
 @keyframes marquee {
     0% {
         transform: translateX(110%);

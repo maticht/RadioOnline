@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {createGenre} from "../../http/radioApi";
-import successErrMsg from "../../img/successErrMsg.svg";
+import successErrMsg from "../../img/successsErrMsg.svg";
 import axios from "axios";
 
 const SendErrorMessage = ({show, onHide, title}) => {

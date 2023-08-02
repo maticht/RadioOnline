@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {Button, Col, Image} from "react-bootstrap";
+import Skeleton from 'react-loading-skeleton'
 import HeaderNavBar from '../../components/headerNavBar/headerNavBar';
 import {createUseStyles} from "react-jss";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
@@ -36,11 +37,12 @@ import Footer from "../../components/Footer/Footer";
 
 const useStyles = createUseStyles({
     container: {
-        backgroundColor: "#F1F1F1"
+        backgroundColor: "#F1F1F1",
     },
     maxWidthContainer: {
         maxWidth: '1060px',
         margin: '0 auto',
+        minHeight: '100vh',
         backgroundColor: "#F1F1F1"
     },
 });
@@ -73,6 +75,7 @@ const HomeScreen = observer(() => {
     const [favoritesUS, setFavoritesUS] = useState(favorites);
     const [ratingArrUS, setRatingArrUs] = useState([]);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [isLoading, setIsLoading] = useState(false);
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -124,30 +127,41 @@ const HomeScreen = observer(() => {
 
 
     useEffect(() => {
+        setIsLoading(true);
         getAllCountries().then(data => radioStation.setCountries(data))
         getAllGenres().then(data => radioStation.setGenres(data))
         if (isFav || isFavWithId) {
             getFavoritesRadios(localStorage.getItem('favorites')).then(data => {
-                radioStation.setRadios(data)
-                radioStation.setTotalCount(data.length)
-                console.log('юз эффект с фав')
+                radioStation.setRadios(data);
+                radioStation.setTotalCount(data.length);
+                console.log('юз эффект с фав');
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 2000);
             })
         } else {
             getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
-                    radioStation.setRadios(data[0])
-                    radioStation.setTotalCount(data[1])
-                    console.log('запрс из 1 useEffect')
+                    radioStation.setRadios(data[0]);
+                    radioStation.setTotalCount(data[1]);
+                    console.log('запрс из 1 useEffect');
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 2000);
                 }
             )
         }
     }, [location.search])
 
     useEffect(() => {
+        setIsLoading(true);
             if (!isFav && !isFavWithId) {
                 getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
                     radioStation.setRadios(data[0])
                     radioStation.setTotalCount(data[1])
                     console.log('запрс из 2 useEffect')
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 2000);
                 })
             }
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
@@ -176,7 +190,7 @@ const HomeScreen = observer(() => {
                     setCurrentMusicName(data.StreamTitle);
                     console.log(data);
                 });
-            }, 5000);
+            }, 2000);
 
             return () => clearInterval(interval);
         }
@@ -576,78 +590,144 @@ const HomeScreen = observer(() => {
                             lineHeight: 'normal'
                         }}>{isFav || isFavWithId ? `Избранные радиостанции` : `Похожие радиостанции`}</p>
                         : null}
-                    <div className={'allRadios'}>
-                        {radioStation.radios.map((radio, index) => (
-                            <div
-                                className={'oneBestSpecialistsBlock'}
-                                key={radio.id}
-                                onClick={() => getOneRadio(radio)}
-                                style={{
+                    <div>
+                        {isLoading ? (
+                            <div  className={'allRadios'}>{[...Array(24)].map((_, index) => (
+                                <div className={'oneBestSpecialistsBlock'} style={{
                                     marginRight: handleMarginRight(index),
-                                }}
-                            >
-                                <Link style={{
-                                    textDecoration: "none",
-                                    color: "#000",
-                                    flexDirection: 'column',
-                                    height: '100%',
-                                    width: '100%'
                                 }}>
-                                    <div style={{
-                                        display: 'flex',
+                                    <Link style={{
+                                        textDecoration: "none",
+                                        color: "#000",
                                         flexDirection: 'column',
-                                        alignContent: 'space-between'
+                                        height: '100%',
+                                        width: '100%'
                                     }}>
-                                        <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
-                                            {radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (
-                                                <div style={{
-                                                    position: 'absolute',
-                                                    top: 1,
-                                                    left: 1,
-                                                    backgroundColor: '#ffffff',
-                                                    padding: '13px 5px 1px 12px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    borderRadius: '8px'
-                                                }}>
-                                                    <img style={{width: '12px'}} src={goldStar} alt="star"/>
-                                                    <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>
-                                                        {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}
-                                                    </p>
-                                                </div>
-                                            )}
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignContent: 'space-between'
+                                        }}>
+                                            <div  style={{
+                                                width: "140px",
+                                                height: '125px',
+                                                marginTop: '10px',
+                                                marginLeft: '10px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'space-between',
+                                                alignContent: 'space-around',
+                                                borderRadius: '10px',
+                                                background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                backgroundSize: '200% 100%',
+                                                animation: 'gradientAnimation 1s linear infinite',
+                                            }}>
+                                            </div>
                                         </div>
                                         <div style={{
                                             marginTop: '10px',
+                                            paddingTop: '2px',
+                                            borderTop: "1px solid #EAEAEA",
                                             display: 'flex',
                                             flexDirection: 'column',
                                             justifyContent: 'space-between',
                                             alignContent: 'space-around'
                                         }}>
-                                            <Image width={140} height={125}
-                                                   className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                   src={radio.image !== 'image' ? 'http://localhost:8081/' + radio.image : nonePrev}/>
-
+                                            <div style={{
+                                                width:"140px",
+                                                height:'30px',
+                                                marginLeft:'10px',
+                                                marginTop:'5px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'space-between',
+                                                alignContent: 'space-around',
+                                                borderRadius:'10px',
+                                                background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                backgroundSize: '200% 100%',
+                                                animation: 'gradientAnimation 1s linear infinite',
+                                            }}>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div style={{
-                                        marginTop: '10px',
-                                        paddingTop: '2px',
-                                        borderTop: "1px solid #EAEAEA",
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between',
-                                        alignContent: 'space-around'
-                                    }}>
-                                        <p className="mx-auto" style={{fontWeight: '500', margin: '5px 0 0 0',}}>
-                                            {(radio.title).length > 15 ? (radio.title).slice(0, 15) + '...' : radio.title}
-                                        </p>
-                                    </div>
 
-                                </Link>
+                                    </Link>
+                                </div>
+                            ) )}</div>
+                        ) : (
+                            <div className={'allRadios'}>
+                                {radioStation.radios.map((radio, index) => (
+                                    <div
+                                        className={'oneBestSpecialistsBlock'}
+                                        key={radio.id}
+                                        onClick={() => getOneRadio(radio)}
+                                        style={{
+                                            marginRight: handleMarginRight(index),
+                                        }}
+                                    >
+                                        <Link style={{
+                                            textDecoration: "none",
+                                            color: "#000",
+                                            flexDirection: 'column',
+                                            height: '100%',
+                                            width: '100%'
+                                        }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignContent: 'space-between'
+                                            }}>
+                                                <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
+                                                    {radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (
+                                                        <div style={{
+                                                            position: 'absolute',
+                                                            top: 1,
+                                                            left: 1,
+                                                            backgroundColor: '#ffffff',
+                                                            padding: '13px 5px 1px 12px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            borderRadius: '8px'
+                                                        }}>
+                                                            <img style={{width: '12px'}} src={goldStar} alt="star"/>
+                                                            <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>
+                                                                {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div style={{
+                                                    marginTop: '10px',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    alignContent: 'space-around'
+                                                }}>
+                                                    <Image width={140} height={125}
+                                                           className="mt-1 rounded rounded-10 d-block mx-auto"
+                                                           src={radio.image !== 'image' ? 'http://localhost:8081/' + radio.image : nonePrev}/>
+
+                                                </div>
+                                            </div>
+                                            <div style={{
+                                                marginTop: '10px',
+                                                paddingTop: '2px',
+                                                borderTop: "1px solid #EAEAEA",
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'space-between',
+                                                alignContent: 'space-around'
+                                            }}>
+                                                <p className="mx-auto" style={{fontWeight: '500', margin: '5px 0 0 0',}}>
+                                                    {(radio.title).length > 15 ? (radio.title).slice(0, 15) + '...' : radio.title}
+                                                </p>
+                                            </div>
+
+                                        </Link>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        )}
                     </div>
                     <Pages/>
                     {selectedRadio && (
