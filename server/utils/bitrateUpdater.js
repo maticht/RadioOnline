@@ -4,8 +4,8 @@ const ffmpeg = require('fluent-ffmpeg');
 
 
 // Указываем пути к исполняемым файлам FFmpeg и ffprobe
-const ffmpegPath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffmpeg';
-const ffprobePath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
+const ffmpegPath = 'C:/FFmpeg/bin/ffmpeg';
+const ffprobePath = 'C:/FFmpeg/bin/ffprobe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
@@ -14,7 +14,7 @@ async function getAudioBitrateFromStream(streamUrl) {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(streamUrl, (err, metadata) => {
             if (err) {
-                console.error('Ошибка при получении метаданных:', err);
+                console.error(`Ошибка при получении метаданных для ${streamUrl}`);
                 reject(err);
             } else {
                 const format = metadata.format;
@@ -38,11 +38,11 @@ async function updateBitrateForRadios() {
                 await Radio.updateOne({_id: radio._id}, {$set: {bitrate: bitRate}});
                 console.log(`Битрейт для радиостанции с ID ${radio._id} успешно обновлен: ${bitRate} kbps`);
             } catch (error) {
-                console.log(`Ошибка при обновлении битрейта для радиостанции с ID ${radio._id}:`, error);
+                console.log(`Ошибка при обновлении битрейта для радиостанции с ID ${radio._id}:`);
             }
         }
     } catch (error) {
-        console.log('Ошибка при обновлении битрейта для радиостанций:', error);
+        console.log('Ошибка при обновлении битрейта для радиостанций:');
     }
 }
 
