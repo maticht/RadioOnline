@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import {createGenre} from "../../http/radioApi";
 import successErrMsg from "../../img/successsErrMsg.svg";
 import axios from "axios";
+import {createCustomError} from "../../http/radioApi";
+import {useLocation, useParams} from "react-router-dom";
 
-const SendErrorMessage = ({show, onHide, title}) => {
+const SendErrorMessage = ({show, onHide, radio}) => {
     const [value, setValue] = useState('');
     const [isSend, setIsSend] = useState(false);
+    const location = useLocation();
+    const params = useParams();
 
     useEffect(() => {
         const timerId = setTimeout(()=>
@@ -22,13 +25,26 @@ const SendErrorMessage = ({show, onHide, title}) => {
     const sendMessage = async () => {
         try {
             const url = `http://localhost:8081/sendErrorMessage`;
-            const {data: res} = await axios.post(url, {title: title, errorMessage: value});
+            const {data: res} = await axios.post(url, {title: radio.title, errorMessage: value});
+
+
+            let currentUrl = window.location.href;
+            if (location.pathname === `/favorites/${params.radioId}`) {
+                currentUrl = currentUrl.replace('/favorites', '')
+            }
+
+            await createCustomError({
+                text: value,
+                radioStationName: radio.title,
+                radioStationLink: currentUrl,
+            })
             setIsSend(true);
             setValue('');
         } catch (error) {
             console.log(error);
         }
     }
+
 
     return (
         <Modal
@@ -42,7 +58,7 @@ const SendErrorMessage = ({show, onHide, title}) => {
                     <div>
                         <Modal.Header closeButton  style={{backgroundColor:'#F4F4F4'}}>
                             <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'20px', fontWeight:'bold'}}>
-                                Ошибка с радио "{title}"
+                                Ошибка с радио "{radio.title}"
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body  style={{backgroundColor:'#F4F4F4', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', textAlign:'center'}}>
@@ -57,7 +73,7 @@ const SendErrorMessage = ({show, onHide, title}) => {
                 <>
                     <Modal.Header closeButton  style={{backgroundColor:'#F4F4F4'}}>
                         <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'20px', fontWeight:'bold'}}>
-                            Ошибка с радио "{title}"
+                            Ошибка с радио "{radio.title}"
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body  style={{backgroundColor:'#F4F4F4'}}>

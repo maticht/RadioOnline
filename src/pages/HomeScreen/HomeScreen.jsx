@@ -68,7 +68,6 @@ const HomeScreen = observer(() => {
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
     const navigation = useNavigate();
     const location = useLocation();
-    const [isFavorite, setIsFavorite] = useState(false);
     const [sendError, setSendError] = useState(false)
     const storedFavorites = localStorage.getItem('favorites');
     let favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
@@ -114,7 +113,6 @@ const HomeScreen = observer(() => {
             return index % 6 === 5 ? '0px' : '20px';
         }
     };
-
 
     const lowerSound = () => {
         setVolume(0);
@@ -577,7 +575,7 @@ const HomeScreen = observer(() => {
                                     <SendErrorMessage
                                         show={sendError}
                                         onHide={() => setSendError(false)}
-                                        title={selectedRadio.title}
+                                        radio={selectedRadio}
                                     />
                                 </div>
                             </div>

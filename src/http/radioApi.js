@@ -93,6 +93,21 @@ export const fetchCurrentMusicName = async (radio) => {
     return data
 }
 
+export const createCustomError = async (customError) => {
+    const {data} = await $authHost.post('api/customError', customError)
+    return data
+}
+
+export const deleteCustomError = async (id) => {
+    const {data} = await $authHost.post('api/customError/delete', id)
+    return data
+}
+
+export const getAllCustomErrors = async () => {
+    const {data} = await $host.get('api/customError')
+    return data
+}
+
 // export const calculateAudioBitrate = async (radio)=>{
 //     const {data} = await $host.post('api/radio/bitrate/'+radio.id, radio)
 //     return data
