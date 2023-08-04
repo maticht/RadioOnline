@@ -179,9 +179,13 @@ const Admin = observer(() => {
         formData.append('country_id', updCountry.id)
         formData.append('genre_id', updGenre.id)
         formData.append('language_id', updLanguage.id)
-        updateRadio(formData).then(response => {
-            alert(response.message)
-            refreshPage()
+        updateRadio(formData).then(data => {
+            if (data.status === 409){
+                alert(data.message)
+            }else{
+                refreshPage()
+            }
+
         })
     }
 

@@ -18,7 +18,9 @@ const CreateLanguage = ({show, onHide}) => {
 
     const addLanguage = async () => {
         await createLanguage({name: value}).then(data => {
-            alert(data.message)
+            if (data.status === 409){
+                alert(data.message)
+            }
             setValue('')
         });
         await getAllLanguages().then(data => {

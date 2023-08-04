@@ -15,9 +15,9 @@ class RadioController {
     async create(req, res, next) {
         try {
             let radio = await Radio.findOne({title: req.body.title});
-            if (radio) return res.status(201).send({message: "Радиостанция с данным названием уже существует!"});
+            if (radio) return res.json({status: 409, message: "Радиостанция с данным названием уже существует!"});
             radio = await Radio.findOne({radioLinkName: req.body.radioLinkName});
-            if (radio) return res.status(201).send({message: `ССылка занята радиостаницей: ${radio.title}`});
+            if (radio) return res.json({status: 409, message: `Ссылка занята радиостаницей: ${radio.title}`})
 
             const {image} = req.files
             let fileName = uuid.v4() + ".jpg"
@@ -217,11 +217,11 @@ class RadioController {
             console.log(req.body)
             let radio = await Radio.findOne({radioLinkName: req.body.radioLinkName});
             if (radio !== null) {
-                if(req.body.id !==  radio.id)
-                return res.status(201).send({message: `ССылка занята радиостаницей: ${radio.title}`});
+                if (req.body.id !== radio.id)
+                    return res.json({status: 409, message: `Ссылка занята радиостаницей: ${radio.title}`})
             }
             radio = await Radio.findById(req.body.id);
-            if (!radio) return res.status(409).send({message: "Радиостанция с данным названием не существует!"});
+            if (!radio) return res.json({status: 409, message: "Радиостанция с данным названием не существует!"});
             let fileName = req.body.imageName
             if (req.files !== null) {
                 fs.unlink(path.resolve(__dirname, '..', 'static', fileName), (err) => {
