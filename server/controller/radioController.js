@@ -7,7 +7,6 @@ const {Country} = require("../models/country");
 const {Language} = require("../models/language");
 const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
-const http = require('http');
 
 const icy = require('icy');
 
@@ -17,12 +16,16 @@ class RadioController {
         try {
             let radio = await Radio.findOne({title: req.body.title});
             if (radio) return res.status(409).send({message: "Радиостанция с данным названием уже существует!"});
+            radio = await Radio.findOne({radioLinkName: req.body.radioLinkName});
+            if (radio) return res.status(409).send({message: "Радиостанция с данной ссылкой уже существует!"});
+
             const {image} = req.files
             let fileName = uuid.v4() + ".jpg"
             await image.mv(path.resolve(__dirname, '..', 'static', fileName))
             radio = await new Radio({
                 title: req.body.title,
                 radio: req.body.radio,
+                radioLinkName: req.body.radioLinkName,
                 language: req.body.language_id,
                 genre: req.body.genre_id,
                 country: req.body.country_id,
@@ -117,6 +120,22 @@ class RadioController {
         }
     }
 
+
+    async getOneByLink(req, res) {
+        const link = req.params.link;
+        if (!link) res.status(400).json('None Link')
+        try {
+            let radioStation = await Radio.findOne({radioLinkName: link})
+            let genre = await Genre.findById(radioStation.genre.toString())
+            let country = await Country.findById(radioStation.country.toString())
+            let language = await Language.findById(radioStation.language.toString())
+            return res.json([radioStation, genre, country, language])
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({message: 'Internal server error'});
+        }
+    }
+
     async getFavorites(req, res) {
         let ids = req.body.ids; // ids - это массив id, переданный из клиента, разделенный запятыми
         try {
@@ -139,10 +158,6 @@ class RadioController {
             const url = req.body.radio;
             const id = req.body.id;
             if (!url) res.status(400).json('None url')
-            // let radioStation = await Radio.findById(req.body.id);
-            // console.log(radioStation)
-            // radioStation.onlineCount = radioStation.onlineCount + 1;
-            // await radioStation.save()
             if (radioOnlineMap.has(id)) {
                 const onlineCount = radioOnlineMap.get(id);
                 radioOnlineMap.set(id, onlineCount + 1);
@@ -161,7 +176,7 @@ class RadioController {
                     });
                 });
             });
-            console.log(parsedMetadata)
+            //console.log(parsedMetadata)
             return res.json(parsedMetadata);
         } catch (err) {
             console.error('Ошибка при получении потока:', err);
@@ -199,7 +214,9 @@ class RadioController {
 
     async update(req, res) {
         try {
-            let radio = await Radio.findById(req.body.id);
+            let radio = await Radio.findOne({radioLinkName: req.body.radioLinkName});
+            if (radio) return res.status(409).send({message: "Радиостанция с данной ссылкой уже существует!"});
+            radio = await Radio.findById(req.body.id);
             if (!radio) return res.status(409).send({message: "Радиостанция с данным названием не существует!"});
             let fileName = req.body.imageName
             if (req.files !== null) {
@@ -226,6 +243,7 @@ class RadioController {
             }
             radio.title = req.body.title
             radio.radio = req.body.radio
+            radio.radioLinkName = req.body.radioLinkName
             radio.language = req.body.language_id
             radio.genre = req.body.genre_id
             radio.country = req.body.country_id

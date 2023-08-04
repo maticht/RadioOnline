@@ -24,7 +24,7 @@ import SendErrorMessage from "../../components/modals/SendErrorMessage";
 
 import {
     fetchCurrentMusicName,
-    fetchOneRadio,
+    fetchOneRadio, fetchOneRadioByLink,
     getAllCountries,
     getAllGenres,
     getFavoritesRadios,
@@ -169,7 +169,7 @@ const HomeScreen = observer(() => {
 
     useEffect(() => {
         if (typeof (params.radioId) !== "undefined") {
-            fetchOneRadio(params.radioId).then(data => {
+            fetchOneRadioByLink(params.radioId).then(data => {
                 setSelectedRadio(data[0]);
                 setRadioOnline(data[0].online);
                 setRatingArrUs(data[0].rating);
@@ -263,9 +263,9 @@ const HomeScreen = observer(() => {
                 audioRef.current.play();
             });
             if (isFav || isFavWithId) {
-                navigation(`/favorites/${r.id}`)
+                navigation(`/favorites/${r.radioLinkName}`)
             } else {
-                navigation(`/${r.id}`)
+                navigation(`/${r.radioLinkName}`)
             }
 
         }

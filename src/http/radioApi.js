@@ -83,6 +83,11 @@ export const fetchOneRadio = async (id) => {
     return data
 }
 
+export const fetchOneRadioByLink = async (link) => {
+    const {data} = await $host.get('api/radio/link/' + link)
+    return data
+}
+
 export const fetchCurrentMusicName = async (radio) => {
     const {data} = await $host.post('api/radio/musicName/' + radio.id, radio)
     return data

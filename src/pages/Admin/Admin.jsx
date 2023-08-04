@@ -46,6 +46,7 @@ const Admin = observer(() => {
     const [selectedRadio, setSelectedRadio] = useState(null);
     const [title, setTitle] = useState('')
     const [radioWave, setRadioWave] = useState('')
+    const [radioLinkName, setRadioLinkName]= useState('')
     const [updGenre, setUpdGenre] = useState('')
     const [updCountry, setUpdCountry] = useState('')
     const [updLanguage, setUpdLanguage] = useState('')
@@ -145,7 +146,8 @@ const Admin = observer(() => {
             setUpdLanguage(data[3])
             setTitle(r.title)
             setRadioWave(r.radio)
-            console.log()
+            setRadioLinkName(r.radioLinkName)
+            console.log(data[0], data[1], data[2], data[3])
         })
     }
 
@@ -171,6 +173,7 @@ const Admin = observer(() => {
         formData.append('id', id)
         formData.append('title', title)
         formData.append('radio', radioWave)
+        formData.append('radioLinkName', radioLinkName)
         formData.append('image', file)
         formData.append('imageName', selectedRadio.image)
         formData.append('country_id', updCountry.id)
@@ -295,6 +298,15 @@ const Admin = observer(() => {
                                                     value={radioWave}
                                                     onChange={e => setRadioWave(e.target.value)}
                                                     placeholder={selectedRadio.radio}
+                                                    className='admin-input'
+                                                />
+                                            </Form>
+                                            <Form className='admin-input-block'>
+                                                <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Отображение:</p>
+                                                <Form.Control
+                                                    value={radioLinkName}
+                                                    onChange={e => setRadioLinkName(e.target.value)}
+                                                    placeholder={selectedRadio.radioLinkName}
                                                     className='admin-input'
                                                 />
                                             </Form>

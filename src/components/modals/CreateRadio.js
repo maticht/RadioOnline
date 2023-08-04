@@ -12,6 +12,7 @@ const CreateRadio = observer(({show, onHide}) => {
     const param = useParams()
     const [title, setTitle] = useState('')
     const [radio, setRadio] = useState('')
+    const [radioLinkName, setRadioLinkName] = useState('')
     const [genreToAdd, setGenreToAdd] =useState('')
     const[countryToAdd, setCountryToAdd] =useState('')
     const[languageToAdd, setLanguageToAdd] = useState('')
@@ -51,6 +52,7 @@ const CreateRadio = observer(({show, onHide}) => {
         const formData = new FormData()
         formData.append('title', title)
         formData.append('radio', radio)
+        formData.append('radioLinkName', radioLinkName)
         formData.append('image', file)
         formData.append('country_id', countryToAdd.id)
         formData.append('genre_id', genreToAdd.id)
@@ -86,6 +88,13 @@ const CreateRadio = observer(({show, onHide}) => {
                         placeholder="Введите ссылку на радиостанцию"
                         style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
                     />
+                    <Form.Control
+                    value={radioLinkName}
+                    onChange={e => setRadioLinkName(e.target.value)}
+                    className="mt-3"
+                    placeholder="Вид ссылки для отображения в адресной строке"
+                    style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                />
                     <Col className="dropdown-modal-block">
                         <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getGenres}>
                             <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" >
