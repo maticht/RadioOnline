@@ -21,8 +21,8 @@ const CreateGenre = ({show, onHide}) => {
     const [value, setValue] = useState('')
     const addGenre = async () => {
         await createGenre({name: value}).then(data => {
+            alert(data.message)
             setValue('')
-            onHide()
         });
         await getAllGenres().then(data => {
             radioStation.setGenres(data)

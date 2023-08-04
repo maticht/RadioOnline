@@ -4,7 +4,7 @@ class LanguageController {
     async create(req, res, next) {
         try {
             let country = await Language.findOne({name: req.body.name});
-            if (country) return res.status(409).send({message: "Язык уже существует!"});
+            if (country) return res.status(201).send({message: "Язык уже существует!"});
             await new Language({name: req.body.name}).save();
             return res.status(201).send({message: "Язык добавлен успешно"});
         } catch (error) {

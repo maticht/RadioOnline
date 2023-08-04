@@ -4,7 +4,7 @@ class GenreController {
     async create(req, res, next) {
         try {
             let country = await Genre.findOne({name: req.body.name});
-            if (country) return res.status(409).send({message: "Жанр уже существует!"});
+            if (country) return res.status(201).send({message: "Жанр уже существует!"});
             await new Genre({name: req.body.name}).save();
             return res.status(201).send({message: "Жанр добавлен успешно"});
         } catch (error) {

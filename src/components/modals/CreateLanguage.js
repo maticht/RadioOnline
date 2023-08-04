@@ -18,8 +18,8 @@ const CreateLanguage = ({show, onHide}) => {
 
     const addLanguage = async () => {
         await createLanguage({name: value}).then(data => {
+            alert(data.message)
             setValue('')
-            onHide()
         });
         await getAllLanguages().then(data => {
             radioStation.setLanguages(data)

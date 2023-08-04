@@ -57,7 +57,9 @@ const CreateRadio = observer(({show, onHide}) => {
         formData.append('country_id', countryToAdd.id)
         formData.append('genre_id', genreToAdd.id)
         formData.append('language_id',languageToAdd.id)
-        createRadio(formData).then(data => onHide())
+        createRadio(formData).then(data => {
+            alert(data.message)
+            onHide()})
     }
 
     return (

@@ -46,7 +46,7 @@ const Admin = observer(() => {
     const [selectedRadio, setSelectedRadio] = useState(null);
     const [title, setTitle] = useState('')
     const [radioWave, setRadioWave] = useState('')
-    const [radioLinkName, setRadioLinkName]= useState('')
+    const [radioLinkName, setRadioLinkName] = useState('')
     const [updGenre, setUpdGenre] = useState('')
     const [updCountry, setUpdCountry] = useState('')
     const [updLanguage, setUpdLanguage] = useState('')
@@ -179,7 +179,10 @@ const Admin = observer(() => {
         formData.append('country_id', updCountry.id)
         formData.append('genre_id', updGenre.id)
         formData.append('language_id', updLanguage.id)
-        updateRadio(formData).then(response => refreshPage())
+        updateRadio(formData).then(response => {
+            alert(response.message)
+            refreshPage()
+        })
     }
 
 
@@ -282,7 +285,7 @@ const Admin = observer(() => {
                             {selectedRadio && (
                                 <div className="largeRadioBlockAdmin">
                                     <div className={'select-admin-radio-info'}>
-                                        <div className="d-flex justify-content-between select-admin-radio-inputs" >
+                                        <div className="d-flex justify-content-between select-admin-radio-inputs">
                                             <Form className='admin-input-block'>
                                                 <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Название:</p>
                                                 <Form.Control
@@ -325,8 +328,10 @@ const Admin = observer(() => {
                                                 <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
                                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                                 }} onClick={getGenres}>
-                                                    <DropdownToggle className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updGenre.name || 'жанр'}</DropdownToggle>
-                                                    <DropdownMenu className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                    <DropdownToggle
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updGenre.name || 'жанр'}</DropdownToggle>
+                                                    <DropdownMenu
+                                                        className="custom-dropdown-menu custom-admin-dropdown-menu">
                                                         {radioStation.genres.map(genre =>
                                                             <Dropdown.Item onClick={() => setUpdGenre(genre)}
                                                                            key={genre.id}> {genre.name} </Dropdown.Item>
@@ -336,19 +341,23 @@ const Admin = observer(() => {
                                                 <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
                                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                                 }} onClick={getCountries}>
-                                                    <DropdownToggle className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updCountry.name || 'страна'}</DropdownToggle>
-                                                    <DropdownMenu className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                    <DropdownToggle
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updCountry.name || 'страна'}</DropdownToggle>
+                                                    <DropdownMenu
+                                                        className="custom-dropdown-menu custom-admin-dropdown-menu">
                                                         {radioStation.countries.map(country =>
                                                             <Dropdown.Item onClick={() => setUpdCountry(country)}
                                                                            key={country.id}> {country.name} </Dropdown.Item>
                                                         )}
                                                     </DropdownMenu>
                                                 </Dropdown>
-                                                <Dropdown className="custom-dropdown custom-admin-dropdown"  style={{
+                                                <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
                                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                                 }} onClick={getLanguages}>
-                                                    <DropdownToggle className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updLanguage.name || 'язык'}</DropdownToggle>
-                                                    <DropdownMenu className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                    <DropdownToggle
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updLanguage.name || 'язык'}</DropdownToggle>
+                                                    <DropdownMenu
+                                                        className="custom-dropdown-menu custom-admin-dropdown-menu">
                                                         {radioStation.languages.map(language =>
                                                             <Dropdown.Item onClick={() => setUpdLanguage(language)}
                                                                            key={language.id}> {language.name} </Dropdown.Item>
@@ -487,18 +496,35 @@ const Admin = observer(() => {
                 }}>
                     <div style={{
                         display: "flex",
-                        padding:"30px 50px",
+                        padding: "30px 50px",
                         backgroundColor: '#fff',
-                        borderRadius:'10px',
+                        borderRadius: '10px',
                         justifyContent: 'center',
                         alignItems: 'center',
                         flexDirection: 'column',
                         alignContent: 'center',
-                        margin:'10px 20px'
+                        margin: '10px 20px'
                     }}>
-                        <h1 style={{fontWeight: '900', color: '#06B5AE', marginBottom:'20px', fontSize: '100px', textAlign:'center'}}>404</h1>
-                        <h4 style={{fontWeight: '700', color: '#000000', marginBottom:'20px', textAlign:'center'}}>Страница не найдена</h4>
-                        <p style={{fontSize: '18px', fontWeight: '400', color: '#000000', marginBottom:'20px', textAlign:'center'}}>Перейдите на главную или подтвердите, что вы администратор ещё раз</p>
+                        <h1 style={{
+                            fontWeight: '900',
+                            color: '#06B5AE',
+                            marginBottom: '20px',
+                            fontSize: '100px',
+                            textAlign: 'center'
+                        }}>404</h1>
+                        <h4 style={{
+                            fontWeight: '700',
+                            color: '#000000',
+                            marginBottom: '20px',
+                            textAlign: 'center'
+                        }}>Страница не найдена</h4>
+                        <p style={{
+                            fontSize: '18px',
+                            fontWeight: '400',
+                            color: '#000000',
+                            marginBottom: '20px',
+                            textAlign: 'center'
+                        }}>Перейдите на главную или подтвердите, что вы администратор ещё раз</p>
                         <Link to="/" style={{
                             border: 'none',
                             borderRadius: '10px',
@@ -506,8 +532,8 @@ const Admin = observer(() => {
                             color: '#fff',
                             fontWeight: "500",
                             padding: '10px 20px',
-                            marginBottom:'20px',
-                            textDecoration:"none"
+                            marginBottom: '20px',
+                            textDecoration: "none"
                         }}>
                             На главную
                         </Link>
