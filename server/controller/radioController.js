@@ -5,6 +5,7 @@ const {Types} = require("mongoose");
 const {Genre} = require("../models/genre");
 const {Country} = require("../models/country");
 const {Language} = require("../models/language");
+const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
 const http = require('http');
 
@@ -19,7 +20,7 @@ class RadioController {
             const {image} = req.files
             let fileName = uuid.v4() + ".jpg"
             await image.mv(path.resolve(__dirname, '..', 'static', fileName))
-            await new Radio({
+            radio = await new Radio({
                 title: req.body.title,
                 radio: req.body.radio,
                 language: req.body.language_id,
@@ -27,6 +28,7 @@ class RadioController {
                 country: req.body.country_id,
                 image: fileName,
             }).save();
+            radioOnlineMap.set(radio.id, 0);
             let genre = await Genre.findById(req.body.genre_id);
             genre.numberOfRS = genre.numberOfRS + 1;
             await genre.save();
@@ -135,10 +137,18 @@ class RadioController {
     async getRadioMetadata(req, res) {
         try {
             const url = req.body.radio;
+            const id = req.body.id;
             if (!url) res.status(400).json('None url')
-            let radioStation = await Radio.findById(req.body.id);
-            radioStation.onlineCount = radioStation.onlineCount + 1;
-            await radioStation.save()
+            // let radioStation = await Radio.findById(req.body.id);
+            // console.log(radioStation)
+            // radioStation.onlineCount = radioStation.onlineCount + 1;
+            // await radioStation.save()
+            if (radioOnlineMap.has(id)) {
+                const onlineCount = radioOnlineMap.get(id);
+                radioOnlineMap.set(id, onlineCount + 1);
+            } else {
+                console.log('Объект с указанным id не найден.');
+            }
             const parsedMetadata = await new Promise((resolve, reject) => {
                 icy.get(url, (res) => {
                     res.on('metadata', (metadata) => {
@@ -151,7 +161,6 @@ class RadioController {
                     });
                 });
             });
-
             console.log(parsedMetadata)
             return res.json(parsedMetadata);
         } catch (err) {
@@ -161,54 +170,13 @@ class RadioController {
     }
 
 
-    // async getAudioBitrate(req, res) {
-    //     const url = req.body.radio;
-    //     if (!url) res.status(400).json('None url');
-    //
-    //     try {
-    //         const request = http.get(url, (response) => {
-    //             const icyMetaInt = response.headers['icy-metaint'];
-    //             let icyMetadata = '';
-    //             let bitRate = null;
-    //
-    //             response.on('data', (chunk) => {
-    //                 if (!bitRate && icyMetaInt && icyMetadata.length < icyMetaInt) {
-    //                     icyMetadata += chunk.toString();
-    //                 } else if (!bitRate && icyMetaInt && icyMetadata.length === icyMetaInt) {
-    //                     // Обработка метаданных
-    //
-    //                     const metadataStr = icyMetadata.slice(icyMetadata.indexOf('StreamTitle=') + 12);
-    //                     const metadataArr = metadataStr.split(';');
-    //                     const title = metadataArr[0].trim();
-    //                     const artist = metadataArr[1] ? metadataArr[1].trim() : '';
-    //                     console.log('Title:', title);
-    //                     console.log('Artist:', artist);
-    //
-    //                     // Получение битрейта из метаданных (если предоставлен)
-    //                     const bitrateMatch = /bitrate=(\d+)/i.exec(metadataArr.join(';'));
-    //                     bitRate = bitrateMatch ? parseInt(bitrateMatch[1]) : null;
-    //                     console.log('Bitrate:', bitRate, 'kbps');
-    //                     return res.json(bitRate);
-    //                 }
-    //             });
-    //         });
-    //
-    //         request.on('error', (error) => {
-    //             console.error('Ошибка при получении метаданных:', error);
-    //             return res.status(500).json({ success: false, error: 'Error getting metadata' });
-    //         });
-    //     } catch (err) {
-    //         console.error('Ошибка при получении потока:', err);
-    //         return res.status(500).json({ success: false, error: 'Internal server error' });
-    //     }
-    // }
-
-
     async delete(req, res) {
         try {
             const {id} = req.body
             if (!id) res.status(400).json('None Id')
             const deletedDocument = await Radio.findByIdAndDelete(id);
+            radioOnlineMap.delete(id)
+            console.log(radioOnlineMap)
             let genre = await Genre.findById(deletedDocument.genre);
             genre.numberOfRS = genre.numberOfRS - 1;
             await genre.save();

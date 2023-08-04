@@ -190,7 +190,7 @@ const HomeScreen = observer(() => {
                     setCurrentMusicName(data.StreamTitle);
                     console.log(data);
                 });
-            }, 2000);
+            }, 1000);
 
             return () => clearInterval(interval);
         }
@@ -259,7 +259,8 @@ const HomeScreen = observer(() => {
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
                 radioStation.setSelectGenre(data[1])
-                setIsPlaying(false);
+                setIsPlaying(true);
+                audioRef.current.play();
             });
             if (isFav || isFavWithId) {
                 navigation(`/favorites/${r.id}`)
