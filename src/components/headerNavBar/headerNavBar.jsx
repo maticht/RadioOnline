@@ -8,9 +8,10 @@ import {Context} from "../../index";
 import {Button, Dropdown} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
-import {getAllCountries, getAllGenres} from "../../http/radioApi";
+import {deleteCustomRating, getAllCountries, getAllGenres} from "../../http/radioApi";
 import axios from "axios";
 import OpenMessages from "../modals/OpenMessages/OpenMessages";
+import {getAllCustomErrors, getAllCustomRating} from "../../http/radioApi";
 
 const HeaderNavBar = observer(({setSelectedRadio}) => {
     const param = useParams();
@@ -24,7 +25,20 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
     const isHomeScreenWithId = location.pathname === `/${param.radioId}`
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${param.radioId}`
-    const [messageVisible, setMessageVisible] = useState(false)
+    const [messageVisible, setMessageVisible] = useState(false);
+    const [errMessagesLs, setErrMessagesLs] = useState([]);
+    const [ratMessagesLs, setRatMessagesLs] = useState([]);
+    const [allMessagesLs, setAllMessagesLs] = useState([]);
+
+
+    useEffect(() => {
+        Promise.all([getAllCustomRating(), getAllCustomErrors()]).then(([ratingData, errorData]) => {
+            setRatMessagesLs(ratingData.length);
+            setErrMessagesLs(errorData.length);
+            setAllMessagesLs(ratingData.length + errorData.length);
+        });
+    }, []);
+
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault()
@@ -214,7 +228,27 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                     {!isFav && !isFavWithId ?
                         <div className={"logInBlock"} onClick={() => setMessageVisible(true)}>
                             <p className={"accountText"} style={{marginBottom:'5px'}}>Входящие</p>
-                            <button className={"msAccountBtn"}></button>
+                            <div style={{ position: 'relative' }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '-5px',
+                                    right: '-3px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    height: '15px',
+                                    padding: '0 5px',
+                                    borderRadius: '15px',
+                                    backgroundColor: '#06B5AE',
+                                    fontWeight: '500',
+                                    color: '#fff',
+                                    fontSize: '10px',
+                                    textAlign: 'center'
+                                }}>
+                                    {allMessagesLs}
+                                </div>
+                                <button className={"msAccountBtn"}></button>
+                            </div>
                         </div>
                         : <p style={{
                             fontSize: '20px',
