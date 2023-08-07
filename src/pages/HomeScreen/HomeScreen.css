@@ -257,7 +257,7 @@ textarea::placeholder{
         background-position: 80% 50%;
     }
     100% {
-        background-position: -100% 50%;
+        background-position: -110% 50%;
     }
 }
 @keyframes marquee {

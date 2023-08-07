@@ -107,6 +107,21 @@ export const getAllCustomErrors = async () => {
     return data
 }
 
+export const createCustomRating = async (customError) => {
+    const {data} = await $authHost.post('api/customRating', customError)
+    return data
+}
+
+export const deleteCustomRating = async (id) => {
+    const {data} = await $authHost.post('api/customRating/delete', id)
+    return data
+}
+
+export const getAllCustomRating = async () => {
+    const {data} = await $host.get('api/customRating')
+    return data
+}
+
 // export const calculateAudioBitrate = async (radio)=>{
 //     const {data} = await $host.post('api/radio/bitrate/'+radio.id, radio)
 //     return data

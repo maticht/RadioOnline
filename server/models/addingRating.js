@@ -10,9 +10,9 @@ router.put("/:id", async (req, res) => {
         if (!radio.rating) {
             radio.rating = [];
         }
-        const { userId, value, description, name, commentatorId} = req.body;
+        const { userId, value, description, name, email, commentatorId} = req.body;
 
-        radio.rating.push({ user: userId, value, description, name, commentatorId });
+        radio.rating.push({ user: userId, value, description, name, email, commentatorId });
         const updatedUser = await radio.save();
         return res.status(200).json({ data: updatedUser });
     } catch (error) {
