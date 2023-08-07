@@ -5,11 +5,12 @@ import React, {useContext, useEffect, useState} from "react";
 import searchBtn from "../../img/search.svg";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
-import {Dropdown} from "react-bootstrap";
+import {Button, Dropdown} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import {getAllCountries, getAllGenres} from "../../http/radioApi";
 import axios from "axios";
+import OpenMessages from "../modals/OpenMessages/OpenMessages";
 
 const HeaderNavBar = observer(({setSelectedRadio}) => {
     const param = useParams();
@@ -23,6 +24,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
     const isHomeScreenWithId = location.pathname === `/${param.radioId}`
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${param.radioId}`
+    const [messageVisible, setMessageVisible] = useState(false)
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault()
@@ -73,7 +75,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
         setSelectedRadio()//убирает значение выбранного радио это колбек функция
         radioStation.setSearchName('')
         radioStation.setPage(1)
-        radioStation.setLimit(42)
+        radioStation.setLimit(42);
         radioStation.setSelectGenre({})
         radioStation.setSelectCountry({})
         radioStation.setSelectLanguage({})
@@ -125,14 +127,33 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                     <img src={logo} alt={"logo"}
                          onClick={refresh}/>
                 </Link>
-                <div className={'navBarBlock-fav'}>
-                    {!isFav && !isFavWithId ?
-                        <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
-                            <p className={"accountText"}>Избранное</p>
-                            <button className={"accountBtn"}></button>
-                        </Link>
-                        : null}
-                </div>
+                {!isAdminLoc ? (
+                    <div className={'navBarBlock-fav'}>
+                        {!isFav && !isFavWithId ?
+                            <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                                <p className={"accountText"}>Избранное</p>
+                                <button className={"accountBtn"}></button>
+                            </Link>
+                            : null}
+                    </div>
+                ) : (
+                    <div className={'navBarBlock-fav'}>
+                        {!isFav && !isFavWithId ?
+                            <div className={"logInBlock"} onClick={() => setMessageVisible(true)}>
+                                <p className={"accountText"} style={{marginBottom:'5px'}}>Входящие</p>
+                                <button className={"msAccountBtn"}></button>
+                            </div>
+                            : <p style={{
+                                fontSize: '20px',
+                                margin: '0 0 px 0',
+                                fontStyle: 'normal',
+                                fontWeight: '700',
+                                lineHeight: 'normal'
+                            }}>{isFav || isFavWithId ? 'Избранное' : ` `}</p>}
+                        <OpenMessages show={messageVisible} onHide={() => setMessageVisible(false)}/>
+                    </div>
+                )}
+
             </div>
             <div>
                 {!isFav && !isFavWithId ?
@@ -173,20 +194,38 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                         </div>
                     </div> : null}
             </div>
-            <div className={'fav-btn'}>
-                {!isFav && !isFavWithId ?
-                    <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
-                        <p className={"accountText"}>Избранное</p>
-                        <button className={"accountBtn"}></button>
-                    </Link>
-                    : <p style={{
-                        fontSize: '20px',
-                        margin: '0 0 px 0',
-                        fontStyle: 'normal',
-                        fontWeight: '700',
-                        lineHeight: 'normal'
-                    }}>{isFav || isFavWithId ? 'Избранное' : ` `}</p>}
-            </div>
+            {!isAdminLoc ? (
+                <div className={'fav-btn'}>
+                    {!isFav && !isFavWithId ?
+                        <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                            <p className={"accountText"}>Избранное</p>
+                            <button className={"accountBtn"}></button>
+                        </Link>
+                        : <p style={{
+                            fontSize: '20px',
+                            margin: '0 0 px 0',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            lineHeight: 'normal'
+                        }}>{isFav || isFavWithId ? 'Избранное' : ` `}</p>}
+                </div>
+            ) : (
+                <div className={'fav-btn'}>
+                    {!isFav && !isFavWithId ?
+                        <div className={"logInBlock"} onClick={() => setMessageVisible(true)}>
+                            <p className={"accountText"} style={{marginBottom:'5px'}}>Входящие</p>
+                            <button className={"msAccountBtn"}></button>
+                        </div>
+                        : <p style={{
+                            fontSize: '20px',
+                            margin: '0 0 px 0',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            lineHeight: 'normal'
+                        }}>{isFav || isFavWithId ? 'Избранное' : ` `}</p>}
+                    <OpenMessages show={messageVisible} onHide={() => setMessageVisible(false)}/>
+                </div>
+            )}
         </div>
     );
 });

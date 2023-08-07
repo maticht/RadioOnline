@@ -4,6 +4,7 @@ import Skeleton from 'react-loading-skeleton'
 import HeaderNavBar from '../../components/headerNavBar/headerNavBar';
 import {createUseStyles} from "react-jss";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import {createCustomRating} from "../../http/radioApi";
 import axios from "axios";
 import goldStar from "../../img/goldStar.svg";
 import online from "../../img/online.svg";
@@ -21,8 +22,10 @@ import errormsg from "../../img/errormsg.svg";
 import share from "../../img/share.svg";
 import {Context} from "../../index";
 import SendErrorMessage from "../../components/modals/SendErrorMessage";
+import SendRatingMessage from "../../components/modals/SendRatingMessage";
 
 import {
+    createCustomError,
     fetchCurrentMusicName,
     fetchOneRadio, fetchOneRadioByLink,
     getAllCountries,
@@ -63,11 +66,13 @@ const HomeScreen = observer(() => {
     const [rating, setRating] = useState(0);
     const [ratingDesc, setRatingDesc] = useState({description: ""});
     const [ratingName, setRatingName] = useState({name: ""});
+    const [ratingEmail, setRatingEmail] = useState({email: ""});
     const [volume, setVolume] = useState(50);
     const [bgSize, setBgSize] = useState('50% 100%');
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
     const navigation = useNavigate();
     const location = useLocation();
+    const [isFavorite, setIsFavorite] = useState(false);
     const [sendError, setSendError] = useState(false)
     const storedFavorites = localStorage.getItem('favorites');
     let favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
@@ -75,6 +80,7 @@ const HomeScreen = observer(() => {
     const [ratingArrUS, setRatingArrUs] = useState([]);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [isLoading, setIsLoading] = useState(false);
+    const [successfulAddRating, setSuccessfulAddRating] = useState(false);
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -113,6 +119,7 @@ const HomeScreen = observer(() => {
             return index % 6 === 5 ? '0px' : '20px';
         }
     };
+
 
     const lowerSound = () => {
         setVolume(0);
@@ -194,12 +201,19 @@ const HomeScreen = observer(() => {
         }
     }, [selectedRadio]);
 
-    const toggleRate = async (userid, rating, description, name) => {
+    const toggleRate = async (userid, rating, description, name, email) => {
         try {
-            const url = `http://localhost:8081/addingRating/${userid}`;
-            const {data: res} = await axios.put(url, {value: rating, description: description, name: name});
-            const nemRatingArr = [...ratingArrUS, {value: rating, description: description, name: name}]
-            setRatingArrUs(nemRatingArr)
+            // const url = `http://localhost:8081/addingRating/${userid}`;
+            // const {data: res} = await axios.put(url, {value: rating, description: description, name: name, email: email});
+            // const nemRatingArr = [...ratingArrUS, {value: rating, description: description, name: name, email: email,}];
+            await createCustomRating({
+                value: rating,
+                description: description,
+                commentatorId: userid,
+                name: name,
+                email: email,
+            })
+            // setRatingArrUs(nemRatingArr)
         } catch (error) {
             console.log(error);
         }
@@ -218,21 +232,30 @@ const HomeScreen = observer(() => {
         const {name, value} = input;
         setRatingName({...ratingName, [name]: value});
     };
+    const handleChangeEmail = ({currentTarget: input}) => {
+        const {name, value} = input;
+        setRatingEmail({...ratingEmail, [name]: value});
+    };
 
     const handleAddRating = () => {
-        if (ratingDesc.description === '' || ratingName.name === '') {
+        if (ratingDesc.description === '' || ratingName.name === '' || ratingEmail.email === '') {
             alert('Заполните поля ввода для добавления отзыва')
         } else {
-            toggleRate(selectedRadio._id, rating, ratingDesc.description, ratingName.name)
+            toggleRate(selectedRadio._id, rating, ratingDesc.description, ratingName.name, ratingEmail.email)
                 .then(() => {
                     setRating(0);
                     setRatingDesc({description: ""});
                     setRatingName({name: ""});
+                    setRatingEmail({email: ""});
                 })
                 .catch(error => {
                     console.log(error);
                 });
-            setLeaveReview(false)
+            setLeaveReview(false);
+            setSuccessfulAddRating(true);
+            setTimeout(() => {
+                setSuccessfulAddRating(false);
+            }, 5000);
         }
     };
     const handleRate = (value) => {
@@ -392,7 +415,7 @@ const HomeScreen = observer(() => {
                                                                 }}>
                                                                     {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
                                                                 </p>
-                                                                <p style={{margin: '2px 0 0 5px', fontSize: '12px'}}>
+                                                                <p style={{margin: '0 0 0 5px', fontSize: '12px'}}>
                                                                     ({ratingArrUS.length} отзывов)
                                                                 </p>
                                                             </div>
@@ -575,6 +598,11 @@ const HomeScreen = observer(() => {
                                     <SendErrorMessage
                                         show={sendError}
                                         onHide={() => setSendError(false)}
+                                        radio={selectedRadio}
+                                    />
+                                    <SendRatingMessage
+                                        show={successfulAddRating}
+                                        onHide={() => setSuccessfulAddRating(false)}
                                         radio={selectedRadio}
                                     />
                                 </div>
@@ -774,6 +802,24 @@ const HomeScreen = observer(() => {
                                                 name="name"
                                                 onChange={handleChangeName}
                                                 value={ratingName.name}
+                                                required
+                                                className="input"
+                                                style={{width:'100%'}}
+                                            />
+                                        </div>
+                                        <div style={{
+                                            position: 'relative',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                            marginTop: '5px'
+                                        }}>
+                                            <input
+                                                type="text"
+                                                placeholder="Email"
+                                                name="email"
+                                                onChange={handleChangeEmail}
+                                                value={ratingEmail.email}
                                                 required
                                                 className="input"
                                                 style={{width:'100%'}}

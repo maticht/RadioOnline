@@ -96,12 +96,12 @@ const CreateRadio = observer(({show, onHide}) => {
                     value={radioLinkName}
                     onChange={e => setRadioLinkName(e.target.value)}
                     className="mt-3"
-                    placeholder="Вид ссылки для отображения в адресной строке"
+                    placeholder="Название радиостанции для адресной строки"
                     style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
                 />
                     <Col className="dropdown-modal-block">
                         <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getGenres}>
-                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" >
+                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>
                                 {genreToAdd.name || 'Выберите жанр'}
                             </DropdownToggle>
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
@@ -113,7 +113,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             </DropdownMenu>
                         </Dropdown>
                         <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getCountries}>
-                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" >{ countryToAdd.name|| 'Выберите страну'}</DropdownToggle>
+                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{ countryToAdd.name|| 'Выберите страну'}</DropdownToggle>
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.countries.map(country =>
                                     <Dropdown.Item onClick={() => setCountryToAdd(country)}
@@ -122,7 +122,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             </DropdownMenu>
                         </Dropdown>
                         <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getLanguages}>
-                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2">{languageToAdd.name || 'Выберите язык'}</DropdownToggle>
+                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{languageToAdd.name || 'Выберите язык'}</DropdownToggle>
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.languages.map(language =>
                                     <Dropdown.Item onClick={() => setLanguageToAdd(language)}

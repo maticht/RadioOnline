@@ -317,7 +317,7 @@ const Admin = observer(() => {
                                                     className='admin-input'
                                                 />
                                             </Form>
-                                            <Form className='admin-input-block'>
+                                            <Form className='admin-input-block'style={{marginBottom:'0'}}>
                                                 <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Файл:</p>
                                                 <Form.Control
                                                     type="file"
@@ -327,13 +327,13 @@ const Admin = observer(() => {
                                             </Form>
                                         </div>
                                         <div className={'dropdown-image-block'}>
-                                            <div className="d-flex justify-content-between custom-dropdown-block"
+                                            <div className="d-flex justify-content-start custom-dropdown-block"
                                                  style={{display: 'flex', flexDirection: 'column'}}>
                                                 <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
                                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                                 }} onClick={getGenres}>
                                                     <DropdownToggle
-                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updGenre.name || 'жанр'}</DropdownToggle>
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updGenre.name || 'жанр'}</DropdownToggle>
                                                     <DropdownMenu
                                                         className="custom-dropdown-menu custom-admin-dropdown-menu">
                                                         {radioStation.genres.map(genre =>
@@ -346,7 +346,7 @@ const Admin = observer(() => {
                                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                                 }} onClick={getCountries}>
                                                     <DropdownToggle
-                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updCountry.name || 'страна'}</DropdownToggle>
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updCountry.name || 'страна'}</DropdownToggle>
                                                     <DropdownMenu
                                                         className="custom-dropdown-menu custom-admin-dropdown-menu">
                                                         {radioStation.countries.map(country =>
@@ -359,7 +359,7 @@ const Admin = observer(() => {
                                                     boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                                 }} onClick={getLanguages}>
                                                     <DropdownToggle
-                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle">{updLanguage.name || 'язык'}</DropdownToggle>
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updLanguage.name || 'язык'}</DropdownToggle>
                                                     <DropdownMenu
                                                         className="custom-dropdown-menu custom-admin-dropdown-menu">
                                                         {radioStation.languages.map(language =>
@@ -379,11 +379,11 @@ const Admin = observer(() => {
                                             </div>
                                         </div>
                                     </div>
-                                    <Col className="d-flex justify-content-between">
+                                    <Col className="d-flex justify-content-between admin-btns-block">
                                         <Button
                                             variant={"outline-dark"}
-                                            style={{width: 'calc(50% - 8px)', margin: '15px 0 0 0'}}
-                                            className="admin-additional-button"
+                                            style={{margin: '15px 0 0 0'}}
+                                            className="admin-additional-button admin-btn"
                                             onClick={() => deleteR(selectedRadio.id)}
 
                                         >
@@ -391,8 +391,8 @@ const Admin = observer(() => {
                                         </Button>
                                         <Button
                                             variant={"outline-dark"}
-                                            style={{width: 'calc(50% - 8px)', margin: '15px 0 0 0'}}
-                                            className="main-admin-button"
+                                            style={{margin: '15px 0 0 0'}}
+                                            className="main-admin-button admin-btn"
                                             onClick={() => updateR(selectedRadio.id)}
                                         >
                                             Обновить

@@ -95,12 +95,19 @@ html, body {
     align-items: flex-end;
 }
 .admin-input-block{
+    margin-bottom:10px;
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 .custom-dropdown-block{
     width: 100%;
+}
+.custom-admin-dropdown{
+    margin-bottom: 10px;
+}
+.admin-btn{
+    width: calc(50% - 8px);
 }
 
 @media screen and (max-width: 1030px) {
@@ -109,12 +116,6 @@ html, body {
     }
 }
 @media screen and (max-width: 992px) {
-    .admin-additional-button {
-        width: 100%;
-    }
-    .main-admin-button {
-        width: 100%;
-    }
     .main-admin-button-screen{
         width: 100%;
     }
@@ -157,7 +158,7 @@ html, body {
         width: 270px;
     }
 }
-@media screen and (max-width: 765px) {
+@media screen and (max-width: 770px) {
     .admin-input{
         width: 100%;
         margin-top: 10px;
@@ -199,12 +200,6 @@ html, body {
     }
 }
 @media screen and (max-width: 720px) {
-    .admin-additional-button {
-        width: 100%;
-    }
-    .main-admin-button {
-        width: 100%;
-    }
     .dropdown-modal-block{
         display: flex;
         align-items: flex-start;
@@ -223,13 +218,6 @@ html, body {
     }
 }
 @media screen and (max-width: 360px) {
-    .admin-additional-button {
-        width: 100%;
-    }
-    .main-admin-button {
-        margin-top: 10px;
-        width: 100%;
-    }
 
 }
 @media screen and (max-width: 340px) {
@@ -251,38 +239,23 @@ html, body {
         margin-top: 10px;
         margin-left: -10px;
     }
+    .admin-btns-block{
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-btn{
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 544px) {
-    .admin-additional-button {
-        width: 100%;
-    }
+
     .center-additional-button{
         margin: 0;
-    }
-    .main-admin-button {
-        margin-top: 10px;
-        width: 100%;
-    }
-    .filter-block{
-        width:540px
     }
     .admin-additional-button-block{
         display: flex;
         flex-direction: column;
-    }
-}
-@media screen and (min-width: 544px) and (max-width: 742px) {
-
-    .admin-additional-button {
-        width: 100%;
-    }
-    .main-admin-button {
-        margin-top: 10px;
-        width: 100%;
-    }
-    .filter-block{
-        width:540px
     }
 }
 
