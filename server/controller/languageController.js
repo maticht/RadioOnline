@@ -3,8 +3,8 @@ const {Language} = require("../models/language");
 class LanguageController {
     async create(req, res, next) {
         try {
-            let country = await Language.findOne({name: req.body.name});
-            if (country) return res.json({status: 409, message: "Язык уже существует!"});
+            let language = await Language.findOne({name: req.body.name});
+            if (language) return res.json({status: 409, message: "Язык уже существует!"});
             await new Language({name: req.body.name}).save();
             return res.status(201).send({message: "Язык добавлен успешно"});
         } catch (error) {

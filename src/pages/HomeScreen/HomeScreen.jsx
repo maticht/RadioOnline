@@ -151,7 +151,7 @@ const HomeScreen = observer(() => {
     }, [location.search])
 
     useEffect(() => {
-        setIsLoading(true);
+            setIsLoading(true);
             if (!isFav && !isFavWithId) {
                 getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
                     radioStation.setRadios(data[0])
@@ -372,9 +372,9 @@ const HomeScreen = observer(() => {
                                         </div>
                                         <div className={"sl-radio-info"}>
                                             <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
-                                                <div className={'radioInfo'} >
+                                                <div className={'radioInfo'}>
                                                     <div style={{
-                                                        width:'100%',
+                                                        width: '100%',
                                                         paddingBottom: '20px',
                                                         borderBottom: '1px solid #E9E9E9'
                                                     }}>
@@ -454,7 +454,7 @@ const HomeScreen = observer(() => {
                                                 <div style={{
                                                     display: 'flex',
                                                     flexDirection: 'row',
-                                                    justifyContent:'flex-start',
+                                                    justifyContent: 'flex-start',
                                                     alignItems: 'flex-start',
                                                     marginRight: '-20px'
                                                 }}>
@@ -471,7 +471,7 @@ const HomeScreen = observer(() => {
                                                             fontWeight: '400',
                                                             margin: '1px 0'
                                                         }}>Сейчас играет</p>
-                                                        <div className='musicName' >
+                                                        <div className='musicName'>
                                                             {currentMusicName.length > 32 ? (
                                                                 <p style={{
                                                                     fontSize: '12px',
@@ -591,8 +591,8 @@ const HomeScreen = observer(() => {
                         : null}
                     <div>
                         {isLoading ? (
-                            <div  className={'allRadios'}>{[...Array(24)].map((_, index) => (
-                                <div className={'oneBestSpecialistsBlock'} style={{
+                            <div className={'allRadios'}>{[...Array(24)].map((_, index) => (
+                                <div key={index} className={'oneBestSpecialistsBlock'} style={{
                                     marginRight: handleMarginRight(index),
                                 }}>
                                     <Link style={{
@@ -655,6 +655,7 @@ const HomeScreen = observer(() => {
                         ) : (
                             <div className={'allRadios'}>
                                 {radioStation.radios.map((radio, index) => (
+                                    selectedRadio && selectedRadio.id === radio.id ? null : (
                                     <div
                                         className={'oneBestSpecialistsBlock'}
                                         key={radio.id}
@@ -724,7 +725,7 @@ const HomeScreen = observer(() => {
 
                                         </Link>
                                     </div>
-                                ))}
+                                )))}
                             </div>
                         )}
                     </div>

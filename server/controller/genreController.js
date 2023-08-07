@@ -3,8 +3,8 @@ const {Genre} = require("../models/genre");
 class GenreController {
     async create(req, res, next) {
         try {
-            let country = await Genre.findOne({name: req.body.name});
-            if (country) return res.json({status: 409, message: "Жанр уже существует!"});
+            let genre = await Genre.findOne({name: req.body.name});
+            if (genre) return res.json({status: 409, message: "Жанр уже существует!"});
             await new Genre({name: req.body.name}).save();
             return res.status(201).send({message: "Жанр добавлен успешно"});
         } catch (error) {

@@ -24,7 +24,9 @@ const CreateCountry = ({show, onHide}) => {
     const [value, setValue] = useState('')
     const addCountry = async () => {
         await createCountry({name: value}).then(data => {
-            alert(data.message)
+            if (data.status === 409){
+                alert(data.message)
+            }
             setValue('');
         });
         await getAllCountries().then(data => {
