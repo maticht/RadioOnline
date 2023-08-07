@@ -207,14 +207,14 @@ const OpenMessages = observer(({show, onHide}) => {
                                             Почта отправителя:</p>
                                         {ratMessage.email}
                                     </div>
-                                    <div className={'radio-err-msg'} style={{ margin: '6px 0 0 0px' }}>
+                                    <div className={'radio-err-msg'} style={{ margin: '6px 0 0 0px', display:'flex', flexWrap:'nowrap', flexDirection:'row' }}>
                                         <p style={{ margin: '0px', fontWeight:'600', marginRight:'10px' }}>
                                             Оенка отзыва:</p>
                                         <img src={goldStar} alt="Star"
                                              style={{marginRight: '5px', width: '18px'}}/>
                                         <p style={{margin: '0px', fontWeight: '500',}}>{ratMessage.value}</p>
                                     </div>
-                                    <div className={'radio-err-msg'} style={{ width:'100%',margin: '6px 0 0 0px', display:'flex', flexWrap:'wrap' }}>
+                                    <div className={'radio-err-msg'} style={{ display:'flex',flexDirection:'column', width:'100%',margin: '6px 0 0 0px',wordWrap: 'break-word', wordBreak: 'break-all' }}>
                                         <p style={{ width:'100%',  margin: '0px', fontWeight:'600', marginRight:'10px' }}>
                                             Описание отзыва:</p>
                                         {ratMessage.description}

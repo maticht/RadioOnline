@@ -142,7 +142,7 @@ const HomeScreen = observer(() => {
                 console.log('юз эффект с фав');
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 2000);
+                }, 10);
             })
         } else {
             getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
@@ -151,7 +151,7 @@ const HomeScreen = observer(() => {
                     console.log('запрс из 1 useEffect');
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 2000);
+                }, 10);
                 }
             )
         }
@@ -166,7 +166,7 @@ const HomeScreen = observer(() => {
                     console.log('запрс из 2 useEffect')
                     setTimeout(() => {
                         setIsLoading(false);
-                    }, 2000);
+                    }, 10);
                 })
             }
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
