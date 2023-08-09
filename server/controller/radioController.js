@@ -7,8 +7,27 @@ const {Country} = require("../models/country");
 const {Language} = require("../models/language");
 const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
+const ffmpeg = require('fluent-ffmpeg');
 
-const icy = require('icy');
+const ffmpegPath = 'C:/FFmpeg/bin/ffmpeg';
+const ffprobePath = 'C:/FFmpeg/bin/ffprobe';
+
+ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobePath);
+
+async function getAudioBitrateFromStream(streamUrl) {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(streamUrl, (err, metadata) => {
+            if (err) {
+                console.error(`Ошибка при получении метаданных для ${streamUrl}`);
+                reject(err);
+            } else {
+                const format = metadata.format;
+                resolve(format);
+            }
+        });
+    });
+}
 
 
 class RadioController {
@@ -154,9 +173,9 @@ class RadioController {
     }
 
     async getRadioMetadata(req, res) {
+        const url = req.body.radio;
+        const id = req.body.id;
         try {
-            const url = req.body.radio;
-            const id = req.body.id;
             if (!url) res.status(400).json('None url')
             if (radioOnlineMap.has(id)) {
                 const onlineCount = radioOnlineMap.get(id);
@@ -164,22 +183,19 @@ class RadioController {
             } else {
                 console.log('Объект с указанным id не найден.');
             }
-            const parsedMetadata = await new Promise((resolve, reject) => {
-                icy.get(url, (res) => {
-                    res.on('metadata', (metadata) => {
-                        const parsedMetadata = icy.parse(metadata);
-                        resolve(parsedMetadata);
-
-                    });
-                    res.on('error', (err) => {
-                        reject(err);
-                    });
-                });
-            });
-            //console.log(parsedMetadata)
-            return res.json(parsedMetadata);
+        } catch (e) {
+            console.log(e)
+            return res.status(500).json({success: false, error: 'Internal server error'});
+        }
+        try {
+            const metadata = await getAudioBitrateFromStream(url);
+            if (metadata.tags.StreamTitle) {
+                return res.json({StreamTitle: metadata.tags.StreamTitle});
+            } else {
+                return res.json({StreamTitle: ''});
+            }
         } catch (err) {
-            console.error('Ошибка при получении потока:', err);
+            console.error('Ошибка внутри try-catch:', err);
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
     }

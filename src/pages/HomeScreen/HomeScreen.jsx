@@ -132,10 +132,11 @@ const HomeScreen = observer(() => {
 
 
     useEffect(() => {
-        setIsLoading(true);
+
         getAllCountries().then(data => radioStation.setCountries(data))
         getAllGenres().then(data => radioStation.setGenres(data))
         if (isFav || isFavWithId) {
+            setIsLoading(true);
             getFavoritesRadios(localStorage.getItem('favorites')).then(data => {
                 radioStation.setRadios(data);
                 radioStation.setTotalCount(data.length);
@@ -145,6 +146,7 @@ const HomeScreen = observer(() => {
                 }, 10);
             })
         } else {
+            setIsLoading(true);
             getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
                     radioStation.setRadios(data[0]);
                     radioStation.setTotalCount(data[1]);
@@ -181,7 +183,9 @@ const HomeScreen = observer(() => {
                 setSelectGenre(data[1]);
                 setSelectCountry(data[2]);
                 setSelectLanguage(data[3]);
-                radioStation.setSelectGenre(data[1]);
+                if(!isFav && !isFavWithId){
+                    radioStation.setSelectGenre(data[1])
+                }
                 setIsPlaying(true);
                 audioRef.current.play();
 
@@ -280,7 +284,9 @@ const HomeScreen = observer(() => {
                 setSelectGenre(data[1])
                 setSelectCountry(data[2])
                 setSelectLanguage(data[3])
-                radioStation.setSelectGenre(data[1])
+                if(!isFav && !isFavWithId){
+                    radioStation.setSelectGenre(data[1])
+                }
                 setIsPlaying(true);
                 audioRef.current.play();
             });
