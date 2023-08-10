@@ -1,11 +1,9 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {Button, Col, Image} from "react-bootstrap";
-import Skeleton from 'react-loading-skeleton'
 import HeaderNavBar from '../../components/headerNavBar/headerNavBar';
 import {createUseStyles} from "react-jss";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import {createCustomRating} from "../../http/radioApi";
-import axios from "axios";
 import goldStar from "../../img/goldStar.svg";
 import online from "../../img/online.svg";
 import './HomeScreen.css';
@@ -25,7 +23,6 @@ import SendErrorMessage from "../../components/modals/SendErrorMessage";
 import SendRatingMessage from "../../components/modals/SendRatingMessage";
 
 import {
-    createCustomError,
     fetchCurrentMusicName,
     fetchOneRadio, fetchOneRadioByLink,
     getAllCountries,
@@ -625,7 +622,7 @@ const HomeScreen = observer(() => {
                         : null}
                     <div>
                         {isLoading ? (
-                            <div className={'allRadios'}>{[...Array(24)].map((_, index) => (
+                            <div className={'allRadios'}>{[...Array(radioStation.radios.length || 24)].map((_, index) => (
                                 <div key={index} className={'oneBestSpecialistsBlock'} style={{
                                     marginRight: handleMarginRight(index),
                                 }}>
@@ -689,7 +686,7 @@ const HomeScreen = observer(() => {
                         ) : (
                             <div className={'allRadios'}>
                                 {radioStation.radios.map((radio, index) => (
-                                    // selectedRadio && selectedRadio.id === radio.id ? null : (
+                                    selectedRadio && selectedRadio.id === radio.id ? null : (
                                         <div
                                             className={'oneBestSpecialistsBlock'}
                                             key={radio.id}
@@ -764,7 +761,7 @@ const HomeScreen = observer(() => {
 
                                             </Link>
                                         </div>
-                                    ))}
+                                    )))}
                             </div>
                         )}
                     </div>
