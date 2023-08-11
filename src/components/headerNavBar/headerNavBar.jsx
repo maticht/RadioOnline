@@ -167,7 +167,6 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                         <OpenMessages show={messageVisible} onHide={() => setMessageVisible(false)}/>
                     </div>
                 )}
-
             </div>
             <div>
                 {!isFav && !isFavWithId ?
@@ -229,24 +228,28 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                         <div className={"logInBlock"} onClick={() => setMessageVisible(true)}>
                             <p className={"accountText"} style={{marginBottom:'5px'}}>Входящие</p>
                             <div style={{ position: 'relative' }}>
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '-5px',
-                                    right: '-3px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    height: '15px',
-                                    padding: '0 5px',
-                                    borderRadius: '15px',
-                                    backgroundColor: '#06B5AE',
-                                    fontWeight: '500',
-                                    color: '#fff',
-                                    fontSize: '10px',
-                                    textAlign: 'center'
-                                }}>
-                                    {allMessagesLs}
-                                </div>
+                                {allMessagesLs !== 0 &&
+                                    (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '-5px',
+                                            right: '-3px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: '15px',
+                                            padding: '0 5px',
+                                            borderRadius: '15px',
+                                            backgroundColor: '#06B5AE',
+                                            fontWeight: '500',
+                                            color: '#fff',
+                                            fontSize: '10px',
+                                            textAlign: 'center'
+                                        }}>
+                                            {allMessagesLs}
+                                        </div>
+                                    )
+                                }
                                 <button className={"msAccountBtn"}></button>
                             </div>
                         </div>

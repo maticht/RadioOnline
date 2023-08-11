@@ -9,8 +9,8 @@ const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 
-const ffmpegPath = 'C:/FFmpeg/bin/ffmpeg';
-const ffprobePath = 'C:/FFmpeg/bin/ffprobe';
+const ffmpegPath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
+const ffprobePath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
@@ -192,7 +192,7 @@ class RadioController {
             if (metadata.tags.StreamTitle) {
                 return res.json({StreamTitle: metadata.tags.StreamTitle});
             } else {
-                return res.json({StreamTitle: ''});
+                return res.json({StreamTitle: 'Неизвестно'});
             }
         } catch (err) {
             console.error('Ошибка внутри try-catch:', err);

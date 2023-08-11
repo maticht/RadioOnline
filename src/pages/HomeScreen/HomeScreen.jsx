@@ -140,7 +140,7 @@ const HomeScreen = observer(() => {
                 console.log('юз эффект с фав');
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 10);
+                }, 2000);
             })
         } else {
             setIsLoading(true);
@@ -150,7 +150,7 @@ const HomeScreen = observer(() => {
                     console.log('запрс из 1 useEffect');
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 10);
+                }, 2000);
                 }
             )
         }
@@ -165,7 +165,7 @@ const HomeScreen = observer(() => {
                     console.log('запрс из 2 useEffect')
                     setTimeout(() => {
                         setIsLoading(false);
-                    }, 10);
+                    }, 2000);
                 })
             }
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
@@ -174,6 +174,7 @@ const HomeScreen = observer(() => {
     useEffect(() => {
         if (typeof (params.radioId) !== "undefined") {
             fetchOneRadioByLink(params.radioId).then(data => {
+                setIsLoading(true);
                 setSelectedRadio(data[0]);
                 setRadioOnline(data[0].online);
                 setRatingArrUs(data[0].rating);
@@ -185,6 +186,9 @@ const HomeScreen = observer(() => {
                 }
                 setIsPlaying(true);
                 audioRef.current.play();
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 2000);
 
             });
         }
@@ -375,100 +379,165 @@ const HomeScreen = observer(() => {
                                     <div className='selectedRadioInfo'>
                                         <div>
                                             <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
-                                                <div style={{
-                                                    backgroundColor: '#ffffff',
-                                                    display: 'flex',
-                                                    alignItems: 'flex-start',
-                                                    justifyContent: 'space-between',
-                                                    flexDirection: 'column',
-                                                    borderRadius: '8px'
-                                                }}>
-                                                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                                                        <img style={{width: '16px'}} src={online} alt="star"/>
-
-                                                        <p style={{margin: '0 0 0 5px', fontSize: '14px'}}>
-                                                            {radioOnline}
-                                                        </p>
+                                                {isLoading ? (
+                                                    <div>
+                                                        <div style={{
+                                                            width: "140px",
+                                                            height: '25px',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'space-between',
+                                                            alignContent: 'space-around',
+                                                            borderRadius: '10px',
+                                                            background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                            backgroundSize: '200% 100%',
+                                                            animation: 'gradientAnimation 1s linear infinite',
+                                                        }}>
+                                                        </div>
+                                                        <div style={{
+                                                            marginTop:'10px',
+                                                            width: "140px",
+                                                            height: '120px',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'space-between',
+                                                            alignContent: 'space-around',
+                                                            borderRadius: '10px',
+                                                            background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                            backgroundSize: '200% 100%',
+                                                            animation: 'gradientAnimation 1s linear infinite',
+                                                        }}>
+                                                        </div>
                                                     </div>
-                                                    <Image width={140} height={125}
-                                                           className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                           src={selectedRadio.image !== 'image' ? 'http://localhost:8081/' + selectedRadio.image : nonePrev}/>
-                                                </div>
+                                                ) : (
+                                                    <div style={{
+                                                        backgroundColor: '#ffffff',
+                                                        display: 'flex',
+                                                        alignItems: 'flex-start',
+                                                        justifyContent: 'space-between',
+                                                        flexDirection: 'column',
+                                                        borderRadius: '8px'
+                                                    }}>
+                                                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                                                            <img style={{width: '16px'}} src={online} alt="star"/>
+
+                                                            <p style={{margin: '0 0 0 5px', fontSize: '14px'}}>
+                                                                {radioOnline}
+                                                            </p>
+                                                        </div>
+                                                        <Image width={140} height={125}
+                                                               className="mt-1 rounded rounded-10 d-block mx-auto"
+                                                               src={selectedRadio.image !== 'image' ? 'http://localhost:8081/' + selectedRadio.image : nonePrev}/>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                         <div className={"sl-radio-info"}>
                                             <div style={{position: 'relative', display: 'flex', flexDirection: 'row'}}>
                                                 <div className={'radioInfo'}>
-                                                    <div style={{
-                                                        width: '100%',
-                                                        paddingBottom: '20px',
-                                                        borderBottom: '1px solid #E9E9E9'
-                                                    }}>
-                                                        {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
+                                                    {isLoading ? (
+                                                        <div style={{
+                                                            width: "150px",
+                                                            height: '65px',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'space-between',
+                                                            alignContent: 'space-around',
+                                                            borderRadius: '10px',
+                                                            background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                            backgroundSize: '200% 100%',
+                                                            animation: 'gradientAnimation 1s linear infinite',
+                                                        }}>
+                                                        </div>
+                                                    ) : (
+                                                        <div style={{
+                                                            width: '100%',
+                                                            paddingBottom: '20px',
+                                                            borderBottom: '1px solid #E9E9E9'
+                                                        }}>
+                                                            {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    flexDirection: 'row',
+                                                                    alignItems: 'center'
+                                                                }}>
+                                                                    <img style={{width: '12px'}} src={goldStar} alt="star"/>
+                                                                    <p style={{
+                                                                        margin: '0 0 0 2px',
+                                                                        fontSize: '13px',
+                                                                        fontWeight: '500'
+                                                                    }}>
+                                                                        {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
+                                                                    </p>
+                                                                    <p style={{margin: '0 0 0 5px', fontSize: '12px'}}>
+                                                                        ({ratingArrUS.length} отзывов)
+                                                                    </p>
+                                                                </div>
+                                                            )}
+                                                            <div>
+                                                                <h6 style={{
+                                                                    fontWeight: 'bold',
+                                                                    fontSize: '14px'
+                                                                }}>{selectedRadio.title}</h6>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {isLoading ? (
+                                                        <div style={{
+                                                            marginTop: '20px',
+                                                            width: "150px",
+                                                            height: '65px',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'space-between',
+                                                            alignContent: 'space-around',
+                                                            borderRadius: '10px',
+                                                            background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                            backgroundSize: '200% 100%',
+                                                            animation: 'gradientAnimation 1s linear infinite',
+                                                        }}>
+                                                        </div>
+                                                    ) : (
+                                                        <div style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            marginTop: '20px'
+                                                        }}>
                                                             <div style={{
                                                                 display: 'flex',
-                                                                flexDirection: 'row',
-                                                                alignItems: 'center'
+                                                                alignItems: 'flex-start',
+                                                                justifyContent: 'space-between',
+                                                                flexDirection: 'column',
                                                             }}>
-                                                                <img style={{width: '12px'}} src={goldStar} alt="star"/>
-                                                                <p style={{
-                                                                    margin: '0 0 0 2px',
-                                                                    fontSize: '13px',
-                                                                    fontWeight: '500'
-                                                                }}>
-                                                                    {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
-                                                                </p>
-                                                                <p style={{margin: '0 0 0 5px', fontSize: '12px'}}>
-                                                                    ({ratingArrUS.length} отзывов)
-                                                                </p>
+                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Жанр</p>
+                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Страна</p>
+                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Язык</p>
                                                             </div>
-                                                        )}
-                                                        <div>
-                                                            <h6 style={{
-                                                                fontWeight: 'bold',
-                                                                fontSize: '14px'
-                                                            }}>{selectedRadio.title}</h6>
+                                                            <div style={{
+                                                                display: 'flex',
+                                                                alignItems: 'flex-start',
+                                                                justifyContent: 'space-between',
+                                                                flexDirection: 'column',
+                                                                margin: '0 0 0 10px'
+                                                            }}>
+                                                                <p style={{
+                                                                    margin: '2px 0',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 'bold'
+                                                                }}>{selectGenre.name}</p>
+                                                                <p style={{
+                                                                    margin: '2px 0',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 'bold'
+                                                                }}>{selectCountry.name}</p>
+                                                                <p style={{
+                                                                    margin: '2px 0',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 'bold'
+                                                                }}>{selectLanguage.name}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        marginTop: '20px'
-                                                    }}>
-                                                        <div style={{
-                                                            display: 'flex',
-                                                            alignItems: 'flex-start',
-                                                            justifyContent: 'space-between',
-                                                            flexDirection: 'column',
-                                                        }}>
-                                                            <p style={{margin: '2px 0', fontSize: '12px'}}>Жанр</p>
-                                                            <p style={{margin: '2px 0', fontSize: '12px'}}>Страна</p>
-                                                            <p style={{margin: '2px 0', fontSize: '12px'}}>Язык</p>
-                                                        </div>
-                                                        <div style={{
-                                                            display: 'flex',
-                                                            alignItems: 'flex-start',
-                                                            justifyContent: 'space-between',
-                                                            flexDirection: 'column',
-                                                            margin: '0 0 0 10px'
-                                                        }}>
-                                                            <p style={{
-                                                                margin: '2px 0',
-                                                                fontSize: '12px',
-                                                                fontWeight: 'bold'
-                                                            }}>{selectGenre.name}</p>
-                                                            <p style={{
-                                                                margin: '2px 0',
-                                                                fontSize: '12px',
-                                                                fontWeight: 'bold'
-                                                            }}>{selectCountry.name}</p>
-                                                            <p style={{
-                                                                margin: '2px 0',
-                                                                fontSize: '12px',
-                                                                fontWeight: 'bold'
-                                                            }}>{selectLanguage.name}</p>
-                                                        </div>
-                                                    </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -491,43 +560,72 @@ const HomeScreen = observer(() => {
                                                             <img src={play} alt="Play" className="audio-icon"/>
                                                         )}
                                                     </button>
-                                                    <div className={'music-title'}>
-                                                        <p style={{
-                                                            fontSize: '12px',
-                                                            fontWeight: '400',
-                                                            margin: '1px 0'
-                                                        }}>Сейчас играет</p>
-                                                        <div className='musicName'>
-                                                            {currentMusicName.length > 32 ? (
-                                                                <p style={{
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold',
-                                                                    margin: '1px 0',
-                                                                    animation: 'marquee 8s linear infinite',
-                                                                    whiteSpace: 'nowrap',
-                                                                    overflow: 'visible',
-                                                                    textOverflow: 'unset'
-                                                                }}>
-                                                                    {currentMusicName}
-                                                                </p>
-                                                            ) : (
-                                                                <p style={{
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold',
-                                                                    margin: '1px 0',
-                                                                }}>
-                                                                    {currentMusicName}
-                                                                </p>
-                                                            )}
-
+                                                    {isLoading ? (
+                                                        <div className={'music-title musicName'} style={{
+                                                            height: '60px',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'space-between',
+                                                            alignContent: 'space-around',
+                                                            borderRadius: '10px',
+                                                            background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                            backgroundSize: '200% 100%',
+                                                            animation: 'gradientAnimation 1s linear infinite',
+                                                        }}>
                                                         </div>
-
-                                                    </div>
+                                                    ) : (
+                                                        <div className={'music-title'}>
+                                                            <p style={{
+                                                                fontSize: '12px',
+                                                                fontWeight: '400',
+                                                                margin: '1px 0'
+                                                            }}>Сейчас играет</p>
+                                                            <div className='musicName'>
+                                                                {currentMusicName.length > 32 ? (
+                                                                    <p style={{
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold',
+                                                                        margin: '1px 0',
+                                                                        animation: 'marquee 8s linear infinite',
+                                                                        whiteSpace: 'nowrap',
+                                                                        overflow: 'visible',
+                                                                        textOverflow: 'unset'
+                                                                    }}>
+                                                                        {currentMusicName}
+                                                                    </p>
+                                                                ) : (
+                                                                    <p style={{
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold',
+                                                                        margin: '1px 0',
+                                                                    }}>
+                                                                        {currentMusicName}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <p className='bitrate'>Битрейт: <span style={{
-                                                    color: '#06B5AE',
-                                                    margin: '0'
-                                                }}>{selectedRadio.bitrate}</span></p>
+                                                {isLoading ? (
+                                                    <div className='bitrate' style={{
+                                                        width: "100px",
+                                                        height: '30px',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'space-between',
+                                                        alignContent: 'space-around',
+                                                        borderRadius: '10px',
+                                                        background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                        backgroundSize: '200% 100%',
+                                                        animation: 'gradientAnimation 1s linear infinite',
+                                                    }}>
+                                                    </div>
+                                                ) : (
+                                                    <p className='bitrate'>Битрейт: <span style={{
+                                                        color: '#06B5AE',
+                                                        margin: '0'
+                                                    }}>{selectedRadio.bitrate}</span></p>
+                                                )}
                                             </div>
 
                                             <div className={'sound-radio'}>
@@ -622,10 +720,11 @@ const HomeScreen = observer(() => {
                         : null}
                     <div>
                         {isLoading ? (
-                            <div className={'allRadios'}>{[...Array(radioStation.radios.length || 24)].map((_, index) => (
-                                <div key={index} className={'oneBestSpecialistsBlock'} style={{
-                                    marginRight: handleMarginRight(index),
-                                }}>
+                            <div className={'allRadios'}>
+                                {[...Array(radioStation.radios && radioStation.radios.length > 0 ? radioStation.radios.length - 1 : 24)].map((_, index) => (
+                                    <div key={index} className={'oneBestSpecialistsBlock'} style={{
+                                        marginRight: handleMarginRight(index),
+                                    }}>
                                     <Link style={{
                                         textDecoration: "none",
                                         color: "#000",

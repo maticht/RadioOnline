@@ -25,6 +25,7 @@
     margin: 0px;
     display:flex;
     flex-direction: row;
+    flex-wrap: nowrap;
 }
 .radio-err-btn-data{
     display:flex;
@@ -32,12 +33,18 @@
     width:100%;
     justify-content:space-between;
     align-items:flex-end;
-    margin-top:10px;
+    margin-top:15px;
 }
 .data-text{
     margin: 0px;
     color:#666;
     font-size:11px;
+}
+.errMessages{
+
+}
+.ratMessages{
+
 }
 @media screen and (max-width: 420px) {
     .radio-err-msg{
@@ -60,5 +67,11 @@
     .data-text{
         text-align: right;
         margin-top: 6px;
+    }
+    .errMessages{
+
+    }
+    .ratMessages{
+        margin-top: 5px;
     }
 }

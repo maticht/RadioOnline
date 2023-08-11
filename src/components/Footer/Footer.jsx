@@ -70,8 +70,8 @@ const Footer = observer(() => {
                                 (columnIndex + 1) * (Math.ceil(radioStation.genres.length / columnCount))
                             )
                             .map((genre) => (
-                                <p key={genre.id} onClick={() => setGenreOnFooter(genre)}>
-                                    {genre.name}({genre.numberOfRS})
+                                <p key={genre.id} onClick={() => {genre.numberOfRS > 0 ? setGenreOnFooter(genre) : console.error('')}}>
+                                    {genre.name} ({genre.numberOfRS})
                                 </p>
                             ))}
                     </div>
