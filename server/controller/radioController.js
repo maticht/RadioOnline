@@ -7,10 +7,14 @@ const {Country} = require("../models/country");
 const {Language} = require("../models/language");
 const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
-const icy = require("icy");
 const ffmpeg = require('fluent-ffmpeg');
-const {json} = require("react-router-dom");
+const icy = require('icy')
 
+// const ffmpegPath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
+// const ffprobePath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
+//
+// ffmpeg.setFfmpegPath(ffmpegPath);
+// ffmpeg.setFfprobePath(ffprobePath);
 
 const ffmpegPath = '../FFmpeg/bin/ffprobe';
 const ffprobePath = '../FFmpeg/bin/ffprobe';
@@ -45,7 +49,7 @@ async function getIcyMetadataFromStream(streamUrl) {
             });
         });
     });
-    return res.json(meta);
+    return json(meta);
 }
 
 
@@ -91,19 +95,19 @@ class RadioController {
                     radioStations = await Radio.find().skip(offset).limit(limit);
                     resultCount = await Radio.countDocuments();
                 } else if (country_id && !genre_id) {
-                    radioStations = await Radio.find({country: Types.ObjectId(country_id)}).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments({country: Types.ObjectId(country_id)});
+                    radioStations = await Radio.find({country: new Types.ObjectId(country_id)}).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments({country: new Types.ObjectId(country_id)});
                 } else if (!country_id && genre_id) {
-                    radioStations = await Radio.find({genre: Types.ObjectId(genre_id)}).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments({genre: Types.ObjectId(genre_id)});
+                    radioStations = await Radio.find({genre: new Types.ObjectId(genre_id)}).skip(offset).limit(limit);
+                    resultCount = await Radio.countDocuments({genre: new Types.ObjectId(genre_id)});
                 } else if (country_id && genre_id) {
                     radioStations = await Radio.find({
-                        country: Types.ObjectId(country_id),
-                        genre: Types.ObjectId(genre_id)
+                        country: new Types.ObjectId(country_id),
+                        genre: new Types.ObjectId(genre_id)
                     }).skip(offset).limit(limit);
                     resultCount = await Radio.countDocuments({
-                        country: Types.ObjectId(country_id),
-                        genre: Types.ObjectId(genre_id)
+                        country: new Types.ObjectId(country_id),
+                        genre: new Types.ObjectId(genre_id)
                     });
                 }
             } else {
@@ -114,22 +118,22 @@ class RadioController {
                 } else if (country_id && !genre_id) {
                     let query = {
                         title: {$regex: searchName, $options: 'i'},
-                        country: Types.ObjectId(country_id)
+                        country: new Types.ObjectId(country_id)
                     };
                     radioStations = await Radio.find(query).skip(offset).limit(limit);
                     resultCount = await Radio.countDocuments(query);
                 } else if (!country_id && genre_id) {
                     let query = {
                         title: {$regex: searchName, $options: 'i'},
-                        genre: Types.ObjectId(genre_id)
+                        genre: new Types.ObjectId(genre_id)
                     };
                     radioStations = await Radio.find(query).skip(offset).limit(limit);
                     resultCount = await Radio.countDocuments(query);
                 } else if (country_id && genre_id) {
                     let query = {
                         title: {$regex: searchName, $options: 'i'},
-                        country: Types.ObjectId(country_id),
-                        genre: Types.ObjectId(genre_id)
+                        country: new Types.ObjectId(country_id),
+                        genre: new Types.ObjectId(genre_id)
                     };
                     radioStations = await Radio.find(query).skip(offset).limit(limit);
                     resultCount = await Radio.countDocuments(query);
@@ -180,7 +184,7 @@ class RadioController {
             const regex = /[\[\]"]/g;
             ids = ids.replace(regex, '');
             // Преобразуем массив строковых id в массив чисел
-            const idArray = ids.split(',').map(id => Types.ObjectId(id));
+            const idArray = ids.split(',').map(id => new Types.ObjectId(id));
 
             // Находим записи в MongoDB по переданным id
             const records = await Radio.find({_id: {$in: idArray}});
@@ -190,6 +194,34 @@ class RadioController {
             return res.status(500).json({message: 'Internal server error'});
         }
     }
+
+    // async getRadioMetadata(req, res) {
+    //     const url = req.body.radio;
+    //     const id = req.body.id;
+    //     try {
+    //         if (!url) res.status(400).json('None url')
+    //         if (radioOnlineMap.has(id)) {
+    //             const onlineCount = radioOnlineMap.get(id);
+    //             radioOnlineMap.set(id, onlineCount + 1);
+    //         } else {
+    //             console.log('Объект с указанным id не найден.');
+    //         }
+    //     } catch (e) {
+    //         console.log(e)
+    //         return res.status(500).json({success: false, error: 'Internal server error'});
+    //     }
+    //     try {
+    //         const metadata = await getAudioBitrateFromStream(url);
+    //         if (metadata.tags.StreamTitle) {
+    //             return res.json({StreamTitle: metadata.tags.StreamTitle});
+    //         } else {
+    //             return res.json({StreamTitle: 'Неизвестно'});
+    //         }
+    //     } catch (err) {
+    //         console.error('Ошибка внутри try-catch:', err);
+    //         return res.status(500).json({success: false, error: 'Internal server error'});
+    //     }
+    // }
 
     async getRadioMetadata(req, res) {
         const url = req.body.radio;
@@ -209,7 +241,6 @@ class RadioController {
             console.log(e)
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
-
         try {
             process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
             let meta;
@@ -231,21 +262,6 @@ class RadioController {
             console.error('Ошибка внутри try-catch:', err);
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
-
-
-        // try {
-        //     const metadata = await getAudioMetadataFromStream(url);
-        //     console.log(metadata);
-        //     if (metadata.tags.StreamTitle) {
-        //         console.log(metadata)
-        //         return res.json({StreamTitle: metadata.tags.StreamTitle});
-        //     } else {
-        //         return res.json({StreamTitle: 'Неизвестно'});
-        //     }
-        // } catch (err) {
-        //     console.error('Ошибка внутри try-catch:', err);
-        //     return res.status(500).json({success: false, error: 'Internal server error'});
-        // }
     }
 
 

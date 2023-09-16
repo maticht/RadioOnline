@@ -10,8 +10,8 @@ const getLastToken = require("./models/getLastToken");
 const fileUpload = require('express-fileupload');
 const connection = require("./db");
 const path = require("path");
-const onlineUpdater = require('./utils/onlineUpdater');
-const bitrateUpdater = require('./utils/bitrateUpdater');
+const onlineUpdater = require('./utils/onlineUpdater')
+// const bitrateUpdater = require('./utils/bitrateUpdater')
 
 connection();
 
@@ -20,9 +20,10 @@ app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 onlineUpdater();
-bitrateUpdater();
+// bitrateUpdater();
 app.use("/addingRating", addingRating);
 app.use("/verifyAdmin", verifyAdmin);
+app.use("/sendErrorMessage", sendErrorMessage);
 app.use("/sendErrorMessage", sendErrorMessage);
 app.use("/getLastToken", getLastToken);
 app.use('/api', router);

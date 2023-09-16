@@ -24,7 +24,7 @@ html, body {
 .center-additional-button{
     margin: 0 15px;
 }
-.main-admin-button {
+.main-admin-buttonn {
     width: calc(50% - 8px);
     cursor: pointer;
     background-color: #06B5AE;
@@ -119,6 +119,10 @@ html, body {
     .main-admin-button-screen{
         width: 100%;
     }
+    /*.main-admin-button {*/
+    /*    margin-left: 10px;*/
+    /*    width: 100%;*/
+    /*}*/
     .dropdown-modal-block{
         display: flex;
         align-items: flex-start;
@@ -156,6 +160,12 @@ html, body {
     }
     .admin-input{
         width: 270px;
+    }
+}
+@media screen and (max-width: 742px) {
+    .main-admin-buttonn {
+        margin-left: 0px;
+        margin-top: 10px;
     }
 }
 @media screen and (max-width: 770px) {
@@ -224,7 +234,7 @@ html, body {
     .admin-additional-button {
         width: 100%;
     }
-    .main-admin-button {
+    .main-admin-buttonn {
         margin-top: 10px;
         width: 100%;
     }

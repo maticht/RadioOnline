@@ -8,7 +8,7 @@ module.exports = () => {
         useUnifiedTopology: true,
     };
     try {
-        mongoose.connect(process.env.MONGO_URI, connectionParams);
+        mongoose.connect('mongodb+srv://radionline:2zuhhzsHM2FXbouz@clusterro.j51sgqt.mongodb.net/', connectionParams);
         console.log("Connected to database successfully");
     } catch (error) {
         console.log(error);
