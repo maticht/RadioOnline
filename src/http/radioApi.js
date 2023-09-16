@@ -60,15 +60,11 @@ export const getRadios = async (country_id, genre_id, page, limit, searchName) =
     return data
 }
 
-<<<<<<< HEAD
-
-=======
 export const getFavoritesRadios = async(ids)=>{
     const {data} = await $host.post('api/radio/favorites', {ids})
     console.log('запрос отработал')
     return data
 }
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 
 export const deleteRadio = async (id) => {
     const {data} = await $authHost.post('api/radio/delete/' + id, id)
@@ -86,31 +82,16 @@ export const fetchOneRadio = async (id) => {
     return data
 }
 
-<<<<<<< HEAD
-export const fetchCurrentMusicName = async (radio) =>{
-=======
 export const fetchOneRadioByLink = async (link) => {
     const {data} = await $host.get('api/radio/link/' + link)
     return data
 }
 
 export const fetchCurrentMusicName = async (radio) => {
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
     const {data} = await $host.post('api/radio/musicName/' + radio.id, radio)
     return data
 }
 
-<<<<<<< HEAD
-export const fetchMinusOnline = async (id) =>{
-    const {data} = await $host.get('api/radio/onlineM/' + id)
-    return data
-}
-
-export const fetchPlusOnline = async (id) =>{
-    const {data} = await $host.get('api/radio/onlineP/' + id)
-    return data
-}
-=======
 export const createCustomError = async (customError) => {
     const {data} = await $authHost.post('api/customError', customError)
     return data
@@ -145,4 +126,3 @@ export const getAllCustomRating = async () => {
 //     const {data} = await $host.post('api/radio/bitrate/'+radio.id, radio)
 //     return data
 // }
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
