@@ -1,9 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-<<<<<<< HEAD
-import {createCountry} from "../../http/radioApi";
-import "../../pages/Admin/admin.css";
-=======
 import {
     createCountry,
     deleteCountry,
@@ -12,7 +8,6 @@ import {
 } from "../../http/radioApi";
 import "../../pages/Admin/admin.css";
 import {Context} from "../../index";
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 
 const CreateCountry = ({show, onHide}) => {
     const {radioStation} = useContext(Context);
@@ -39,36 +34,6 @@ const CreateCountry = ({show, onHide}) => {
             setCountries(data)
         });
     }
-<<<<<<< HEAD
-    return (
-        <Modal
-            show={show}
-            onHide={onHide}
-            size="lg"
-            centered
-        >
-            <Modal.Header closeButton style={{backgroundColor:'#F4F4F4'}}>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Добавить страну
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{backgroundColor:'#F4F4F4'}}>
-                <Form>
-                    <Form.Control
-                        value={value}
-                        onChange={e => setValue(e.target.value)}
-                        placeholder={"Введите название страны"}
-                        style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
-                    />
-                </Form>
-            </Modal.Body>
-            <Modal.Footer style={{backgroundColor:'#F4F4F4', width:'100%', justifyContent:'space-between'}}>
-                <Button variant={"outline-danger"} style={{width:'375px'}} className='admin-additional-button' onClick={onHide}>Закрыть</Button>
-                <Button variant={"outline-success"} style={{width:'375px'}} className='main-admin-button' onClick={addCountry}>Добавить</Button>
-            </Modal.Footer>
-        </Modal>
-    );
-=======
     const handleDeleteCountry = (id) => {
         deleteCountry({id: id});
         setCountries(countries.filter((country) => country.id !== id));
@@ -123,7 +88,6 @@ const CreateCountry = ({show, onHide}) => {
                     onClick={addCountry}>Добавить</Button>
         </Modal.Footer>
     </Modal>);
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 };
 
 export default CreateCountry;

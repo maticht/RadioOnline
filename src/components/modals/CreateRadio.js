@@ -93,12 +93,12 @@ const CreateRadio = observer(({show, onHide}) => {
                         style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
                     />
                     <Form.Control
-                    value={radioLinkName}
-                    onChange={e => setRadioLinkName(e.target.value)}
-                    className="mt-3"
-                    placeholder="Название радиостанции для адресной строки"
-                    style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
-                />
+                        value={radioLinkName}
+                        onChange={e => setRadioLinkName(e.target.value)}
+                        className="mt-3"
+                        placeholder="Название радиостанции для адресной строки"
+                        style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                    />
                     <Col className="dropdown-modal-block">
                         <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getGenres}>
                             <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>
@@ -107,7 +107,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.genres.map(genre =>
                                     <Dropdown.Item onClick={() => setGenreToAdd(genre)} key={genre.id}>
-                                        {genre.name.length >= 13 ? genre.name.slice(0,14) : genre.name}
+                                        {genre.name}
                                     </Dropdown.Item>
                                 )}
                             </DropdownMenu>
@@ -117,7 +117,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.countries.map(country =>
                                     <Dropdown.Item onClick={() => setCountryToAdd(country)}
-                                                   key={country.id}>{country.name.length >= 13 ? country.name.slice(0,14) : country.name} </Dropdown.Item>
+                                                   key={country.id}> {country.name} </Dropdown.Item>
                                 )}
                             </DropdownMenu>
                         </Dropdown>
@@ -126,7 +126,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.languages.map(language =>
                                     <Dropdown.Item onClick={() => setLanguageToAdd(language)}
-                                                   key={language.id}> {language.name.length >= 13 ? language.name.slice(0,14) : language.name} </Dropdown.Item>
+                                                   key={language.id}> {language.name} </Dropdown.Item>
                                 )}
                             </DropdownMenu>
                         </Dropdown>
@@ -146,8 +146,4 @@ const CreateRadio = observer(({show, onHide}) => {
         </Modal>
     );
 });
-<<<<<<< HEAD
 export default CreateRadio;
-=======
-export default CreateRadio;
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
