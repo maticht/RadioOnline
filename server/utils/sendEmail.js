@@ -14,11 +14,7 @@ module.exports = async (email, subject, html) => {
 
         await transporter.sendMail({
             from: process.env.USER,
-<<<<<<< HEAD
-            to: process.env.ADMIN,
-=======
             to: 'matveytreyvas@gmail.com',
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
             subject: subject,
             html: html,
         });

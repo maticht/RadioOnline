@@ -11,7 +11,7 @@ const VerifyAdminScreen = () => {
         e.preventDefault();
         console.log(data)
         try {
-            const url = `http://test.server757413.nazwa.pl/verifyAdmin`;
+            const url = `http://localhost:8081/verifyAdmin`;
             const {data: res} = await axios.post(url, data);
             setMsg(res.message)
             console.log(data);
@@ -68,10 +68,6 @@ const VerifyAdminScreen = () => {
             </div>
         </div>
     );
-<<<<<<< HEAD
-
-=======
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 };
 
 export default VerifyAdminScreen;

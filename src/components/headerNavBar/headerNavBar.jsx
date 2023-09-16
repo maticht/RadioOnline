@@ -49,7 +49,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
     useEffect(() => {
         const fetchLastToken = async () => {
             try {
-                const {data} = await axios.get(`http://front.server757413.nazwa.pl/getLastToken`);
+                const {data} = await axios.get(`http://localhost:8081/getLastToken`);
                 if (data.token === param.token) {
                     setValidateToken(true);
                 }
@@ -82,8 +82,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
 
     const goToFav = () => {
         // Добавляем параметр запроса isFav со значением true
-        history('/favorites');
-        window.location.reload();
+        window.location = '/favorites';
     }
 
     const refresh = async () => {
@@ -145,7 +144,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                 {!isAdminLoc ? (
                     <div className={'navBarBlock-fav'}>
                         {!isFav && !isFavWithId ?
-                            <Link className={"logInBlock"} to={"/favorites"} >
+                            <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
                                 <p className={"accountText"}>Избранное</p>
                                 <button className={"accountBtn"}></button>
                             </Link>
@@ -156,31 +155,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                         {!isFav && !isFavWithId ?
                             <div className={"logInBlock"} onClick={() => setMessageVisible(true)}>
                                 <p className={"accountText"} style={{marginBottom:'5px'}}>Входящие</p>
-                                <div style={{ position: 'relative' }}>
-                                    {allMessagesLs !== 0 &&
-                                        (
-                                            <div style={{
-                                                position: 'absolute',
-                                                top: '-5px',
-                                                right: '-3px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                height: '15px',
-                                                padding: '0 5px',
-                                                borderRadius: '15px',
-                                                backgroundColor: '#06B5AE',
-                                                fontWeight: '500',
-                                                color: '#fff',
-                                                fontSize: '10px',
-                                                textAlign: 'center'
-                                            }}>
-                                                {allMessagesLs}
-                                            </div>
-                                        )
-                                    }
-                                    <button className={"msAccountBtn"}></button>
-                                </div>
+                                <button className={"msAccountBtn"}></button>
                             </div>
                             : <p style={{
                                 fontSize: '20px',
@@ -193,38 +168,6 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                     </div>
                 )}
             </div>
-<<<<<<< HEAD
-            <Dropdown className="custom-dropdown" style={{width:'170px'}} onClick={getCountries}>
-                <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu" style={{width:'170px', maxHeight:'250px', overflowY: 'auto'}}>
-                    {radioStation.countries.map(country =>
-                        <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
-                                       key={country.id}> {country.name} </Dropdown.Item>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
-            <Dropdown className="custom-dropdown" onClick={getGenres}>
-                <DropdownToggle className="custom-dropdown-toggle"
-                                style={{backgroundColor: '#FFFFFF', color: '#909095'}}
-                >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
-                <DropdownMenu className="custom-dropdown-menu" style={{width:'160px', maxHeight:'250px', overflowY: 'auto'}}>
-                    {radioStation.genres.map(genre =>
-                        <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
-                                       key={genre.id}> {genre.name} </Dropdown.Item>
-                    )}
-                </DropdownMenu>
-            </Dropdown>
-        </div>
-        {!isAdminLoc ?
-        <Link className={"logInBlock"} to={"/verifyAdminScreen"}>
-            <p className={"accountText"}>Админ</p>
-            <button className={"accountBtn"}></button>
-        </Link>
-            :null}
-
-    </div>);
-})
-=======
             <div>
                 {!isFav && !isFavWithId ?
                     <div className={'main-filter-block'}>
@@ -267,10 +210,10 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
             {!isAdminLoc ? (
                 <div className={'fav-btn'}>
                     {!isFav && !isFavWithId ?
-                        <div className={"logInBlock"} onClick={goToFav}>
+                        <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
                             <p className={"accountText"}>Избранное</p>
                             <button className={"accountBtn"}></button>
-                        </div>
+                        </Link>
                         : <p style={{
                             fontSize: '20px',
                             margin: '0 0 px 0',
@@ -323,6 +266,5 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
         </div>
     );
 });
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 
 export default HeaderNavBar;

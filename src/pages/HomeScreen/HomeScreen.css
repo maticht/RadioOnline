@@ -205,15 +205,12 @@ textarea::placeholder{
 }
 
 .audio-player {
-<<<<<<< HEAD
     display: flex;
     align-items: center;
-=======
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 }
 
 #audio {
@@ -227,10 +224,7 @@ textarea::placeholder{
     padding: 0;
     width: 60px;
     height: 60px;
-<<<<<<< HEAD
-=======
     cursor: pointer;
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 }
 
 .audio-icon {
@@ -243,11 +237,7 @@ textarea::placeholder{
     -webkit-appearance: none;
     width: 92px;
     margin: 0 0 0 auto;
-<<<<<<< HEAD
-
-=======
     cursor: pointer;
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
     background: rgb(234, 234, 234);
     border-radius: 5px;
     background-image: linear-gradient(#06B5AE, #06B5AE);
@@ -264,8 +254,6 @@ textarea::placeholder{
     background: #007A76;
     margin-top: -5px;
 }
-<<<<<<< HEAD
-=======
 @keyframes gradientAnimation {
     0% {
         background-position: 80% 50%;
@@ -274,7 +262,6 @@ textarea::placeholder{
         background-position: -110% 50%;
     }
 }
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 @keyframes marquee {
     0% {
         transform: translateX(110%);
@@ -289,8 +276,6 @@ textarea::placeholder{
     border: none;
     border-radius: 10px;
 }
-<<<<<<< HEAD
-=======
 .radioInfoBlock{
     display: flex;
     flex-direction: row;
@@ -924,4 +909,3 @@ textarea::placeholder{
     }
 
 }
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
