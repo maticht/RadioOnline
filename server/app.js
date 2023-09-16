@@ -3,13 +3,21 @@ require("dotenv").config();
 const cors = require("cors");
 const app = express();
 const router = require('./routes/index')
+<<<<<<< HEAD
 const radioRoutes = require("./models/createRadio");
 const addingRating = require("./models/addingRating");
 const verifyAdmin = require("./models/verifyAdmin");
+=======
+const addingRating = require("./models/addingRating");
+const verifyAdmin = require("./models/verifyAdmin");
+const sendErrorMessage = require("./models/sendErrorMessage");
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 const getLastToken = require("./models/getLastToken");
 const fileUpload = require('express-fileupload');
 const connection = require("./db");
 const path = require("path");
+const onlineUpdater = require('./utils/onlineUpdater')
+const bitrateUpdater = require('./utils/bitrateUpdater')
 
 connection();
 
@@ -17,8 +25,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
+onlineUpdater();
+bitrateUpdater();
 app.use("/addingRating", addingRating);
 app.use("/verifyAdmin", verifyAdmin);
+<<<<<<< HEAD
+=======
+app.use("/sendErrorMessage", sendErrorMessage);
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 app.use("/getLastToken", getLastToken);
 app.use('/api', router);
 

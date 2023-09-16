@@ -5,18 +5,20 @@ import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import {createRadio, getAllCountries, getAllGenres, getAllLanguages} from "../../http/radioApi";
 import {observer} from "mobx-react-lite";
-import {useLocation} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 
 const CreateRadio = observer(({show, onHide}) => {
     const {radioStation} = useContext(Context)
+    const param = useParams()
     const [title, setTitle] = useState('')
     const [radio, setRadio] = useState('')
+    const [radioLinkName, setRadioLinkName] = useState('')
     const [genreToAdd, setGenreToAdd] =useState('')
     const[countryToAdd, setCountryToAdd] =useState('')
     const[languageToAdd, setLanguageToAdd] = useState('')
     const [file, setFile] = useState(null)
     const location = useLocation()
-    const isAdminLoc = location.pathname === '/admin'
+    const isAdminLoc = location.pathname === `/admin/${param.token}`
 
     useEffect(() => {
         getAllGenres().then(data => radioStation.setGenres(data))
@@ -50,11 +52,16 @@ const CreateRadio = observer(({show, onHide}) => {
         const formData = new FormData()
         formData.append('title', title)
         formData.append('radio', radio)
+        formData.append('radioLinkName', radioLinkName)
         formData.append('image', file)
         formData.append('country_id', countryToAdd.id)
         formData.append('genre_id', genreToAdd.id)
         formData.append('language_id',languageToAdd.id)
-        createRadio(formData).then(data => onHide())
+        createRadio(formData).then(data => {
+            if (data.status === 409){
+                alert(data.message)
+            }
+            onHide()})
     }
 
     return (
@@ -65,7 +72,7 @@ const CreateRadio = observer(({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton  style={{backgroundColor:'#F4F4F4'}}>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'20px', fontWeight:'bold'}}>
                     Добавить радиостанцию
                 </Modal.Title>
             </Modal.Header>
@@ -85,12 +92,19 @@ const CreateRadio = observer(({show, onHide}) => {
                         placeholder="Введите ссылку на радиостанцию"
                         style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
                     />
-                    <Col className="d-flex justify-content-between" style={{display:'flex', alignItems:'center'}}>
-                        <Dropdown className="custom-dropdown" onClick={getGenres}>
-                            <DropdownToggle className="custom-dropdown-toggle" style={{ width: '160px', marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095' }}>
+                    <Form.Control
+                    value={radioLinkName}
+                    onChange={e => setRadioLinkName(e.target.value)}
+                    className="mt-3"
+                    placeholder="Название радиостанции для адресной строки"
+                    style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                />
+                    <Col className="dropdown-modal-block">
+                        <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getGenres}>
+                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>
                                 {genreToAdd.name || 'Выберите жанр'}
                             </DropdownToggle>
-                            <DropdownMenu className="custom-dropdown-menu" style={{ width: '150px', maxHeight:'250px', overflowY: 'auto' }}>
+                            <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.genres.map(genre =>
                                     <Dropdown.Item onClick={() => setGenreToAdd(genre)} key={genre.id}>
                                         {genre.name}
@@ -98,18 +112,18 @@ const CreateRadio = observer(({show, onHide}) => {
                                 )}
                             </DropdownMenu>
                         </Dropdown>
-                        <Dropdown className="custom-dropdown" style={{width:'170px'}} onClick={getCountries}>
-                            <DropdownToggle className="custom-dropdown-toggle" style={{width:'170px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{ countryToAdd.name|| 'Выберите страну'}</DropdownToggle>
-                            <DropdownMenu className="custom-dropdown-menu" style={{width:'170px', maxHeight:'250px', overflowY: 'auto'}}>
+                        <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getCountries}>
+                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{ countryToAdd.name|| 'Выберите страну'}</DropdownToggle>
+                            <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.countries.map(country =>
                                     <Dropdown.Item onClick={() => setCountryToAdd(country)}
                                                    key={country.id}> {country.name} </Dropdown.Item>
                                 )}
                             </DropdownMenu>
                         </Dropdown>
-                        <Dropdown className="custom-dropdown" onClick={getLanguages}>
-                            <DropdownToggle className="custom-dropdown-toggle" style={{width:'160px',marginRight: '25px', backgroundColor: '#FFFFFF', color: '#909095'}}>{languageToAdd.name || 'Выберите язык'}</DropdownToggle>
-                            <DropdownMenu className="custom-dropdown-menu" style={{width:'150px', maxHeight:'250px', overflowY: 'auto'}}>
+                        <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getLanguages}>
+                            <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{languageToAdd.name || 'Выберите язык'}</DropdownToggle>
+                            <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.languages.map(language =>
                                     <Dropdown.Item onClick={() => setLanguageToAdd(language)}
                                                    key={language.id}> {language.name} </Dropdown.Item>
@@ -126,10 +140,14 @@ const CreateRadio = observer(({show, onHide}) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer  style={{backgroundColor:'#F4F4F4', width:'100%', justifyContent:'space-between'}}>
-                <Button variant={"outline-danger"} style={{width:'375px'}} className='admin-additional-button' onClick={onHide}>Закрыть</Button>
-                <Button variant={"outline-success"} style={{width:'375px'}} className='main-admin-button' onClick={addRadio}>Добавить</Button>
+                <Button variant={"outline-danger"} className='admin-additional-button' onClick={onHide}>Закрыть</Button>
+                <Button variant={"outline-success"} className='main-admin-button' onClick={addRadio}>Добавить</Button>
             </Modal.Footer>
         </Modal>
     );
 });
+<<<<<<< HEAD
 export default CreateRadio;
+=======
+export default CreateRadio;
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31

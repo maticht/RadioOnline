@@ -1,24 +1,51 @@
 .bestSpecialists {
+    z-index: 1;
     display:flex;
     flex-direction:column;
     justify-content:center;
-    margin:5px 10px 0 10px;
-    max-width: 100px;
+    margin:5px 0 0 0;
 
 }
 .radioBlock{
     width: 700px;
     background-color: #fff;
     border-radius: 8px;
-    margin: 15px 0 0 20px;
-    padding: 15px;
+    margin: 15px 0 0 0;
+    padding-left: 10px;
+    box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+}
+.selectedRadio{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+@keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes slideOut {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
 }
 
 .largeRadioBlockAdmin {
-    width: 1045px;
+    width: 100%;
     background-color: #fff;
     border-radius: 8px;
-    margin: 15px 0 0 20px;
+    margin: 15px 0 0 0;
     padding: 15px;
 }
 .oneBestSpecialistsBlock {
@@ -30,14 +57,15 @@
     justify-content: flex-start;
     align-items: center;
     border-radius: 8px;
-    margin: 10px 9px 10px 8px;
+    margin: 10px 0 10px 0;
+    box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
 }
 .inputTop {
     text-align: left;
     resize: none;
     height: 300px;
     border: none;
-    width: 80vw;
+    width: 100%;
     padding: 15px;
     border-radius: 8px;
     background-color: #ffffff;
@@ -48,29 +76,26 @@
 .input {
     outline: none;
     border: none;
-    width: 80vw;
+    width: 100%;
     padding: 15px;
     border-radius: 8px;
     background-color: #ffffff;
     margin: 5px 0;
     font-size: 14px;
     box-shadow: 0 0 9px rgba(0, 0, 0, 0.05);
+    -webkit-tap-highlight-color: transparent;
 }
+
 .input-top {
     text-align: left;
     resize: none;
     height: 300px;
 }
-@media screen and (min-width: 1100px) {
-    .bestSpecialists {
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        margin:0 auto;
-        max-width: 1100px;
-        width: 100%
-    }
+.inputTop:focus {
+    outline: none;
+    border: none;
 }
+
 .signup_container {
     width: 100%;
     height: 100vh;
@@ -180,8 +205,15 @@ textarea::placeholder{
 }
 
 .audio-player {
+<<<<<<< HEAD
     display: flex;
     align-items: center;
+=======
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 }
 
 #audio {
@@ -195,6 +227,10 @@ textarea::placeholder{
     padding: 0;
     width: 60px;
     height: 60px;
+<<<<<<< HEAD
+=======
+    cursor: pointer;
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 }
 
 .audio-icon {
@@ -207,7 +243,11 @@ textarea::placeholder{
     -webkit-appearance: none;
     width: 92px;
     margin: 0 0 0 auto;
+<<<<<<< HEAD
 
+=======
+    cursor: pointer;
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
     background: rgb(234, 234, 234);
     border-radius: 5px;
     background-image: linear-gradient(#06B5AE, #06B5AE);
@@ -224,6 +264,17 @@ textarea::placeholder{
     background: #007A76;
     margin-top: -5px;
 }
+<<<<<<< HEAD
+=======
+@keyframes gradientAnimation {
+    0% {
+        background-position: 80% 50%;
+    }
+    100% {
+        background-position: -110% 50%;
+    }
+}
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 @keyframes marquee {
     0% {
         transform: translateX(110%);
@@ -238,3 +289,626 @@ textarea::placeholder{
     border: none;
     border-radius: 10px;
 }
+<<<<<<< HEAD
+=======
+.radioInfoBlock{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.btnsBlock{
+    margin-left: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btnContainer {
+    background-color: #fff;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    display: flex;
+    padding: 15px 0;
+    flex-direction: column;
+    border-radius: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.imgContainer {
+    width: 30px;
+    height: 30px;
+}
+
+.textContainer {
+    margin: 0;
+    font-size: 12px;
+    text-align: center;
+}
+
+.copiedMessage {
+    background-color: #fff;
+    width: 100px;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    font-size: 12px;
+    text-align: center;
+    position: absolute;
+    z-index: 0;
+    animation: slideIn 0.3s forwards;
+}
+.selectedRadioInfo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 20px;
+}
+.musicName{
+    width: 200px;
+    overflow: hidden;
+}
+.audio-player-block{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 10px;
+}
+.bitrate{
+    margin: 23px 0 0;
+    font-size: 14px;
+}
+.audio-info {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top: 40px;
+}
+.rate-btns-block{
+
+}
+.admin-additional-button {
+    width: calc(50% - 8px);
+}
+.allRadios{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.radioInfo{
+    width: 150px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+    border-radius: 8px;
+}
+.sound-radio{
+    display: flex;
+    flex-direction: row;
+    transform: rotate(270deg);
+    align-items: center;
+}
+.music-title{
+    margin-left: 15px;
+}
+.main-admin-button {
+    width: calc(50% - 8px);
+    cursor: pointer;
+    background-color: #06B5AE;
+    border: 2px solid #06B5AE;
+    color: #F4F4F4;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+.rate-star{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction:row;
+    align-items: center;
+}
+.sl-radio-info{
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 1060px) {
+    .bestSpecialists {
+        padding: 0 10px;
+
+    }
+    .allRadios{
+        justify-content: center;
+    }
+    .selectedRadio{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .btnsBlock{
+        width: 340px;
+        margin-left: 0;
+        margin-top: 15px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: #fff;
+        border-radius: 8px;
+        margin: 15px 0 0 0;
+        padding-left: 10px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    }
+    .musicName{
+        width: 180px;
+        overflow: hidden;
+    }
+    .music-title{
+        margin-left: 40px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        width: 100%;
+    }
+}
+@media screen and (max-width: 742px) {
+    .selectedRadio{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: row;
+    }
+    .btnsBlock{
+        margin-left: 0;
+        margin-top: 15px;
+        width: 100px;
+        height: 325px;
+        display: flex;
+        flex-direction: column;
+        align-content: space-between;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: #fff;
+        border-radius: 8px;
+        margin: 15px 0 0 0;
+        padding-left: 10px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    }
+    .selectedRadioInfo{
+        width: calc(100% - 15px);
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        margin-right: 0;
+        margin-top: 10px;
+    }
+    .musicName{
+        width: 180px;
+        overflow: hidden;
+    }
+    .audio-player {
+        padding: 0;
+        height: 120px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .audio-player-block{
+        width: calc(100% - 15px);
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 5px 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        margin: 15px 0 0 0;
+    }
+    .vertical-slider {
+        -webkit-appearance: none;
+        width: 75px;
+    }
+    .bitrate{
+        margin: 15px 0 0;
+        font-size: 14px;
+    }
+    .audio-info {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+    .radioInfoBlock{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        margin: 5px 0 0 0;
+        box-shadow: 0px 0px 0px;
+        padding-left: 0;
+    }
+    .rate-btns-block{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .main-admin-button {
+        width: 100%;
+    }
+}
+@media screen and (max-width: 600px) {
+    .bestSpecialists {
+        padding: 0 10px;
+
+    }
+    .allRadios{
+        justify-content: center;
+    }
+    .selectedRadio{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: row;
+    }
+    .btnsBlock{
+        margin-left: 0;
+        margin-top: 15px;
+        width: 100px;
+        height: 325px;
+        display: flex;
+        flex-direction: column;
+        align-content: space-between;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: #fff;
+        border-radius: 8px;
+        margin: 15px 0 0 0;
+        padding-left: 10px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    }
+    .selectedRadioInfo{
+        width: calc(100% - 15px);
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        margin-right: 0;
+        margin-top: 10px;
+    }
+    .musicName{
+        width: 180px;
+        overflow: hidden;
+    }
+    .audio-player {
+        padding: 0;
+        height: 120px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .audio-player-block{
+        width: calc(100% - 15px);
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 5px 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        margin: 15px 0 0 0;
+    }
+    .vertical-slider {
+        -webkit-appearance: none;
+        width: 75px;
+    }
+    .bitrate{
+        margin: 15px 0 0;
+        font-size: 14px;
+    }
+    .audio-info {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+    .radioInfoBlock{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        margin: 5px 0 0 0;
+        box-shadow: 0px 0px 0px;
+        padding-left: 0;
+    }
+}
+@media screen and (max-width: 510px) {
+    .selectedRadio{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+    }
+    .radioInfoBlock{
+        display: flex;
+        flex-direction: column;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        margin: 5px 0 0 0;
+        box-shadow: 0px 0px 0px;
+        padding-left: 0;
+    }
+    .btnsBlock{
+        margin-left: 0px;
+        flex-direction: row;
+        height: 100px;
+        width: 100%;
+    }
+    .bestSpecialists {
+        padding: 0 10px;
+
+    }
+    .selectedRadioInfo{
+        width: calc(100%);
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        margin-right: 0;
+        margin-top: 10px;
+    }
+    .musicName{
+        width: 180px;
+        overflow: hidden;
+    }
+    .audio-player {
+        padding: 0;
+        height: 120px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .audio-player-block{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 5px 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    }
+    .vertical-slider {
+        -webkit-appearance: none;
+        width: 75px;
+    }
+    .bitrate{
+        margin: 15px 0 0;
+        font-size: 14px;
+    }
+    .audio-info {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+    .rate-btns-block{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        width: 100%;
+    }
+
+}
+@media screen and (max-width: 360px) {
+    .selectedRadio{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+    }
+    .radioInfoBlock{
+        display: flex;
+        flex-direction: column;
+    }
+    .radioBlock{
+        width: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        margin: 5px 0 0 0;
+        box-shadow: 0px 0px 0px;
+        padding-left: 0;
+    }
+    .btnsBlock{
+        margin-left: 0px;
+        flex-direction: row;
+        width: 100%;
+    }
+    .bestSpecialists {
+        padding: 0 10px;
+
+    }
+    .selectedRadioInfo{
+        width: calc(100%);
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        margin-right: 0;
+        margin-top: 10px;
+    }
+    .musicName{
+        width: 170px;
+        overflow: hidden;
+    }
+    .music-title{
+        margin-left: 30px;
+    }
+    .audio-player {
+        padding: 0;
+        height: 120px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .audio-player-block{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 5px 15px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    }
+    .vertical-slider {
+        -webkit-appearance: none;
+        width: 75px;
+    }
+    .bitrate{
+        margin: 15px 0 0;
+        font-size: 14px;
+    }
+    .audio-info {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        margin-top: 5px;
+    }
+    .rate-btns-block{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        width: 100%;
+    }
+
+}
+@media screen and (max-width: 345px) {
+    .radioInfo{
+        width: 100px;
+        background-color: #ffffff;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+        border-radius: 8px;
+    }
+    .sound-radio{
+        display: none;
+    }
+    .musicName{
+        width: 120px;
+        overflow: hidden;
+    }
+    .music-title{
+        margin-left: 40px;
+    }
+
+}
+@media screen and (max-width: 345px) {
+    .radioInfo{
+        width: 100px;
+        background-color: #ffffff;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+        border-radius: 8px;
+    }
+    .sound-radio{
+        display: none;
+    }
+    .musicName{
+        width: 120px;
+        overflow: hidden;
+    }
+    .music-title{
+        margin-left: 40px;
+    }
+
+}
+@media screen and (max-width: 300px) {
+    .rate-star{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction:column;
+        align-items: flex-start;
+    }
+    .selectedRadioInfo{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: space-between;
+        margin-right: 20px;
+    }
+    .sl-radio-info{
+        margin-top: 20px;
+        margin-right: 20px;
+    }
+    .btnsBlock{
+        margin-left: 0px;
+        flex-direction: row;
+        height: 50px;
+        width: 100%;
+    }
+    .btnContainer {
+        background-color: #fff;
+        width: 70px;
+        height: 40px;
+        box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+        display: flex;
+        padding: 15px 0;
+        margin-top: 5px;
+        flex-direction: row;
+        border-radius: 10px;
+        align-items: center;
+        cursor: pointer;
+        justify-content: center;
+    }
+    .textContainer {
+        display: none;
+    }
+
+}
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31

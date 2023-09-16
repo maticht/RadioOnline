@@ -1,3 +1,6 @@
+html, body {
+    background-color: #F1F1F1;
+}
 .pagination {
     display: flex;
     justify-content: center;
@@ -18,7 +21,11 @@
     padding: 10px 15px;
     border-radius: 10px;
 }
+.center-additional-button{
+    margin: 0 15px;
+}
 .main-admin-button {
+    width: calc(50% - 8px);
     cursor: pointer;
     background-color: #06B5AE;
     border: 2px solid #06B5AE;
@@ -27,6 +34,9 @@
     font-weight: 500;
     padding: 10px 15px;
     border-radius: 10px;
+}
+.main-admin-button-screen{
+    width: 100%;
 }
 .pagination-button.active {
     color: #fff;
@@ -45,5 +55,209 @@
     width: 9px;
     margin-bottom: 2px;
 }
+.adminComtainer{
+    margin-left: 10px;
+}
+.dropdown-modal-block{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.admin-additional-button-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.dropdown-image-block{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 60px;
+}
+.select-admin-radio-info{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.admin-input{
+    background-color: #fff;
+    outline: none;
+    border: 0;
+    height: 42px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
+    width: 500px;
+}
+.select-admin-radio-inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.admin-input-block{
+    margin-bottom:10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.custom-dropdown-block{
+    width: 100%;
+}
+.custom-admin-dropdown{
+    margin-bottom: 10px;
+}
+.admin-btn{
+    width: calc(50% - 8px);
+}
+
+@media screen and (max-width: 1030px) {
+    .dropdown-image-block{
+        margin-left: 15px;
+    }
+}
+@media screen and (max-width: 992px) {
+    .main-admin-button-screen{
+        width: 100%;
+    }
+    .dropdown-modal-block{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .dropdown-modal-toggle{
+        margin-top: 15px;
+        width: 100%;
+    }
+    .custom-dropdown-toggle2{
+        text-align: left;
+        width: 100%;
+    }
+    .custom-dropdown-menu2{
+        width: 100%;
+    }
+    .dropdown-image-block{
+        margin-left: 40px;
+    }
+    .admin-input{
+        width: 400px;
+    }
+}
+@media screen and (max-width: 915px) {
+    .dropdown-image-block{
+        margin-left: 40px;
+    }
+    .admin-input{
+        width: 300px;
+    }
+}
+@media screen and (max-width: 810px) {
+    .dropdown-image-block{
+        margin-left: 20px;
+    }
+    .admin-input{
+        width: 270px;
+    }
+}
+@media screen and (max-width: 770px) {
+    .admin-input{
+        width: 100%;
+        margin-top: 10px;
+    }
+    .select-admin-radio-info{
+        flex-direction: column-reverse;
+    }
+    .dropdown-image-block{
+        margin-left: 0;
+        flex-direction: row-reverse;
+    }
+    .select-admin-radio-inputs{
+        width: 100%;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .admin-input-block{
+        width: 100%;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .custom-admin-dropdown{
+        width: 100%;
+    }
+    .custom-dropdown-block{
+        width: 100%;
+        margin-left: 15px;
+    }
+    .custom-admin-dropdown-toggle{
+        width: 100%;
+        text-align: left;
+    }
+    .custom-admin-dropdown-menu{
+        width: 100%;
+    }
+}
+@media screen and (max-width: 720px) {
+    .dropdown-modal-block{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .dropdown-modal-toggle{
+        margin: 15px 0 0 0;
+        width: 100%;
+    }
+    .custom-dropdown-toggle2{
+        text-align: left;
+        width: 100%;
+    }
+    .custom-dropdown-menu2{
+        width: 100%;
+    }
+}
+@media screen and (max-width: 360px) {
+
+}
+@media screen and (max-width: 340px) {
+    .admin-additional-button {
+        width: 100%;
+    }
+    .main-admin-button {
+        margin-top: 10px;
+        width: 100%;
+    }
+    .dropdown-image-block{
+        width: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+    .custom-dropdown-block{
+        width: 100%;
+        margin-top: 10px;
+        margin-left: -10px;
+    }
+    .admin-btns-block{
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-btn{
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 544px) {
+
+    .center-additional-button{
+        margin: 0;
+    }
+    .admin-additional-button-block{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 
 

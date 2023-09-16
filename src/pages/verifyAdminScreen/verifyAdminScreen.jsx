@@ -68,7 +68,10 @@ const VerifyAdminScreen = () => {
             </div>
         </div>
     );
+<<<<<<< HEAD
 
+=======
+>>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 };
 
 export default VerifyAdminScreen;

@@ -1,9 +1,31 @@
 import {observer} from "mobx-react-lite";
-import React, {useContext} from "react";
+import React, {useContext, useState, useEffect} from "react";
+import { Link } from 'react-router-dom';
 import {Context} from "../../index";
+import './Footer.css';
 
 const Footer = observer(() => {
-    const {radioStation} = useContext(Context)
+    const {radioStation} = useContext(Context);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Clean up the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const getColumnCount = () => {
+        return windowWidth < 400 ? 2 : 4;
+    };
+
+    const columnCount = getColumnCount();
 
     const setGenreOnFooter = (genre) => {
         radioStation.setSelectGenre(genre)
@@ -17,48 +39,51 @@ const Footer = observer(() => {
         <div
             style={{
                 width: '100%',
-                height: '486px',
                 background: 'black',
                 marginTop: '60px',
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
+                alignContent: 'space-between',
+                position: 'relative',
+                padding: '0 auto'
             }}
         >
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr 1fr 1fr',
-                gridColumnGap: '50px',
-                justifyContent: 'center',
-                alignItems: 'flex-end',
-                marginLeft: '173px',
-                marginRight: '173px',
-            }}>
-                <div style={{flex: 1, marginTop: '99px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer'}}>
-                    {radioStation.genres.slice(0, Math.ceil(radioStation.genres.length / 4)).map((genre) => (
-                        <p key={genre.id} onClick={() => setGenreOnFooter(genre)}>
-                            {genre.name}({genre.numberOfRS})</p>
-                    ))}
-                </div>
-                <div style={{flex: 1, marginTop: '99px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer'}}>
-                    {radioStation.genres.slice(Math.ceil(radioStation.genres.length / 4), 2 * (Math.ceil(radioStation.genres.length / 4))).map((genre) => (
-                        <p key={genre.id} onClick={() => setGenreOnFooter(genre)}>
-                            {genre.name}({genre.numberOfRS})</p>
-                    ))}
-                </div>
-                <div style={{flex: 1, marginTop: '99px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer'}}>
-                    {radioStation.genres.slice(2 * (Math.ceil(radioStation.genres.length / 4)), 3 * (Math.ceil(radioStation.genres.length / 4))).map((genre) => (
-                        <p key={genre.id} onClick={() => setGenreOnFooter(genre)}>
-                            {genre.name}({genre.numberOfRS})</p>
-                    ))}
-                </div>
-                <div style={{flex: 1, marginTop: '99px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer'}}>
-                    {radioStation.genres.slice(3 * (Math.ceil(radioStation.genres.length / 4)), radioStation.genres.length+1).map((genre) => (
-                        <p key={genre.id} onClick={() => setGenreOnFooter(genre)}>
-                            {genre.name}({genre.numberOfRS})</p>
-                    ))}
-
+            <div
+                style={{
+                    display: 'flex',
+                    width: '100%',
+                    margin: '0 auto',
+                    maxWidth: '1060px',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    alignItems: 'flex-start',
+                    padding:"0 10px"
+                }}
+            >
+                {Array.from({ length: columnCount }).map((_, columnIndex) => (
+                    <div
+                        key={columnIndex}
+                        style={{ marginTop: '50px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer', marginBottom:'20px' }}
+                    >
+                        {radioStation.genres
+                            .slice(
+                                columnIndex * (Math.ceil(radioStation.genres.length / columnCount)),
+                                (columnIndex + 1) * (Math.ceil(radioStation.genres.length / columnCount))
+                            )
+                            .map((genre) => (
+                                <p key={genre.id} onClick={() => {genre.numberOfRS > 0 ? setGenreOnFooter(genre) : console.error('')}}>
+                                    {genre.name} ({genre.numberOfRS})
+                                </p>
+                            ))}
+                    </div>
+                ))}
+            </div>
+            <div style={{ position: 'relative' }}>
+                <div className='contact-info'>
+                    <Link to="/contacts" className='contact-info-text'>Контакты</Link>
+                    <Link to="/owners" className='contact-info-text'>Правообладателям</Link>
+                    <Link to="/privacy-policy" className='contact-info-text'>Политика конфиденциальности</Link>
                 </div>
             </div>
-
         </div>
     );
 });
