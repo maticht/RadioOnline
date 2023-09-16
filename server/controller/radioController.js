@@ -7,15 +7,18 @@ const {Country} = require("../models/country");
 const {Language} = require("../models/language");
 const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
+const icy = require("icy");
 const ffmpeg = require('fluent-ffmpeg');
+const {json} = require("react-router-dom");
 
-const ffmpegPath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
-const ffprobePath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
+
+const ffmpegPath = '../FFmpeg/bin/ffprobe';
+const ffprobePath = '../FFmpeg/bin/ffprobe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-async function getAudioBitrateFromStream(streamUrl) {
+async function getAudioMetadataFromStream(streamUrl) {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(streamUrl, (err, metadata) => {
             if (err) {
@@ -27,6 +30,22 @@ async function getAudioBitrateFromStream(streamUrl) {
             }
         });
     });
+}
+
+async function getIcyMetadataFromStream(streamUrl) {
+    const meta = new Promise((resolve, reject) => {
+        icy.get(streamUrl, (res) => {
+            res.on("metadata", (metadata) => {
+                const parsedMetadata = icy.parse(metadata);
+                resolve(parsedMetadata);
+            });
+            res.on("error", (error) => {
+                console.log(error.message);
+                reject(error);
+            });
+        });
+    });
+    return res.json(meta);
 }
 
 
@@ -180,24 +199,53 @@ class RadioController {
             if (radioOnlineMap.has(id)) {
                 const onlineCount = radioOnlineMap.get(id);
                 radioOnlineMap.set(id, onlineCount + 1);
+                // return res.status(200);
             } else {
+
                 console.log('Объект с указанным id не найден.');
+                // return res.status(200);
             }
         } catch (e) {
             console.log(e)
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
+
         try {
-            const metadata = await getAudioBitrateFromStream(url);
-            if (metadata.tags.StreamTitle) {
-                return res.json({StreamTitle: metadata.tags.StreamTitle});
-            } else {
-                return res.json({StreamTitle: 'Неизвестно'});
-            }
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+            let meta;
+            meta = await new Promise((resolve, reject) => {
+                icy.get(url, (response) => {
+                    response.on("metadata", (metadata) => {
+                        const parsedMetadata = icy.parse(metadata);
+                        resolve(parsedMetadata);
+                    });
+                    response.on("error", (error) => {
+                        console.log(error.message);
+                        resolve({StreamTitle: 'Неизвестно'})
+                    });
+                });
+            });
+            console.log(meta);
+            return res.json(meta);
         } catch (err) {
             console.error('Ошибка внутри try-catch:', err);
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
+
+
+        // try {
+        //     const metadata = await getAudioMetadataFromStream(url);
+        //     console.log(metadata);
+        //     if (metadata.tags.StreamTitle) {
+        //         console.log(metadata)
+        //         return res.json({StreamTitle: metadata.tags.StreamTitle});
+        //     } else {
+        //         return res.json({StreamTitle: 'Неизвестно'});
+        //     }
+        // } catch (err) {
+        //     console.error('Ошибка внутри try-catch:', err);
+        //     return res.status(500).json({success: false, error: 'Internal server error'});
+        // }
     }
 
 
@@ -207,7 +255,7 @@ class RadioController {
             if (!id) res.status(400).json('None Id')
             const deletedDocument = await Radio.findByIdAndDelete(id);
             radioOnlineMap.delete(id)
-            console.log(radioOnlineMap)
+            console.log(radioOnlineMap);
             let genre = await Genre.findById(deletedDocument.genre);
             genre.numberOfRS = genre.numberOfRS - 1;
             await genre.save();

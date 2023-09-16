@@ -10,8 +10,8 @@ const getLastToken = require("./models/getLastToken");
 const fileUpload = require('express-fileupload');
 const connection = require("./db");
 const path = require("path");
-const onlineUpdater = require('./utils/onlineUpdater')
-const bitrateUpdater = require('./utils/bitrateUpdater')
+const onlineUpdater = require('./utils/onlineUpdater');
+const bitrateUpdater = require('./utils/bitrateUpdater');
 
 connection();
 

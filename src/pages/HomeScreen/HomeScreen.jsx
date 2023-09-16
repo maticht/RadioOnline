@@ -148,9 +148,9 @@ const HomeScreen = observer(() => {
                     radioStation.setRadios(data[0]);
                     radioStation.setTotalCount(data[1]);
                     console.log('запрс из 1 useEffect');
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 2000);
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 2000);
                 }
             )
         }
@@ -181,7 +181,7 @@ const HomeScreen = observer(() => {
                 setSelectGenre(data[1]);
                 setSelectCountry(data[2]);
                 setSelectLanguage(data[3]);
-                if(!isFav && !isFavWithId){
+                if (!isFav && !isFavWithId) {
                     radioStation.setSelectGenre(data[1])
                 }
                 setIsPlaying(true);
@@ -198,7 +198,11 @@ const HomeScreen = observer(() => {
         if (selectedRadio !== null) {
             const interval = setInterval(() => {
                 fetchCurrentMusicName(selectedRadio).then(data => {
-                    setCurrentMusicName(data.StreamTitle);
+                    if(data.StreamTitle === ''){
+                        setCurrentMusicName(`Играет ${selectedRadio.title}`);
+                    }else {
+                        setCurrentMusicName(data.StreamTitle);
+                    }
                     console.log(data);
                 });
             }, 1000);
@@ -271,31 +275,38 @@ const HomeScreen = observer(() => {
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
         if (selectedRadio === null || r.title !== selectedRadio.title) {
-            setSelectedRadio(r)
-            setLeaveReview(false)
-            setAllReviews(false)
-            setRatingArrUs(r.rating)
-            radioStation.setLimit(18)
-            fetchCurrentMusicName(r).then(data => {
-                setCurrentMusicName(data.StreamTitle)
-                console.log(data)
-            })
-            fetchOneRadio(r.id).then(data => {
-                setRadioOnline(data[0].online)
-                setSelectGenre(data[1])
-                setSelectCountry(data[2])
-                setSelectLanguage(data[3])
-                if(!isFav && !isFavWithId){
-                    radioStation.setSelectGenre(data[1])
+            setIsLoading(true);
+                setSelectedRadio(r)
+                setLeaveReview(false)
+                setAllReviews(false)
+                setRatingArrUs(r.rating)
+                radioStation.setLimit(18)
+                fetchCurrentMusicName(r).then(data => {
+                    if(data.StreamTitle === ''){
+                        setCurrentMusicName(`Играет ${selectedRadio.title}`);
+                    }else {
+                        setCurrentMusicName(data.StreamTitle);
+                    }
+                    console.log(data)
+                });
+                fetchOneRadio(r.id).then(data => {
+                    setRadioOnline(data[0].online)
+                    setSelectGenre(data[1])
+                    setSelectCountry(data[2])
+                    setSelectLanguage(data[3])
+                    if (!isFav && !isFavWithId) {
+                        radioStation.setSelectGenre(data[1])
+                    }
+                    setIsPlaying(true);
+                    audioRef.current.play();
+                });
+                if (isFav || isFavWithId) {
+                    navigation(`/favorites/${r.radioLinkName}`)
+                } else {
+                    navigation(`/${r.radioLinkName}`)
                 }
-                setIsPlaying(true);
-                audioRef.current.play();
-            });
-            if (isFav || isFavWithId) {
-                navigation(`/favorites/${r.radioLinkName}`)
-            } else {
-                navigation(`/${r.radioLinkName}`)
-            }
+
+
         }
     }
 
@@ -395,7 +406,7 @@ const HomeScreen = observer(() => {
                                                         }}>
                                                         </div>
                                                         <div style={{
-                                                            marginTop:'10px',
+                                                            marginTop: '10px',
                                                             width: "140px",
                                                             height: '120px',
                                                             display: 'flex',
@@ -461,7 +472,8 @@ const HomeScreen = observer(() => {
                                                                     flexDirection: 'row',
                                                                     alignItems: 'center'
                                                                 }}>
-                                                                    <img style={{width: '12px'}} src={goldStar} alt="star"/>
+                                                                    <img style={{width: '12px'}} src={goldStar}
+                                                                         alt="star"/>
                                                                     <p style={{
                                                                         margin: '0 0 0 2px',
                                                                         fontSize: '13px',
@@ -510,7 +522,10 @@ const HomeScreen = observer(() => {
                                                                 flexDirection: 'column',
                                                             }}>
                                                                 <p style={{margin: '2px 0', fontSize: '12px'}}>Жанр</p>
-                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Страна</p>
+                                                                <p style={{
+                                                                    margin: '2px 0',
+                                                                    fontSize: '12px'
+                                                                }}>Страна</p>
                                                                 <p style={{margin: '2px 0', fontSize: '12px'}}>Язык</p>
                                                             </div>
                                                             <div style={{
@@ -725,63 +740,63 @@ const HomeScreen = observer(() => {
                                     <div key={index} className={'oneBestSpecialistsBlock'} style={{
                                         marginRight: handleMarginRight(index),
                                     }}>
-                                    <Link style={{
-                                        textDecoration: "none",
-                                        color: "#000",
-                                        flexDirection: 'column',
-                                        height: '100%',
-                                        width: '100%'
-                                    }}>
-                                        <div style={{
-                                            display: 'flex',
+                                        <Link style={{
+                                            textDecoration: "none",
+                                            color: "#000",
                                             flexDirection: 'column',
-                                            alignContent: 'space-between'
+                                            height: '100%',
+                                            width: '100%'
                                         }}>
                                             <div style={{
-                                                width: "140px",
-                                                height: '125px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignContent: 'space-between'
+                                            }}>
+                                                <div style={{
+                                                    width: "140px",
+                                                    height: '125px',
+                                                    marginTop: '10px',
+                                                    marginLeft: '10px',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    alignContent: 'space-around',
+                                                    borderRadius: '10px',
+                                                    background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                    backgroundSize: '200% 100%',
+                                                    animation: 'gradientAnimation 1s linear infinite',
+                                                }}>
+                                                </div>
+                                            </div>
+                                            <div style={{
                                                 marginTop: '10px',
-                                                marginLeft: '10px',
+                                                paddingTop: '2px',
+                                                borderTop: "1px solid #EAEAEA",
                                                 display: 'flex',
                                                 flexDirection: 'column',
                                                 justifyContent: 'space-between',
-                                                alignContent: 'space-around',
-                                                borderRadius: '10px',
-                                                background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
-                                                backgroundSize: '200% 100%',
-                                                animation: 'gradientAnimation 1s linear infinite',
+                                                alignContent: 'space-around'
                                             }}>
+                                                <div style={{
+                                                    width: "140px",
+                                                    height: '30px',
+                                                    marginLeft: '10px',
+                                                    marginTop: '5px',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    alignContent: 'space-around',
+                                                    borderRadius: '10px',
+                                                    background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                                    backgroundSize: '200% 100%',
+                                                    animation: 'gradientAnimation 1s linear infinite',
+                                                }}>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div style={{
-                                            marginTop: '10px',
-                                            paddingTop: '2px',
-                                            borderTop: "1px solid #EAEAEA",
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'space-between',
-                                            alignContent: 'space-around'
-                                        }}>
-                                            <div style={{
-                                                width: "140px",
-                                                height: '30px',
-                                                marginLeft: '10px',
-                                                marginTop: '5px',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'space-between',
-                                                alignContent: 'space-around',
-                                                borderRadius: '10px',
-                                                background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
-                                                backgroundSize: '200% 100%',
-                                                animation: 'gradientAnimation 1s linear infinite',
-                                            }}>
-                                            </div>
-                                        </div>
 
-                                    </Link>
-                                </div>
-                            ))}</div>
+                                        </Link>
+                                    </div>
+                                ))}</div>
                         ) : (
                             <div className={'allRadios'}>
                                 {radioStation.radios.map((radio, index) => (
@@ -912,7 +927,7 @@ const HomeScreen = observer(() => {
                                                 value={ratingName.name}
                                                 required
                                                 className="input"
-                                                style={{width:'100%'}}
+                                                style={{width: '100%'}}
                                             />
                                         </div>
                                         <div style={{
@@ -930,7 +945,7 @@ const HomeScreen = observer(() => {
                                                 value={ratingEmail.email}
                                                 required
                                                 className="input"
-                                                style={{width:'100%'}}
+                                                style={{width: '100%'}}
                                             />
                                         </div>
                                         <div style={{
