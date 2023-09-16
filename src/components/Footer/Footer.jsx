@@ -22,7 +22,7 @@ const Footer = observer(() => {
     }, []);
 
     const getColumnCount = () => {
-        return windowWidth < 400 ? 2 : 4;
+        return windowWidth >= 650 ? 4 : windowWidth >= 450 ? 3 : 2;
     };
 
     const columnCount = getColumnCount();
@@ -62,7 +62,7 @@ const Footer = observer(() => {
                 {Array.from({ length: columnCount }).map((_, columnIndex) => (
                     <div
                         key={columnIndex}
-                        style={{ marginTop: '50px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer', marginBottom:'20px' }}
+                        style={{ margin: '50px 10px 20px', alignSelf: 'flex-start', color: 'white', cursor: 'pointer' }}
                     >
                         {radioStation.genres
                             .slice(

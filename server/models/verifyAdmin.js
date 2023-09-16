@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
         const token = await new Token({
             token: crypto.randomBytes(32).toString("hex"),
         }).save();
-        const url = `http://localhost:3000/admin/${token.token}`;
+        const url = `http://front.server757413.nazwa.pl/admin/${token.token}`;
         const emailHtml = generateEmailTemplate(url);
         await sendEmail(process.env.ADMIN, "Radio Online | Проверка электронной почты администратора", emailHtml);
 

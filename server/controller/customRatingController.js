@@ -33,7 +33,7 @@ class CustomRatingController {
             let customError = await customRating.find();
             if (!customError) return res.status(409).send({message: "Ошибок нет в базе данных!"});
             customError.sort((a, b) => {
-                return b.time- a.time;
+                return b.created- a.created;
             });
             return res.json(customError);
         } catch (error) {

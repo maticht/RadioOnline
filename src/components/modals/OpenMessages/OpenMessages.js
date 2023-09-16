@@ -44,7 +44,7 @@ const OpenMessages = observer(({show, onHide}) => {
 
     const toggleRate = async (id, userid, rating, description, name, email) => {
         try {
-            const url = `http://localhost:8081/addingRating/${userid}`;
+            const url = `http://front.server757413.nazwa.pl/addingRating/${userid}`;
             const {data: res} = await axios.put(url, {
                 value: rating, description: description, name: name, email: email
             });
@@ -247,7 +247,8 @@ const OpenMessages = observer(({show, onHide}) => {
                     marginTop: '10px',
                 }}>
                     {ratMessages.length !== 0 ?
-                        ratMessages.map(ratMessage => (<div style={{
+                        ratMessages.map(
+                            ratMessage => (<div style={{
                                 width: '100%',
                                 display: 'flex',
                                 alignItems: 'flex-start',

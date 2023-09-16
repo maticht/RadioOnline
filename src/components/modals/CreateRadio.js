@@ -107,7 +107,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.genres.map(genre =>
                                     <Dropdown.Item onClick={() => setGenreToAdd(genre)} key={genre.id}>
-                                        {genre.name}
+                                        {genre.name.length >= 13 ? genre.name.slice(0,14) : genre.name}
                                     </Dropdown.Item>
                                 )}
                             </DropdownMenu>
@@ -117,7 +117,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.countries.map(country =>
                                     <Dropdown.Item onClick={() => setCountryToAdd(country)}
-                                                   key={country.id}> {country.name} </Dropdown.Item>
+                                                   key={country.id}>{country.name.length >= 13 ? country.name.slice(0,14) : country.name} </Dropdown.Item>
                                 )}
                             </DropdownMenu>
                         </Dropdown>
@@ -126,7 +126,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.languages.map(language =>
                                     <Dropdown.Item onClick={() => setLanguageToAdd(language)}
-                                                   key={language.id}> {language.name} </Dropdown.Item>
+                                                   key={language.id}> {language.name.length >= 13 ? language.name.slice(0,14) : language.name} </Dropdown.Item>
                                 )}
                             </DropdownMenu>
                         </Dropdown>

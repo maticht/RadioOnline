@@ -49,7 +49,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
     useEffect(() => {
         const fetchLastToken = async () => {
             try {
-                const {data} = await axios.get(`http://localhost:8081/getLastToken`);
+                const {data} = await axios.get(`http://front.server757413.nazwa.pl/getLastToken`);
                 if (data.token === param.token) {
                     setValidateToken(true);
                 }
@@ -82,7 +82,8 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
 
     const goToFav = () => {
         // Добавляем параметр запроса isFav со значением true
-        window.location = '/favorites';
+        history('/favorites');
+        window.location.reload();
     }
 
     const refresh = async () => {
@@ -144,7 +145,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                 {!isAdminLoc ? (
                     <div className={'navBarBlock-fav'}>
                         {!isFav && !isFavWithId ?
-                            <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                            <Link className={"logInBlock"} to={"/favorites"} >
                                 <p className={"accountText"}>Избранное</p>
                                 <button className={"accountBtn"}></button>
                             </Link>
@@ -155,7 +156,31 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
                         {!isFav && !isFavWithId ?
                             <div className={"logInBlock"} onClick={() => setMessageVisible(true)}>
                                 <p className={"accountText"} style={{marginBottom:'5px'}}>Входящие</p>
-                                <button className={"msAccountBtn"}></button>
+                                <div style={{ position: 'relative' }}>
+                                    {allMessagesLs !== 0 &&
+                                        (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '-5px',
+                                                right: '-3px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                height: '15px',
+                                                padding: '0 5px',
+                                                borderRadius: '15px',
+                                                backgroundColor: '#06B5AE',
+                                                fontWeight: '500',
+                                                color: '#fff',
+                                                fontSize: '10px',
+                                                textAlign: 'center'
+                                            }}>
+                                                {allMessagesLs}
+                                            </div>
+                                        )
+                                    }
+                                    <button className={"msAccountBtn"}></button>
+                                </div>
                             </div>
                             : <p style={{
                                 fontSize: '20px',
@@ -242,10 +267,10 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
             {!isAdminLoc ? (
                 <div className={'fav-btn'}>
                     {!isFav && !isFavWithId ?
-                        <Link className={"logInBlock"} to={"/favorites"} onClick={goToFav}>
+                        <div className={"logInBlock"} onClick={goToFav}>
                             <p className={"accountText"}>Избранное</p>
                             <button className={"accountBtn"}></button>
-                        </Link>
+                        </div>
                         : <p style={{
                             fontSize: '20px',
                             margin: '0 0 px 0',

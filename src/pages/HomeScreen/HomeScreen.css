@@ -57,7 +57,7 @@
     justify-content: flex-start;
     align-items: center;
     border-radius: 8px;
-    margin: 10px 0 10px 0;
+    margin: 10px 10px 10px 10px;
     box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
 }
 .inputTop {
@@ -376,6 +376,8 @@ textarea::placeholder{
     width: calc(50% - 8px);
 }
 .allRadios{
+    margin-left: -10px;
+    width: calc(100% + 20px);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -463,8 +465,10 @@ textarea::placeholder{
 @media screen and (max-width: 992px) {
     .admin-additional-button {
         width: 100%;
+        margin-right: 8px;
     }
     .main-admin-button {
+        margin-left: 8px;
         width: 100%;
     }
 }
@@ -557,6 +561,15 @@ textarea::placeholder{
         flex-direction: column;
     }
     .main-admin-button {
+        width: 100%;
+    }
+    .admin-additional-button {
+        width: 100%;
+        margin-right: 0;
+    }
+    .main-admin-button {
+        margin-top: 10px;
+        margin-left: 0;
         width: 100%;
     }
 }

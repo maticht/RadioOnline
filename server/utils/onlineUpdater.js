@@ -28,7 +28,7 @@ async function updateOnlineField() {
             const onlineCount = radioOnlineMap.get(radio.id); //получение пингов дла радиостанции с необходимым айди из мапы
             radioOnlineMap.set(radio.id, 0);// обнуляем счетчик пингов длая радиостанции с необходимым айди в мапе
             const updatedOnline = Math.round(onlineCount / 4); // считаем сколько людей на радиостанции
-            console.log(`Для "${radio.title}" в бд было записано: ${onlineCount} пингов.`)
+            // console.log(`Для "${radio.title}" в бд было записано: ${onlineCount} пингов.`)
             return {...radio._doc, online: updatedOnline}; // возвращаем это количество
         });
 
@@ -37,8 +37,7 @@ async function updateOnlineField() {
                 online: radio.online,
             }
         })));
-
-        console.log('Поле "online" в записях базы данных "radio" успешно обновлено.');
+        // console.log('Поле "online" в записях базы данных "radio" успешно обновлено.');
     } catch (error) {
         console.log('Ошибка при обновлении поля "online":', error);
     }

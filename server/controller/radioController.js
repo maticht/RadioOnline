@@ -8,16 +8,13 @@ const {Language} = require("../models/language");
 const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
+const icy = require('icy')
 
-<<<<<<< HEAD
-const icy = require('icy');
-const {log} = require("util");
-=======
-const ffmpegPath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
-const ffprobePath = 'C:/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe';
-
-ffmpeg.setFfmpegPath(ffmpegPath);
-ffmpeg.setFfprobePath(ffprobePath);
+// const ffmpegPath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
+// const ffprobePath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
+//
+// ffmpeg.setFfmpegPath(ffmpegPath);
+// ffmpeg.setFfprobePath(ffprobePath);
 
 async function getAudioBitrateFromStream(streamUrl) {
     return new Promise((resolve, reject) => {
@@ -32,7 +29,6 @@ async function getAudioBitrateFromStream(streamUrl) {
         });
     });
 }
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
 
 
 class RadioController {
@@ -144,27 +140,6 @@ class RadioController {
         }
     }
 
-<<<<<<< HEAD
-    async getRadioMetadata(req, res) {
-       const url = req.body.radio;
-        try {
-            const parsedMetadata = await new Promise((resolve, reject) => {
-                icy.get(url, (res) => {
-                    res.on('metadata', (metadata) => {
-                        const parsedMetadata = icy.parse(metadata);
-                        resolve(parsedMetadata);
-
-                    });
-                    res.on('error', (err) => {
-                        reject(err);
-                    });
-                });
-            });
-            return res.json(parsedMetadata);
-        } catch (err) {
-            console.error('Ошибка при получении потока:', err);
-            return res.status(500).json({ success: false, error: 'Internal server error' });
-=======
 
     async getOneByLink(req, res) {
         const link = req.params.link;
@@ -178,7 +153,6 @@ class RadioController {
         } catch (error) {
             console.error(error);
             return res.status(500).json({message: 'Internal server error'});
->>>>>>> deb7e21556671a12e89aeb549aaf0eb6dbd58a31
         }
     }
 
@@ -199,6 +173,34 @@ class RadioController {
         }
     }
 
+    // async getRadioMetadata(req, res) {
+    //     const url = req.body.radio;
+    //     const id = req.body.id;
+    //     try {
+    //         if (!url) res.status(400).json('None url')
+    //         if (radioOnlineMap.has(id)) {
+    //             const onlineCount = radioOnlineMap.get(id);
+    //             radioOnlineMap.set(id, onlineCount + 1);
+    //         } else {
+    //             console.log('Объект с указанным id не найден.');
+    //         }
+    //     } catch (e) {
+    //         console.log(e)
+    //         return res.status(500).json({success: false, error: 'Internal server error'});
+    //     }
+    //     try {
+    //         const metadata = await getAudioBitrateFromStream(url);
+    //         if (metadata.tags.StreamTitle) {
+    //             return res.json({StreamTitle: metadata.tags.StreamTitle});
+    //         } else {
+    //             return res.json({StreamTitle: 'Неизвестно'});
+    //         }
+    //     } catch (err) {
+    //         console.error('Ошибка внутри try-catch:', err);
+    //         return res.status(500).json({success: false, error: 'Internal server error'});
+    //     }
+    // }
+
     async getRadioMetadata(req, res) {
         const url = req.body.radio;
         const id = req.body.id;
@@ -207,20 +209,34 @@ class RadioController {
             if (radioOnlineMap.has(id)) {
                 const onlineCount = radioOnlineMap.get(id);
                 radioOnlineMap.set(id, onlineCount + 1);
+                // return res.status(200);
             } else {
+
                 console.log('Объект с указанным id не найден.');
+                // return res.status(200);
             }
         } catch (e) {
             console.log(e)
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
+
         try {
-            const metadata = await getAudioBitrateFromStream(url);
-            if (metadata.tags.StreamTitle) {
-                return res.json({StreamTitle: metadata.tags.StreamTitle});
-            } else {
-                return res.json({StreamTitle: 'Неизвестно'});
-            }
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+            let meta;
+            meta = await new Promise((resolve, reject) => {
+                icy.get(url, (response) => {
+                    response.on("metadata", (metadata) => {
+                        const parsedMetadata = icy.parse(metadata);
+                        resolve(parsedMetadata);
+                    });
+                    response.on("error", (error) => {
+                        console.log(error.message);
+                        resolve({StreamTitle: 'Неизвестно'})
+                    });
+                });
+            });
+            console.log(meta);
+            return res.json(meta);
         } catch (err) {
             console.error('Ошибка внутри try-catch:', err);
             return res.status(500).json({success: false, error: 'Internal server error'});
@@ -295,36 +311,6 @@ class RadioController {
             radio.genre = req.body.genre_id
             radio.country = req.body.country_id
             radio.image = fileName
-            await radio.save()
-            return res.status(201).send({message: "Радиостанция обновлена успешно"});
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({message: "Внутренняя ошибка сервера"});
-        }
-    }
-
-    async onlineMinus(req, res) {
-        const id = req.params.id;
-        try {
-            let radio = await Radio.findById(id);
-            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
-            radio.online = radio.online - 1;
-            console.log('попал в минус ' + radio.online)
-            await radio.save()
-            return res.status(201).send({message: "Радиостанция обновлена успешно"});
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({message: "Внутренняя ошибка сервера"});
-        }
-    }
-
-    async onlinePlus(req, res) {
-        const id = req.params.id;
-        try {
-            let radio = await Radio.findById(id);
-            if (!radio) return res.status(409).send({message: "Радиостанция с данным id не существует!"});
-            radio.online = radio.online + 1;
-            console.log('попал в плюс ' + radio.online)
             await radio.save()
             return res.status(201).send({message: "Радиостанция обновлена успешно"});
         } catch (error) {
