@@ -83,6 +83,7 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
     const goToFav = () => {
         // Добавляем параметр запроса isFav со значением true
         window.location = '/favorites';
+        window.location.reload();
     }
 
     const refresh = async () => {
