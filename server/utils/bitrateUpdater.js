@@ -1,12 +1,15 @@
 const {Radio} = require("../models/radio");
+const path = require('path');
 const intervalTime = 300000; // 5 мин
 const ffmpeg = require('fluent-ffmpeg');
 
 
+// // Указываем пути к исполняемым файлам FFmpeg и ffprobe
+const ffmpegRelativePath = '../FFmpeg/bin/ffmpeg';
+const ffprobeRelativePath = '../FFmpeg/bin/ffprobe';
 
-// Указываем пути к исполняемым файлам FFmpeg и ffprobe
-const ffmpegPath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
-const ffprobePath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
+const ffmpegPath = path.resolve(__dirname, ffmpegRelativePath);
+const ffprobePath = path.resolve(__dirname, ffprobeRelativePath);
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);

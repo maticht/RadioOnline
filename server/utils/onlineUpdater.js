@@ -37,7 +37,8 @@ async function updateOnlineField() {
                 online: radio.online,
             }
         })));
-        // console.log('Поле "online" в записях базы данных "radio" успешно обновлено.');
+
+        console.log('Поле "online" в записях базы данных "radio" успешно обновлено.');
     } catch (error) {
         console.log('Ошибка при обновлении поля "online":', error);
     }
