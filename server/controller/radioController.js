@@ -57,15 +57,14 @@ const radioStationsWithoutSelected = (arrayFromDB, selectedRadioId, limit) => {
 
     const resultArr = [];
     let counter = 0;
-    let flag = false;
     for(const item of arrayFromDB){
         if(item.id === selectedRadioId){
-            flag = true;
+            continue;
         }
-        if((counter === parseInt(limit) && flag === false) || (counter === parseInt(limit) + 1 && flag === true)){
+        if(counter === parseInt(limit)){
             break;
         }
-        resultArr.push(item)
+        resultArr.push(item);
         counter++;
     }
     return resultArr;
@@ -316,11 +315,11 @@ class RadioController {
             if (radioOnlineMap.has(id)) {
                 const onlineCount = radioOnlineMap.get(id);
                 radioOnlineMap.set(id, onlineCount + 1);
-                // return res.status(200);
+                //return res.json({StreamTitle: ''});
             } else {
 
                 console.log('Объект с указанным id не найден.');
-                // return res.status(200);
+                //return res.json({StreamTitle: ''});
             }
         } catch (e) {
             console.log(e)

@@ -761,7 +761,7 @@ const HomeScreen = observer(() => {
                     <div>
                         {isLoading ? (
                             <div className={'allRadios'}>
-                                {[...Array(radioStation.radios && radioStation.radios.length > 0 ? radioStation.radios.length - 1 : 24)].map((_, index) => (
+                                {[...Array(radioStation.radios && radioStation.radios.length > 0 ? radioStation.radios.length : 24)].map((_, index) => (
                                     <div key={index} className={'oneBestSpecialistsBlock'}
                                         //      style={{
                                         //     marginRight: handleMarginRight(index),
@@ -827,7 +827,7 @@ const HomeScreen = observer(() => {
                         ) : (
                             <div className={'allRadios'}>
                                 {radioStation.radios.map((radio, index) => (
-                                    selectedRadio && selectedRadio.id === radio.id ? null : (
+
                                         <div
                                             className={'oneBestSpecialistsBlock'}
                                             key={radio.id}
@@ -909,7 +909,7 @@ const HomeScreen = observer(() => {
 
                                             </Link>
                                         </div>
-                                    )))}
+                                    ))}
                             </div>
                         )}
                     </div>
