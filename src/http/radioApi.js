@@ -50,11 +50,11 @@ export const createRadio = async (radio) => {
     return data
 }
 
-export const getRadios = async (country_id, genre_id, page, limit, searchName) => {
+export const getRadios = async (country_id, genre_id, page, limit, searchName, radio_id) => {
     const {data} = await $host.get('api/radio', {
         params:
             {
-                country_id, genre_id, page, limit, searchName
+                country_id, genre_id, page, limit, searchName, radio_id
             }
     })
     return data

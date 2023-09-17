@@ -9,6 +9,7 @@ const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const icy = require('icy')
+const {parse} = require("icy");
 
 // const ffmpegPath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
 // const ffprobePath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
@@ -49,7 +50,25 @@ async function getIcyMetadataFromStream(streamUrl) {
             });
         });
     });
-    return json(meta);
+    return meta;
+}
+
+const radioStationsWithoutSelected = (arrayFromDB, selectedRadioId, limit) => {
+
+    const resultArr = [];
+    let counter = 0;
+    let flag = false;
+    for(const item of arrayFromDB){
+        if(item.id === selectedRadioId){
+            flag = true;
+        }
+        if((counter === parseInt(limit) && flag === false) || (counter === parseInt(limit) + 1 && flag === true)){
+            break;
+        }
+        resultArr.push(item)
+        counter++;
+    }
+    return resultArr;
 }
 
 
@@ -86,61 +105,127 @@ class RadioController {
 
     async getAll(req, res) {
         try {
-            let {country_id, genre_id, page, limit, searchName} = req.query
+            let {country_id, genre_id, page, limit, searchName, radio_id} = req.query
             let offset = page * limit - limit
-            let radioStations
-            let resultCount
-            if (searchName === '') {
-                if (!country_id && !genre_id) {
-                    radioStations = await Radio.find().skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments();
-                } else if (country_id && !genre_id) {
-                    radioStations = await Radio.find({country: new Types.ObjectId(country_id)}).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments({country: new Types.ObjectId(country_id)});
-                } else if (!country_id && genre_id) {
-                    radioStations = await Radio.find({genre: new Types.ObjectId(genre_id)}).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments({genre: new Types.ObjectId(genre_id)});
-                } else if (country_id && genre_id) {
-                    radioStations = await Radio.find({
-                        country: new Types.ObjectId(country_id),
-                        genre: new Types.ObjectId(genre_id)
-                    }).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments({
-                        country: new Types.ObjectId(country_id),
-                        genre: new Types.ObjectId(genre_id)
-                    });
+            let radioStations = [];
+            let resultCount;
+            if (radio_id === '' || typeof radio_id === 'undefined') {
+                if (searchName !== '') {
+                    if (!country_id && !genre_id) {
+                        radioStations = await Radio.find().skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments();
+                    } else if (country_id && !genre_id) {
+                        radioStations = await Radio.find({country: new Types.ObjectId(country_id)}).skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments({country: new Types.ObjectId(country_id)});
+                    } else if (!country_id && genre_id) {
+                        radioStations = await Radio.find({genre: new Types.ObjectId(genre_id)}).skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments({genre: new Types.ObjectId(genre_id)});
+                    } else if (country_id && genre_id) {
+                        radioStations = await Radio.find({
+                            country: new Types.ObjectId(country_id),
+                            genre: new Types.ObjectId(genre_id)
+                        }).skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments({
+                            country: new Types.ObjectId(country_id),
+                            genre: new Types.ObjectId(genre_id)
+                        });
+                    }
+                } else {
+                    if (!country_id && !genre_id) {
+                        let query = {title: {$regex: searchName, $options: 'i'}};
+                        radioStations = await Radio.find(query).skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments(query);
+                    } else if (country_id && !genre_id) {
+                        let query = {
+                            title: {$regex: searchName, $options: 'i'},
+                            country: new Types.ObjectId(country_id)
+                        };
+                        radioStations = await Radio.find(query).skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments(query);
+                    } else if (!country_id && genre_id) {
+                        let query = {
+                            title: {$regex: searchName, $options: 'i'},
+                            genre: new Types.ObjectId(genre_id)
+                        };
+                        radioStations = await Radio.find(query).skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments(query);
+                    } else if (country_id && genre_id) {
+                        let query = {
+                            title: {$regex: searchName, $options: 'i'},
+                            country: new Types.ObjectId(country_id),
+                            genre: new Types.ObjectId(genre_id)
+                        };
+                        radioStations = await Radio.find(query).skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments(query);
+                    }
                 }
-            } else {
-                if (!country_id && !genre_id) {
-                    let query = {title: {$regex: searchName, $options: 'i'}};
-                    radioStations = await Radio.find(query).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments(query);
-                } else if (country_id && !genre_id) {
-                    let query = {
-                        title: {$regex: searchName, $options: 'i'},
-                        country: new Types.ObjectId(country_id)
-                    };
-                    radioStations = await Radio.find(query).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments(query);
-                } else if (!country_id && genre_id) {
-                    let query = {
-                        title: {$regex: searchName, $options: 'i'},
-                        genre: new Types.ObjectId(genre_id)
-                    };
-                    radioStations = await Radio.find(query).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments(query);
-                } else if (country_id && genre_id) {
-                    let query = {
-                        title: {$regex: searchName, $options: 'i'},
-                        country: new Types.ObjectId(country_id),
-                        genre: new Types.ObjectId(genre_id)
-                    };
-                    radioStations = await Radio.find(query).skip(offset).limit(limit);
-                    resultCount = await Radio.countDocuments(query);
+            }else {
+                if (searchName === '') {
+                    if (!country_id && !genre_id) {
+                        radioStations = await Radio.find().skip(offset).limit(limit);
+                        resultCount = await Radio.countDocuments();
+                    } else if (country_id && !genre_id) {
+
+                        const radioStationsTemp = await Radio.find({country: new Types.ObjectId(country_id)}).skip(offset);
+                        radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
+                        resultCount = await Radio.countDocuments({country: new Types.ObjectId(country_id)});
+
+                    } else if (!country_id && genre_id) {
+
+                        const radioStationsTemp = await Radio.find({genre: new Types.ObjectId(genre_id)}).skip(offset);
+                        radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
+                        resultCount = await Radio.countDocuments({genre: new Types.ObjectId(genre_id)});
+                    } else if (country_id && genre_id) {
+
+                        const radioStationsTemp = await Radio.find({
+                            country: new Types.ObjectId(country_id),
+                            genre: new Types.ObjectId(genre_id)
+                        }).skip(offset);
+
+                        radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
+
+                        resultCount = await Radio.countDocuments({
+                            country: new Types.ObjectId(country_id),
+                            genre: new Types.ObjectId(genre_id)
+                        });
+                    }
+                } else {
+                    if (!country_id && !genre_id) {
+                        let query = {title: {$regex: searchName, $options: 'i'}};
+                        const radioStationsTemp = await Radio.find(query).skip(offset).limit(limit);
+                        radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
+                        resultCount = await Radio.countDocuments(query);
+                    } else if (country_id && !genre_id) {
+                        let query = {
+                            title: {$regex: searchName, $options: 'i'},
+                            country: new Types.ObjectId(country_id)
+                        };
+
+                        const radioStationsTemp = await Radio.find(query).skip(offset);
+                        radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
+                        resultCount = await Radio.countDocuments(query);
+                    } else if (!country_id && genre_id) {
+                        let query = {
+                            title: {$regex: searchName, $options: 'i'},
+                            genre: new Types.ObjectId(genre_id)
+                        };
+                        const radioStationsTemp = await Radio.find(query).skip(offset);
+                        radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
+                        resultCount = await Radio.countDocuments(query);
+                    } else if (country_id && genre_id) {
+                        let query = {
+                            title: {$regex: searchName, $options: 'i'},
+                            country: new Types.ObjectId(country_id),
+                            genre: new Types.ObjectId(genre_id)
+                        };
+                        const radioStationsTemp = await Radio.find(query).skip(offset);
+                        radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
+                        resultCount = await Radio.countDocuments(query);
+                    }
                 }
             }
             const count = resultCount
-            return res.json([radioStations, count])
+            return res.json([radioStations, count, page])
         } catch (error) {
             console.log(error);
             res.status(500).send({message: "Внутренняя ошибка сервера"});

@@ -144,7 +144,12 @@ const HomeScreen = observer(() => {
             });
         } else {
             setIsLoading(true);
-            getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
+
+            let radioId;
+            if (selectedRadio !== null) {
+                radioId = selectedRadio.id;
+            }
+            getRadios(null, null, radioStation.page, radioStation.limit, '', radioId).then(data => {
                     radioStation.setRadios(data[0]);
                     radioStation.setTotalCount(data[1]);
                     console.log('запрс из 1 useEffect');
@@ -158,10 +163,14 @@ const HomeScreen = observer(() => {
 
     useEffect(() => {
             setIsLoading(true);
+            let radioId;
+            if (selectedRadio !== null) {
+                radioId = selectedRadio.id;
+            }
             if (!isFav && !isFavWithId) {
-                getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
+                getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName, radioId).then(data => {
                     radioStation.setRadios(data[0])
-                    radioStation.setTotalCount(data[1])
+                    radioStation.setTotalCount(data[1]);
                     console.log('запрс из 2 useEffect')
                     setTimeout(() => {
                         setIsLoading(false);
@@ -173,6 +182,8 @@ const HomeScreen = observer(() => {
 
     useEffect(() => {
         if (typeof (params.radioId) !== "undefined") {
+
+            radioStation.setLimit(18);
             fetchOneRadioByLink(params.radioId).then(data => {
                 setIsLoading(true);
                 setSelectedRadio(data[0]);
@@ -198,9 +209,9 @@ const HomeScreen = observer(() => {
         if (selectedRadio !== null) {
             const interval = setInterval(() => {
                 fetchCurrentMusicName(selectedRadio).then(data => {
-                    if(data.StreamTitle === ''){
+                    if (data.StreamTitle === '') {
                         setCurrentMusicName(`Играет ${selectedRadio.title}`);
-                    }else {
+                    } else {
                         setCurrentMusicName(data.StreamTitle);
                     }
                     console.log(data);
@@ -282,13 +293,13 @@ const HomeScreen = observer(() => {
             setRatingArrUs(r.rating)
             radioStation.setLimit(18)
             fetchCurrentMusicName(r).then(data => {
-                if(data.StreamTitle === ''){
-                    setCurrentMusicName(`Играет ${selectedRadio.title}`);
-                }else {
+                if (data.StreamTitle === '') {
+                    setCurrentMusicName(`Играет ${r.title}`);
+                } else {
                     setCurrentMusicName(data.StreamTitle);
                 }
                 console.log(data)
-            })
+            });
             fetchOneRadio(r.id).then(data => {
                 setRadioOnline(data[0].online)
                 setSelectGenre(data[1])
@@ -752,9 +763,9 @@ const HomeScreen = observer(() => {
                             <div className={'allRadios'}>
                                 {[...Array(radioStation.radios && radioStation.radios.length > 0 ? radioStation.radios.length - 1 : 24)].map((_, index) => (
                                     <div key={index} className={'oneBestSpecialistsBlock'}
-                                    //      style={{
-                                    //     marginRight: handleMarginRight(index),
-                                    // }}
+                                        //      style={{
+                                        //     marginRight: handleMarginRight(index),
+                                        // }}
                                     >
                                         <Link style={{
                                             textDecoration: "none",
