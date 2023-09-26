@@ -50,7 +50,7 @@ async function getIcyMetadataFromStream(streamUrl) {
             });
         });
     });
-    return meta;
+    return meta
 }
 
 const radioStationsWithoutSelected = (arrayFromDB, selectedRadioId, limit) => {
@@ -105,11 +105,15 @@ class RadioController {
     async getAll(req, res) {
         try {
             let {country_id, genre_id, page, limit, searchName, radio_id} = req.query
+            console.log("поисковое слово " + searchName)
+            console.log("поисковое айди радио " + radio_id)
             let offset = page * limit - limit
             let radioStations = [];
             let resultCount;
             if (radio_id === '' || typeof radio_id === 'undefined') {
-                if (searchName !== '') {
+
+                if (searchName === '') {
+                    console.log('Попал сюда')
                     if (!country_id && !genre_id) {
                         radioStations = await Radio.find().skip(offset).limit(limit);
                         resultCount = await Radio.countDocuments();
@@ -130,7 +134,7 @@ class RadioController {
                         });
                     }
                 } else {
-                    if (!country_id && !genre_id) {
+                     if (!country_id && !genre_id) {
                         let query = {title: {$regex: searchName, $options: 'i'}};
                         radioStations = await Radio.find(query).skip(offset).limit(limit);
                         resultCount = await Radio.countDocuments(query);
@@ -190,6 +194,7 @@ class RadioController {
                     }
                 } else {
                     if (!country_id && !genre_id) {
+
                         let query = {title: {$regex: searchName, $options: 'i'}};
                         const radioStationsTemp = await Radio.find(query).skip(offset).limit(limit);
                         radioStations = radioStationsWithoutSelected(radioStationsTemp, radio_id, limit);
@@ -264,15 +269,20 @@ class RadioController {
 
     async getFavorites(req, res) {
         let ids = req.body.ids; // ids - это массив id, переданный из клиента, разделенный запятыми
+        let records = [];
         try {
+            if(ids === null || typeof ids === "undefined" || ids === '[]'){
+                return res.json(records);
+            }
             const regex = /[\[\]"]/g;
             ids = ids.replace(regex, '');
             // Преобразуем массив строковых id в массив чисел
             const idArray = ids.split(',').map(id => new Types.ObjectId(id));
 
             // Находим записи в MongoDB по переданным id
-            const records = await Radio.find({_id: {$in: idArray}});
-            res.json(records);
+            records = await Radio.find({_id: {$in: idArray}});
+            console.log(typeof records)
+            return res.json(records);
         } catch (error) {
             console.error(error);
             return res.status(500).json({message: 'Internal server error'});

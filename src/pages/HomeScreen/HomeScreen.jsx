@@ -182,14 +182,19 @@ const HomeScreen = observer(() => {
 
     useEffect(() => {
         if (typeof (params.radioId) !== "undefined") {
-
+            setLeaveReview(false)
+            setAllReviews(false)
             radioStation.setLimit(18);
             fetchOneRadioByLink(params.radioId).then(data => {
                 setIsLoading(true);
                 setSelectedRadio(data[0]);
                 setRadioOnline(data[0].online);
                 setRatingArrUs(data[0].rating);
-                setSelectGenre(data[1]);
+                console.log(selectGenre);
+                console.log(data[1]);
+                if(selectGenre.name !== data[1].name) {
+                    setSelectGenre(data[1])
+                }
                 setSelectCountry(data[2]);
                 setSelectLanguage(data[3]);
                 if (!isFav && !isFavWithId) {
@@ -199,7 +204,7 @@ const HomeScreen = observer(() => {
                 audioRef.current.play();
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 100);
+                }, 500);
 
             });
         }
@@ -286,12 +291,13 @@ const HomeScreen = observer(() => {
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
         if (selectedRadio === null || r.title !== selectedRadio.title) {
-            setIsLoading(true);
-            setSelectedRadio(r)
-            setLeaveReview(false)
-            setAllReviews(false)
-            setRatingArrUs(r.rating)
-            radioStation.setLimit(18)
+            //setIsLoading(true);
+            setSelectedRadio(r);
+            radioStation.setSearchName('');
+            // setLeaveReview(false)
+            // setAllReviews(false)
+            // setRatingArrUs(r.rating)
+            // radioStation.setLimit(18)
             fetchCurrentMusicName(r).then(data => {
                 if (data.StreamTitle === '') {
                     setCurrentMusicName(`Играет ${r.title}`);
@@ -300,17 +306,22 @@ const HomeScreen = observer(() => {
                 }
                 console.log(data)
             });
-            fetchOneRadio(r.id).then(data => {
-                setRadioOnline(data[0].online)
-                setSelectGenre(data[1])
-                setSelectCountry(data[2])
-                setSelectLanguage(data[3])
-                if (!isFav && !isFavWithId) {
-                    radioStation.setSelectGenre(data[1])
-                }
+            // fetchOneRadio(r.id).then(data => {
+            //     setRadioOnline(data[0].online)
+            //     if(selectGenre.name !== data[1].name) {
+            //         setSelectGenre(data[1])
+            //     }
+            //     setSelectCountry(data[2])
+            //     setSelectLanguage(data[3])
+            //     if (!isFav && !isFavWithId && radioStation.selectedGenre.name !== data[1].name) {
+            //         radioStation.setSelectGenre(data[1])
+            //     }
+            setTimeout(()=>{
                 setIsPlaying(true);
                 audioRef.current.play();
-            });
+            }, 200)
+
+            // });
             if (isFav || isFavWithId) {
                 navigation(`/favorites/${r.radioLinkName}`)
             } else {
@@ -373,7 +384,7 @@ const HomeScreen = observer(() => {
     return (
         <div className={classes.container}>
             <div className={classes.maxWidthContainer}>
-                <HeaderNavBar setSelectedRadio={removeSelectedRadio}/>
+                <HeaderNavBar setSelectedRadio={removeSelectedRadio} isSelectedRadioActive={selectedRadio !== null}/>
                 <div className={'bestSpecialists'}>
                     {selectedRadio === null ?
                         <p style={{

@@ -13,7 +13,7 @@ import axios from "axios";
 import OpenMessages from "../modals/OpenMessages/OpenMessages";
 import {getAllCustomErrors, getAllCustomRating} from "../../http/radioApi";
 
-const HeaderNavBar = observer(({setSelectedRadio}) => {
+const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
     const param = useParams();
     const {radioStation} = useContext(Context)
     const [search, setSearch] = useState('')
@@ -63,17 +63,24 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
 
     const click = async () => {
         try {
-            radioStation.setSearchName(search)
-            radioStation.setPage(1)
+            radioStation.setSearchName(search);
+            radioStation.setPage(1);
+            radioStation.setLimit(42);
             console.log(radioStation.searchName)
             if (isAdminLoc) {
                 history(isAdminLoc)
             } else if (isHomeScreen) {
                 history(isHomeScreen)
-            } else if (isHomeScreenWithId) {
-                history(isHomeScreenWithId)
+            // } else if (isHomeScreenWithId) {
+            //     history(isHomeScreenWithId)
             } else {
                 history(`/`)
+            }
+
+            if (isSelectedRadioActive){
+                setSelectedRadio()
+                radioStation.setSelectGenre({})
+                radioStation.setSelectCountry({})
             }
         } catch (e) {
             alert(e.response.data.message)
@@ -83,10 +90,10 @@ const HeaderNavBar = observer(({setSelectedRadio}) => {
     const goToFav = () => {
         // Добавляем параметр запроса isFav со значением true
         window.location = '/favorites';
-        window.location.reload();
     }
 
     const refresh = async () => {
+        setSearch('');
         setSelectedRadio()//убирает значение выбранного радио это колбек функция
         radioStation.setSearchName('')
         radioStation.setPage(1)
