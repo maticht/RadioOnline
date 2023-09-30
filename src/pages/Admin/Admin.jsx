@@ -67,7 +67,7 @@ const Admin = observer(() => {
         const fetchLastToken = async () => {
             try {
                 setIsLoading(true)
-                const {data} = await axios.get(`http://test.server757413.nazwa.pl/getLastToken`);
+                const {data} = await axios.get(`https://backend.radio-online.me/getLastToken`);
 
                 setIsLoading(false);
                 if (data.token === param.token) {
@@ -380,7 +380,7 @@ const Admin = observer(() => {
                                                         width={150}
                                                         height={150}
                                                         style={{borderRadius: '8px'}}
-                                                        src={selectedRadio.image !== 'image' ? 'http://test.server757413.nazwa.pl/' + selectedRadio.image : nonePrev}
+                                                        src={selectedRadio.image !== 'image' ? 'https://backend.radio-online.me/' + selectedRadio.image : nonePrev}
                                                     />
                                                 </div>
                                             </div>
@@ -467,7 +467,7 @@ const Admin = observer(() => {
                                                     }}>
                                                         <Image width={140} height={125}
                                                                className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                               src={radio.image !== 'image' ? 'http://test.server757413.nazwa.pl/' + radio.image : nonePrev}/>
+                                                               src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
 
                                                     </div>
                                                 </div>

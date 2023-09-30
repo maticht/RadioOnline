@@ -44,7 +44,7 @@ const OpenMessages = observer(({show, onHide}) => {
 
     const toggleRate = async (id, userid, rating, description, name, email) => {
         try {
-            const url = `http://front.server757413.nazwa.pl/addingRating/${userid}`;
+            const url = `https://backend.radio-online.me/addingRating/${userid}`;
             const {data: res} = await axios.put(url, {
                 value: rating, description: description, name: name, email: email
             });
@@ -107,7 +107,7 @@ const OpenMessages = observer(({show, onHide}) => {
                         { errMessagesLs !== 0 && (
                             <div style={{
                                 display: 'flex',
-                                alignItems: 'center',
+                                alignItems: 'f',
                                 justifyContent: 'center',
                                 fontSize:'16px',
                                 padding:'5px 0 5px 10px',
@@ -173,7 +173,7 @@ const OpenMessages = observer(({show, onHide}) => {
                     maxHeight: '450px',
                     overflowY: 'auto',
                     justifyContent: 'flex-start',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     flexWrap: 'wrap',
                     marginTop: '10px',
                 }}>
@@ -242,7 +242,7 @@ const OpenMessages = observer(({show, onHide}) => {
                     maxHeight: '450px',
                     overflowY: 'auto',
                     justifyContent: 'flex-start',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     flexWrap: 'wrap',
                     marginTop: '10px',
                 }}>

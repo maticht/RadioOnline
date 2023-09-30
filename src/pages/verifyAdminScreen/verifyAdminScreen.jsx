@@ -11,7 +11,7 @@ const VerifyAdminScreen = () => {
         e.preventDefault();
         console.log(data)
         try {
-            const url = `http://localhost:8081/verifyAdmin`;
+            const url = `https://backend.radio-online.me/verifyAdmin`;
             const {data: res} = await axios.post(url, data);
             setMsg(res.message)
             console.log(data);
@@ -38,6 +38,8 @@ const VerifyAdminScreen = () => {
         }}>
             <div style={{
                 display: "flex",
+                maxWidth:'630px',
+                margin: '0 15px',
                 padding:"30px 50px",
                 backgroundColor: '#fff',
                 borderRadius:'10px',
@@ -46,16 +48,18 @@ const VerifyAdminScreen = () => {
                 flexDirection: 'column',
                 alignContent: 'center'
             }}>
-                <h4 style={{fontWeight: '700', color: '#000000', marginBottom:'20px'}}>Вход в панель админестратора</h4>
-                <p style={{fontSize: '18px', fontWeight: '400', color: '#000000', marginBottom:'20px'}}>Если вы администратор, подтвердите свою
+                <h4 style={{fontWeight: '700', color: '#000000', marginBottom:'20px', textAlign:'center'}}>Вход в панель админестратора</h4>
+                <p style={{fontSize: '18px', fontWeight: '400', color: '#000000', marginBottom:'20px', textAlign:'center'}}>Если вы администратор, подтвердите свою
                     электронную почту</p>
                 <button style={{
+                    maxWidth:'190px',
+                    width:'100%',
                     border: 'none',
                     borderRadius: '10px',
                     backgroundColor: '#06B5AE',
                     color: '#fff',
                     fontWeight: "500",
-                    padding: '10px 20px',
+                    padding: '10px 10px',
                     marginBottom:'20px'
                 }} onClick={handleSubmit}>
                     Отправить письмо

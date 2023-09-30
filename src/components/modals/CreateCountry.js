@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
+import "../../pages/Admin/admin.css";
 import {
     createCountry,
     deleteCountry,
@@ -11,7 +12,7 @@ import {Context} from "../../index";
 
 const CreateCountry = ({show, onHide}) => {
     const {radioStation} = useContext(Context);
-    const [countries, setCountries] = useState([])
+    const [countries, setCountries] = useState([]);
 
 
     useEffect(() => {

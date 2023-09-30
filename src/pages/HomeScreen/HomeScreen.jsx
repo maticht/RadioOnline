@@ -229,7 +229,7 @@ const HomeScreen = observer(() => {
 
     const toggleRate = async (userid, rating, description, name, email) => {
         try {
-            // const url = `http://localhost:8081/addingRating/${userid}`;
+            // const url = `https://backend.radio-online.me/addingRating/${userid}`;
             // const {data: res} = await axios.put(url, {value: rating, description: description, name: name, email: email});
             // const nemRatingArr = [...ratingArrUS, {value: rating, description: description, name: name, email: email,}];
             await createCustomRating({
@@ -291,7 +291,11 @@ const HomeScreen = observer(() => {
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
         if (selectedRadio === null || r.title !== selectedRadio.title) {
-            //setIsLoading(true);
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            setIsLoading(true);
             setSelectedRadio(r);
             radioStation.setSearchName('');
             // setLeaveReview(false)
@@ -393,7 +397,7 @@ const HomeScreen = observer(() => {
                             fontStyle: 'normal',
                             fontWeight: '700',
                             lineHeight: 'normal'
-                        }}>{isFav || isFavWithId ? 'Избранные радиостанции' : `Слушать радио онлайн бесплатно`}</p>
+                        }}>{isFav || isFavWithId ? 'Избранные радиостанции' : `Радио онлайн — слушать бесплатно`}</p>
                         : isLoading ? (
                             <div className='bitrate' style={{
                                 width: "250px",
@@ -410,13 +414,13 @@ const HomeScreen = observer(() => {
                             }}>
                             </div>
                         ) : (
-                            <p style={{
+                            <title style={{
                                 fontSize: '20px',
                                 margin: '0 0 5px 0',
                                 fontStyle: 'normal',
                                 fontWeight: '700',
                                 lineHeight: 'normal'
-                            }}>{`${selectedRadio.title} — слушать бесплатно`}</p>
+                            }}>{`${selectedRadio.title} — слушать бесплатно`}</title>
                         )
                     }
                     {selectedRadio && (
@@ -474,7 +478,7 @@ const HomeScreen = observer(() => {
                                                         </div>
                                                         <Image width={140} height={125}
                                                                className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                               src={selectedRadio.image !== 'image' ? 'http://test.server757413.nazwa.pl/' + selectedRadio.image : nonePrev}/>
+                                                               src={selectedRadio.image !== 'image' ? 'https://backend.radio-online.me/' + selectedRadio.image : nonePrev}/>
                                                     </div>
                                                 )}
                                             </div>
@@ -772,7 +776,8 @@ const HomeScreen = observer(() => {
                     <div>
                         {isLoading ? (
                             <div className={'allRadios'}>
-                                {[...Array(radioStation.radios && radioStation.radios.length > 0 ? radioStation.radios.length : 24)].map((_, index) => (
+                                {/*{[...Array(radioStation.radios && radioStation.radios.length > 0 ? radioStation.radios.length : 24)].map((_, index) => (*/}
+                                {[...Array(radioStation.limit)].map((_, index) => (
                                     <div key={index} className={'oneBestSpecialistsBlock'}
                                         //      style={{
                                         //     marginRight: handleMarginRight(index),
@@ -893,7 +898,7 @@ const HomeScreen = observer(() => {
                                                     }}>
                                                         <Image width={140} height={125}
                                                                className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                               src={radio.image !== 'image' ? 'http://test.server757413.nazwa.pl/' + radio.image : nonePrev}/>
+                                                               src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
 
                                                     </div>
                                                 </div>

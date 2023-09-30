@@ -49,7 +49,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
     useEffect(() => {
         const fetchLastToken = async () => {
             try {
-                const {data} = await axios.get(`http://localhost:8081/getLastToken`);
+                const {data} = await axios.get(`https://backend.radio-online.me/getLastToken`);
                 if (data.token === param.token) {
                     setValidateToken(true);
                 }
@@ -88,7 +88,6 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
     }
 
     const goToFav = () => {
-        // Добавляем параметр запроса isFav со значением true
         window.location = '/favorites';
     }
 
@@ -101,7 +100,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
         radioStation.setSelectGenre({})
         radioStation.setSelectCountry({})
         radioStation.setSelectLanguage({})
-        history(`/`)
+        history(`/`);
     }
 
     const getCountries = async () => {
@@ -112,7 +111,8 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
 
     const getGenres = async () => {
         if (isAdminLoc) {
-            getAllGenres().then(data => radioStation.setGenres(data))
+            getAllGenres().then(data => radioStation.setGenres(data));
+            console.log(radioStation.genres)
         }
     }
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -208,7 +208,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                                 <DropdownMenu className="custom-dropdown-menu">
                                     {radioStation.genres.map(genre =>
                                         <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
-                                                       key={genre.id}> {genre.name} </Dropdown.Item>
+                                                       key={genre.id}> {genre.name.length >= 13 ? genre.name.slice(0,14) : genre.name} </Dropdown.Item>
                                     )}
                                 </DropdownMenu>
                             </Dropdown>

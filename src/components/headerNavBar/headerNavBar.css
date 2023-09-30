@@ -32,7 +32,7 @@
     width: 29px;
     margin-left: 5px;
     height: 20px;
-    background-image: url('../../img/favorite.svg');
+    background-image: url('../../img/message.svg');
     background-repeat: no-repeat;
 }
 .searchBlock{
@@ -169,6 +169,7 @@
     background-color: #FFFFFF;
     border: 8px solid #FFFFFF;
     margin-top: 10px;
+    margin-bottom: 10px;
     border-radius: 8px;
     width: 165px;
     max-height: 270px;

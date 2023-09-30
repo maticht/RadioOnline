@@ -107,7 +107,7 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
                                 {radioStation.genres.map(genre =>
                                     <Dropdown.Item onClick={() => setGenreToAdd(genre)} key={genre.id}>
-                                        {genre.name}
+                                        {genre.name.length >= 13 ? genre.name.slice(0,14) : genre.name}
                                     </Dropdown.Item>
                                 )}
                             </DropdownMenu>

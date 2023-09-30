@@ -24,7 +24,7 @@ const SendErrorMessage = ({show, onHide, radio}) => {
 
     const sendMessage = async () => {
         try {
-            const url = `http://localhost:8081/sendErrorMessage`;
+            const url = `https://backend.radio-online.me/sendErrorMessage`;
             const {data: res} = await axios.post(url, {title: radio.title, errorMessage: value});
 
 
@@ -174,9 +174,9 @@ const SendErrorMessage = ({show, onHide, radio}) => {
                         </Form>
                     </Modal.Body>
                     <Modal.Footer style={{backgroundColor: '#F4F4F4', width: '100%', justifyContent: 'space-between'}}>
-                        <Button variant={"outline-danger"} className='admin-additional-button'
+                        <Button variant={"outline-danger"} style={{marginRight:'4px'}} className='admin-additional-button'
                                 onClick={onHide}>Закрыть</Button>
-                        <Button variant={"outline-success"} className='main-admin-button'
+                        <Button variant={"outline-success"} style={{marginLeft:'4px'}} className='main-admin-button'
                                 onClick={sendMessage}>Добавить</Button>
                     </Modal.Footer>
                 </>

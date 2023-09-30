@@ -11,11 +11,19 @@ const Pages = observer(() => {
     const pages = useMemo(() => [...Array(pageCount)].reduce((acc, _, i) => acc.concat(i + 1), []), [pageCount]);
 
     const handlePrevPage = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
         radioStation.setPage(
             radioStation.page > 1 ? radioStation.page - 1 : radioStation.page
         );
     };
     const handleNextPage = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
         radioStation.setPage(
             radioStation.page < pageCount ? radioStation.page + 1 : radioStation.page
         );
@@ -36,7 +44,13 @@ const Pages = observer(() => {
                 {pages.map((page) => (
                     <button
                         key={page}
-                        onClick={() => radioStation.setPage(page)}
+                        onClick={() => {
+                            radioStation.setPage(page);
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                        }}
                         className={`pagination-button pagination-page ${radioStation.page === page ? 'active' : ''}`}
                     >
                         {page}
