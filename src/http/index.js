@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const $host = axios.create({
-    baseURL: 'https://backend.radio-online.me/'
+    baseURL: 'http://localhost:8081'
 })
 
 const $authHost = axios.create({
-    baseURL: 'https://backend.radio-online.me/'
+    baseURL: 'http://localhost:8081'
 })
 
 // const authInterceptor = config => {

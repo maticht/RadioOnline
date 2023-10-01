@@ -1,9 +1,10 @@
+import './CreateRadio.css';
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Dropdown, Form, Modal, Col} from "react-bootstrap";
-import {Context} from "../../index";
+import {Context} from "../../../index";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
-import {createRadio, getAllCountries, getAllGenres, getAllLanguages} from "../../http/radioApi";
+import {createRadio, getAllCountries, getAllGenres, getAllLanguages} from "../../../http/radioApi";
 import {observer} from "mobx-react-lite";
 import {useLocation, useParams} from "react-router-dom";
 
@@ -19,6 +20,8 @@ const CreateRadio = observer(({show, onHide}) => {
     const [file, setFile] = useState(null)
     const location = useLocation()
     const isAdminLoc = location.pathname === `/admin/${param.token}`
+    const [selectedGenres, setSelectedGenres] = useState([]);
+
 
     useEffect(() => {
         getAllGenres().then(data => radioStation.setGenres(data))
@@ -48,6 +51,22 @@ const CreateRadio = observer(({show, onHide}) => {
         setFile(e.target.files[0])
     }
 
+    const toggleGenre = (genreId) => {
+        setSelectedGenres((prevGenres) => {
+            if (prevGenres.includes(genreId)) {
+                // Убираем жанр, если он уже в списке
+                return prevGenres.filter(selected => selected !== genreId);
+            } else {
+                // Добавляем жанр, если его нет в списке
+                return [...prevGenres, genreId];
+            }
+        });
+    }
+
+    useEffect(()=>{
+        console.log(selectedGenres)
+    },[selectedGenres])
+
     const addRadio = () => {
         const formData = new FormData()
         formData.append('title', title)
@@ -55,7 +74,8 @@ const CreateRadio = observer(({show, onHide}) => {
         formData.append('radioLinkName', radioLinkName)
         formData.append('image', file)
         formData.append('country_id', countryToAdd.id)
-        formData.append('genre_id', genreToAdd.id)
+        const genresIdsString = selectedGenres.join(',');
+        formData.append('genre_id', genresIdsString)
         formData.append('language_id',languageToAdd.id)
         createRadio(formData).then(data => {
             if (data.status === 409){
@@ -104,10 +124,17 @@ const CreateRadio = observer(({show, onHide}) => {
                             <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>
                                 {genreToAdd.name || 'Выберите жанр'}
                             </DropdownToggle>
-                            <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2">
+                            <DropdownMenu className="custom-dropdown-menu custom-dropdown-menu2" onClick={(e) => e.stopPropagation()}>
                                 {radioStation.genres.map(genre =>
-                                    <Dropdown.Item onClick={() => setGenreToAdd(genre)} key={genre.id}>
-                                        {genre.name.length >= 13 ? genre.name.slice(0,14) : genre.name}
+                                    <Dropdown.Item key={genre.id} onClick={(e) => e.stopPropagation()}>
+                                        <Form.Check
+                                            className="checkboxOne"
+                                            type="checkbox"
+                                            label={genre.name.length >= 11 ? genre.name.slice(0, 12) : genre.name}
+                                            checked={selectedGenres.includes(genre.id)}
+                                            onChange={() => toggleGenre(genre.id)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            />
                                     </Dropdown.Item>
                                 )}
                             </DropdownMenu>

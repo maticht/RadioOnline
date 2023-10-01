@@ -28,7 +28,9 @@ const Footer = observer(() => {
     const columnCount = getColumnCount();
 
     const setGenreOnFooter = (genre) => {
-        radioStation.setSelectGenre(genre)
+        const arr = [];
+        arr.push(genre.id)
+        radioStation.setSelectGenre(arr)
         window.scrollTo({
             top: 0,
             behavior: 'smooth'

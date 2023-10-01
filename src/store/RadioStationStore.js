@@ -8,7 +8,7 @@ export default class RadioStationStore {
         this._languages = []
         this._radios = []
         this._selectedCountry = {}
-        this._selectedGenre = {}
+        this._selectedGenre = []
         this._selectedLanguage = {}
         this._page = 1
         this._totalCount = 0

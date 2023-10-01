@@ -52,7 +52,7 @@ const HomeScreen = observer(() => {
     const [selectedRadio, setSelectedRadio] = useState(null);
     const [radioOnline, setRadioOnline] = useState('');
     const {radioStation} = useContext(Context);
-    const [selectGenre, setSelectGenre] = useState('');
+    const [selectGenre, setSelectGenre] = useState([]);
     const [selectCountry, setSelectCountry] = useState('');
     const [selectLanguage, setSelectLanguage] = useState('');
     const [currentMusicName, setCurrentMusicName] = useState('Неизвестно');
@@ -167,8 +167,10 @@ const HomeScreen = observer(() => {
             if (selectedRadio !== null) {
                 radioId = selectedRadio.id;
             }
+            console.log(radioStation.selectedGenre)
+            const genresIds = radioStation.selectedGenre.join(',')
             if (!isFav && !isFavWithId) {
-                getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName, radioId).then(data => {
+                getRadios(radioStation.selectedCountry.id, genresIds, radioStation.page, radioStation.limit, radioStation.searchName, radioId).then(data => {
                     radioStation.setRadios(data[0])
                     radioStation.setTotalCount(data[1]);
                     console.log('запрс из 2 useEffect')
@@ -192,13 +194,13 @@ const HomeScreen = observer(() => {
                 setRatingArrUs(data[0].rating);
                 console.log(selectGenre);
                 console.log(data[1]);
-                if(selectGenre.name !== data[1].name) {
-                    setSelectGenre(data[1])
-                }
+                setSelectGenre(data[1]);
                 setSelectCountry(data[2]);
                 setSelectLanguage(data[3]);
                 if (!isFav && !isFavWithId) {
-                    radioStation.setSelectGenre(data[1])
+                    const genresIdArr = data[1].map((genre) => genre.id);
+                    radioStation.setSelectGenre(genresIdArr)
+                    console.log(radioStation.selectedGenre)
                 }
                 setIsPlaying(true);
                 audioRef.current.play();
@@ -298,10 +300,6 @@ const HomeScreen = observer(() => {
             setIsLoading(true);
             setSelectedRadio(r);
             radioStation.setSearchName('');
-            // setLeaveReview(false)
-            // setAllReviews(false)
-            // setRatingArrUs(r.rating)
-            // radioStation.setLimit(18)
             fetchCurrentMusicName(r).then(data => {
                 if (data.StreamTitle === '') {
                     setCurrentMusicName(`Играет ${r.title}`);
@@ -310,16 +308,6 @@ const HomeScreen = observer(() => {
                 }
                 console.log(data)
             });
-            // fetchOneRadio(r.id).then(data => {
-            //     setRadioOnline(data[0].online)
-            //     if(selectGenre.name !== data[1].name) {
-            //         setSelectGenre(data[1])
-            //     }
-            //     setSelectCountry(data[2])
-            //     setSelectLanguage(data[3])
-            //     if (!isFav && !isFavWithId && radioStation.selectedGenre.name !== data[1].name) {
-            //         radioStation.setSelectGenre(data[1])
-            //     }
             setTimeout(()=>{
                 setIsPlaying(true);
                 audioRef.current.play();
@@ -360,9 +348,7 @@ const HomeScreen = observer(() => {
             setShowCopiedMessage(false);
         }, 1200);
     };
-    // useEffect(() => {
-    //     setIsFavorite(favorites.includes(selectedRadioId));
-    // }, [favorites, selectedRadioId]);
+
     const handleAddToFavorites = (selectedRadioId) => {
         try {
             const index = favorites.indexOf(selectedRadioId);
@@ -382,6 +368,15 @@ const HomeScreen = observer(() => {
 
     const removeSelectedRadio = () => {
         setSelectedRadio(null)
+    }
+
+    const genreOutput = (genreArr)=>{
+        if(genreArr.length > 1){
+            const genresNames = genreArr.map((genre) => genre.name);
+            return genresNames.join(', ')
+        }else{
+            return genreArr[0].name;
+        }
     }
 
 
@@ -579,7 +574,7 @@ const HomeScreen = observer(() => {
                                                                     margin: '2px 0',
                                                                     fontSize: '12px',
                                                                     fontWeight: 'bold'
-                                                                }}>{selectGenre.name}</p>
+                                                                }}>{genreOutput(selectGenre)}</p>
                                                                 <p style={{
                                                                     margin: '2px 0',
                                                                     fontSize: '12px',

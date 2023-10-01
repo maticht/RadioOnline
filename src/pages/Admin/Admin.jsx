@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Button, Col, Dropdown, Form, Image} from "react-bootstrap";
 import CreateGenre from "../../components/modals/CreateGenre";
 import CreateCountry from "../../components/modals/CreateCountry";
-import CreateRadio from "../../components/modals/CreateRadio";
+import CreateRadio from "../../components/modals/CreateRadio/CreateRadio";
 import CreateLanguage from "../../components/modals/CreateLanguage";
 import {observer} from "mobx-react-lite";
 import HeaderNavBar from '../../components/headerNavBar/headerNavBar';
@@ -48,7 +48,7 @@ const Admin = observer(() => {
     const [title, setTitle] = useState('')
     const [radioWave, setRadioWave] = useState('')
     const [radioLinkName, setRadioLinkName] = useState('')
-    const [updGenre, setUpdGenre] = useState('')
+    const [updGenre, setUpdGenre] = useState([])
     const [updCountry, setUpdCountry] = useState('')
     const [updLanguage, setUpdLanguage] = useState('')
     const [file, setFile] = useState(null)
@@ -97,7 +97,8 @@ const Admin = observer(() => {
 
     useEffect(() => {
             console.log('a ue 2')
-            getRadios(radioStation.selectedCountry.id, radioStation.selectedGenre.id, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
+            const genresIds = radioStation.selectedGenre.join(',')
+            getRadios(radioStation.selectedCountry.id, genresIds, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])
                 console.log('page:' + radioStation.page)
@@ -146,7 +147,8 @@ const Admin = observer(() => {
     const getOneRadio = (r) => {
         fetchOneRadio(r.id).then(data => {
             setSelectedRadio(r)
-            setUpdGenre(data[1])
+            const genresIdArr = data[1].map((genre) => genre.id);
+            setUpdGenre(genresIdArr)
             setUpdCountry(data[2])
             setUpdLanguage(data[3])
             setTitle(r.title)
@@ -154,6 +156,22 @@ const Admin = observer(() => {
             setRadioLinkName(r.radioLinkName)
             console.log(data[0], data[1], data[2], data[3])
         })
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    const toggleGenre = (genreId) => {
+        setUpdGenre((prevGenres) => {
+            if (prevGenres.includes(genreId)) {
+                // Убираем жанр, если он уже в списке
+                return prevGenres.filter(selected => selected !== genreId);
+            } else {
+                // Добавляем жанр, если его нет в списке
+                return [...prevGenres, genreId];
+            }
+        });
     }
 
     const getCountries = async () => {
@@ -182,7 +200,8 @@ const Admin = observer(() => {
         formData.append('image', file)
         formData.append('imageName', selectedRadio.image)
         formData.append('country_id', updCountry.id)
-        formData.append('genre_id', updGenre.id)
+        const genresIdsString = updGenre.join(',');
+        formData.append('genre_id', genresIdsString)
         formData.append('language_id', updLanguage.id)
         updateRadio(formData).then(data => {
             if (data.status === 409){
@@ -339,13 +358,20 @@ const Admin = observer(() => {
                                                         boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
                                                     }} onClick={getGenres}>
                                                         <DropdownToggle
-                                                            className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updGenre.name || 'жанр'}</DropdownToggle>
+                                                            className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{'Жанр'}</DropdownToggle>
                                                         <DropdownMenu
                                                             className="custom-dropdown-menu custom-admin-dropdown-menu">
                                                             {radioStation.genres.map(genre =>
-                                                                <Dropdown.Item onClick={() => setUpdGenre(genre)}
-                                                                               key={genre.id}> {genre.name.length >= 13 ? genre.name.slice(0,14) : genre.name} </Dropdown.Item>
-                                                            )}
+                                                                <Dropdown.Item key={genre.id} onClick={(e) => e.stopPropagation()}>
+                                                                    <Form.Check
+                                                                        className="checkboxOne"
+                                                                        type="checkbox"
+                                                                        label={genre.name.length >= 11 ? genre.name.slice(0, 12) : genre.name}
+                                                                        checked={updGenre.includes(genre.id)}
+                                                                        onChange={() => toggleGenre(genre.id)}
+                                                                        onClick={(e) => e.stopPropagation()}
+                                                                    />
+                                                                </Dropdown.Item>)}
                                                         </DropdownMenu>
                                                     </Dropdown>
                                                     <Dropdown className="custom-dropdown custom-admin-dropdown" style={{

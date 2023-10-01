@@ -7,10 +7,7 @@ const radioSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Language'
     },
-    genre: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Genre'
-    },
+    genre: {type: String, required: false},
     country: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Country'

@@ -5,7 +5,7 @@ import React, {useContext, useEffect, useState} from "react";
 import searchBtn from "../../img/search.svg";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
-import {Button, Dropdown} from "react-bootstrap";
+import {Button, Dropdown, Form} from "react-bootstrap";
 import DropdownToggle from "react-bootstrap/DropdownToggle";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import {deleteCustomRating, getAllCountries, getAllGenres} from "../../http/radioApi";
@@ -79,7 +79,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
 
             if (isSelectedRadioActive){
                 setSelectedRadio()
-                radioStation.setSelectGenre({})
+                radioStation.setSelectGenre([])
                 radioStation.setSelectCountry({})
             }
         } catch (e) {
@@ -97,7 +97,8 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
         radioStation.setSearchName('')
         radioStation.setPage(1)
         radioStation.setLimit(42);
-        radioStation.setSelectGenre({})
+        radioStation.setSelectGenre([])
+        setSelectedGenresUS([]);
         radioStation.setSelectCountry({})
         radioStation.setSelectLanguage({})
         history(`/`);
@@ -138,6 +139,25 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
             }
         }
     };
+
+    const [selectedGenresUS,setSelectedGenresUS]= useState([])
+
+    const toggleGenre = (genreId) => {
+        setSelectedGenresUS((prevGenres) => {
+            if (prevGenres.includes(genreId)) {
+                // Убираем жанр, если он уже в списке
+                return prevGenres.filter(selected => selected !== genreId);
+            } else {
+                // Добавляем жанр, если его нет в списке
+                return [...prevGenres, genreId];
+            }
+        });
+    }
+
+    useEffect(()=>{
+        radioStation.setSelectGenre(selectedGenresUS)
+    },[selectedGenresUS])
+
 
 
     return (
@@ -207,8 +227,26 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                                 >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
                                 <DropdownMenu className="custom-dropdown-menu">
                                     {radioStation.genres.map(genre =>
-                                        <Dropdown.Item onClick={() => radioStation.setSelectGenre(genre)}
-                                                       key={genre.id}> {genre.name.length >= 13 ? genre.name.slice(0,14) : genre.name} </Dropdown.Item>
+                                        <Dropdown.Item key={genre.id} onClick={(e) => e.stopPropagation()}>
+                                            <Form.Check
+                                                className="checkboxOne"
+                                                type="checkbox"
+                                                label={genre.name.length >= 11 ? genre.name.slice(0, 12) : genre.name}
+                                                checked={radioStation.selectedGenre.includes(genre.id)}
+                                                onChange={() => {
+                                                    if (!isSelectedRadioActive) {
+                                                        toggleGenre(genre.id);
+                                                    }
+                                                }}
+                                                onClick={e => {
+                                                    if (isSelectedRadioActive) {
+                                                        e.preventDefault(); // Предотвратить изменение состояния, если isSelectedRadioActive равно true
+                                                    }
+                                                    e.stopPropagation();
+                                                }}
+                                                disabled={isSelectedRadioActive} // Добавить атрибут disabled, если isSelectedRadioActive равно true
+                                            />
+                                        </Dropdown.Item>
                                     )}
                                 </DropdownMenu>
                             </Dropdown>
