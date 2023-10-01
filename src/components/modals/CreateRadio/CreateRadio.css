@@ -1,5 +1,6 @@
 .checkboxOne input[type=checkbox]:checked {
     background-color: #06B5AE;
     border-color: #06B5AE;
-
+    outline: none;
+    box-shadow: none;
 }
