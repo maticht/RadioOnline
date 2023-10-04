@@ -238,7 +238,6 @@ class RadioController {
                 }
             }
             const count = resultCount
-            console.log(radioStations);
             return res.json([radioStations, count, page])
         } catch (error) {
             console.log(error);
@@ -264,6 +263,11 @@ class RadioController {
             console.log(genres, 'Массив жанров')
             let country = await Country.findById(radioStation.country.toString())
             let language = await Language.findById(radioStation.language.toString())
+
+            const indexPath  = path.resolve(__dirname, '../..', 'build', 'index.html');
+            console.log(indexPath)
+
+
             return res.json([radioStation, genres, country, language])
         } catch (error) {
             console.error(error);
@@ -287,7 +291,30 @@ class RadioController {
             }
             let country = await Country.findById(radioStation.country.toString())
             let language = await Language.findById(radioStation.language.toString())
-            return res.json([radioStation, genres, country, language])
+
+            const indexPath  = path.resolve(__dirname, '../..', 'build', 'index.html');
+
+            fs.readFile(indexPath, 'utf8', (err, htmlData) => {
+                if (err) {
+                    console.error('Error during file reading', err);
+                    return res.status(404).end()
+                }
+
+                const headTagRegex = /<head\b[^>]*>(.*?)<\/head>/s;
+                const headContentMatch = htmlData.match(headTagRegex);
+                let updatedHeadContent;
+                if (headContentMatch && headContentMatch[1]) {
+                    updatedHeadContent = headContentMatch[1]
+                        .replaceAll("<title>Radio Online</title>", `<title>Radio Online - ${radioStation.title}</title>`)
+                        .replaceAll("Слушайте любимые радиостанции с удовольствием на площадке Radio Online!", `Слушайте радиостанцию ${radioStation.title} на площадке Radio Online!`)
+                        .replaceAll("https://radio-online.me", `https://radio-online.me/${radioStation.radioLinkName}`)
+                        .replaceAll("image_holder", `https://backend.radio-online.me/${radioStation.image}`)
+                }
+
+                console.log(updatedHeadContent)
+                return res.json([radioStation, genres, country, language, updatedHeadContent])
+
+            });
         } catch (error) {
             console.error(error);
             return res.status(500).json({message: 'Internal server error'});

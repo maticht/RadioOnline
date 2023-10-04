@@ -33,6 +33,7 @@ import SendRatingMessage from "../../components/modals/SendRatingMessage";
 import Pages from "../../components/Pages/Pages";
 import {observer} from "mobx-react-lite";
 import Footer from "../../components/Footer/Footer";
+import { Helmet } from 'react-helmet-async';
 
 
 const useStyles = createUseStyles({
@@ -182,6 +183,27 @@ const HomeScreen = observer(() => {
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
     )
 
+    // const [htmlData, setHtmlData] = useState(""); // Состояние для HTML-кода
+    function replaceHtmlWithNewContent(newHtml) {
+        const tempDiv = document.createElement('div');
+// Вставляем в него HTML-код, который вы хотите использовать в теге <head>
+        tempDiv.innerHTML = newHtml;
+
+// Получаем ссылку на текущий тег <head> в документе
+        const currentHead = document.head;
+
+// Удаляем все дочерние элементы из текущего тега <head>
+        while (currentHead.firstChild) {
+            currentHead.removeChild(currentHead.firstChild);
+        }
+
+// Вставляем новые элементы из временного div в текущий тег <head>
+        while (tempDiv.firstChild) {
+            currentHead.appendChild(tempDiv.firstChild);
+        }
+    }
+
+
     useEffect(() => {
         if (typeof (params.radioId) !== "undefined") {
             setLeaveReview(false)
@@ -190,6 +212,22 @@ const HomeScreen = observer(() => {
             fetchOneRadioByLink(params.radioId).then(data => {
                 setIsLoading(true);
                 setSelectedRadio(data[0]);
+
+                const ogTags = [
+                    { property: 'og:title', content: `Radio Online - ${data[0].title}` },
+                    { property: 'og:image', content: `https://backend.radio-online.me/${data[0].image}` },
+                    { property: 'og:description', content: `Слушайте радиостанцию "${data[0].title}" на radio-online.me` },
+                ];
+
+                // Устанавливаем метатеги с помощью react-helmet-async
+                const helmet = document.querySelector('head');
+                ogTags.forEach(tag => {
+                    const tagElement = document.createElement('meta');
+                    tagElement.setAttribute('property', tag.property);
+                    tagElement.setAttribute('content', tag.content);
+                    helmet.appendChild(tagElement);
+                });
+
                 setRadioOnline(data[0].online);
                 setRatingArrUs(data[0].rating);
                 console.log(selectGenre);
@@ -197,6 +235,8 @@ const HomeScreen = observer(() => {
                 setSelectGenre(data[1]);
                 setSelectCountry(data[2]);
                 setSelectLanguage(data[3]);
+                console.log(data[4]);
+                //replaceHtmlWithNewContent(data[4]);
                 if (!isFav && !isFavWithId) {
                     const genresIdArr = data[1].map((genre) => genre.id);
                     radioStation.setSelectGenre(genresIdArr)
@@ -211,6 +251,7 @@ const HomeScreen = observer(() => {
             });
         }
     }, [params]);
+
 
     useEffect(() => {
         if (selectedRadio !== null) {
@@ -290,6 +331,9 @@ const HomeScreen = observer(() => {
         setRating(value);
     };
 
+
+
+
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
         if (selectedRadio === null || r.title !== selectedRadio.title) {
@@ -321,6 +365,8 @@ const HomeScreen = observer(() => {
             }
         }
     }
+
+
 
     const togglePlayback = () => {
         if (isPlaying) {
@@ -379,9 +425,51 @@ const HomeScreen = observer(() => {
         }
     }
 
-
     return (
         <div className={classes.container}>
+            {/*{selectedRadio !== null ? (*/}
+            {/*    <Helmet>*/}
+            {/*        /!* HTML Meta Tags*!/*/}
+            {/*        <title>Radio Online</title>*/}
+            {/*        <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>*/}
+
+            {/*        /!*Facebook Meta Tags*!/*/}
+            {/*        <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>*/}
+            {/*        <meta property="og:type" content="music.radio_station"/>*/}
+            {/*        <meta property="og:title" content={`Radio Online - ${selectedRadio.title}`}/>*/}
+            {/*        <meta property="og:description" content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>*/}
+            {/*        <meta property="og:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>*/}
+
+            {/*        /!*Twitter Meta Tags*!/*/}
+            {/*        <meta name="twitter:card" content="summary_large_image"/>*/}
+            {/*        <meta property="twitter:domain" content="radio-online.me"/>*/}
+            {/*        <meta property="twitter:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>*/}
+            {/*        <meta name="twitter:title" content={`Radio Online - ${selectedRadio.title}`}/>*/}
+            {/*        <meta name="twitter:description" content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>*/}
+            {/*        <meta name="twitter:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>*/}
+            {/*    </Helmet>*/}
+            {/*) : (*/}
+            {/*    <Helmet>*/}
+            {/*        /!* HTML Meta Tags*!/*/}
+            {/*        <title>RadioOnline</title>*/}
+            {/*        <meta name="description" content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!" data-rh="true"/>*/}
+
+            {/*        /!*Facebook Meta Tags*!/*/}
+            {/*        <meta property="og:url" content="https://radio-online.me" data-rh="true"/>*/}
+            {/*        <meta property="og:type" content="music.radio_station" data-rh="true"/>*/}
+            {/*        <meta property="og:title" content="RadioOnline" data-rh="true"/>*/}
+            {/*        <meta property="og:description" content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!" data-rh="true"/>*/}
+            {/*        <meta property="og:image" content="image_holder" data-rh="true"/>*/}
+
+            {/*        /!*Twitter Meta Tags*!/*/}
+            {/*        <meta name="twitter:card" content="summary_large_image" data-rh="true"/>*/}
+            {/*        <meta property="twitter:domain" content="radio-online.me" data-rh="true"/>*/}
+            {/*        <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>*/}
+            {/*        <meta name="twitter:title" content="Radio Online" data-rh="true"/>*/}
+            {/*        <meta name="twitter:description" content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!" data-rh="true"/>*/}
+            {/*        <meta name="twitter:image" content="image_holder" data-rh="true"/>*/}
+            {/*    </Helmet>*/}
+            {/*)}*/}
             <div className={classes.maxWidthContainer}>
                 <HeaderNavBar setSelectedRadio={removeSelectedRadio} isSelectedRadioActive={selectedRadio !== null}/>
                 <div className={'bestSpecialists'}>
