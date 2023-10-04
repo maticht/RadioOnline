@@ -73,6 +73,7 @@ const radioStationsWithoutSelected = (arrayFromDB, selectedRadioId, limit) => {
 
 class RadioController {
     async create(req, res, next) {
+        console.log(req.body);
         try {
             let radio = await Radio.findOne({title: req.body.title});
             if (radio) return res.json({status: 409, message: "Радиостанция с данным названием уже существует!"});
@@ -82,6 +83,7 @@ class RadioController {
             const {image} = req.files
             let fileName = uuid.v4() + ".jpg"
             await image.mv(path.resolve(__dirname, '..', 'static', fileName))
+
             const genresIdsString = req.body.genre_id;
             radio = await new Radio({
                 title: req.body.title,
@@ -108,7 +110,7 @@ class RadioController {
 
     async getAll(req, res) {
         try {
-            let {country_id, genre_id, page, limit, searchName, radio_id} = req.query
+            let {country_id, genre_id, page, limit, searchName, radio_id, bitrate} = req.query
             console.log("поисковое слово " + searchName);
             console.log("поисковое айди радио " + radio_id);
             console.log(genre_id);
@@ -238,6 +240,7 @@ class RadioController {
                 }
             }
             const count = resultCount
+            radioStations.sort((a, b) => b.bitrate - a.bitrate);
             console.log(radioStations);
             return res.json([radioStations, count, page])
         } catch (error) {
@@ -270,6 +273,43 @@ class RadioController {
             return res.status(500).json({message: 'Internal server error'});
         }
     }
+
+    async incrementBitrate(req, res) {
+        const link = req.params.link;
+        if (!link) return res.status(400).json('None id');
+        try {
+            let radioStation = await Radio.findOne({radioLinkName: link})
+            if (!radioStation) {
+                return res.status(404).json({ message: 'Radio station not found' });
+            }
+            radioStation.bitrate += 1;
+            await radioStation.save();
+            console.log(link, 'Достали incrementBitrate')
+            return res.json({ message: 'Bitrate incremented successfully', newBitrate: radioStation.bitrate });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    async decrementBitrate(req, res) {
+        const link = req.params.link;
+        if (!link) return res.status(400).json('None id');
+        try {
+            let radioStation = await Radio.findOne({radioLinkName: link});
+            if (!radioStation) {
+                return res.status(404).json({ message: 'Radio station not found' });
+            }
+            radioStation.bitrate -= 1;
+            await radioStation.save();
+            console.log(link, 'Достали decrementBitrate')
+            return res.json({ message: 'Bitrate decremented successfully', newBitrate: radioStation.bitrate });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
 
 
     async getOneByLink(req, res) {
@@ -345,7 +385,7 @@ class RadioController {
     // }
 
     async getRadioMetadata(req, res) {
-        const url = req.body.radio;
+        const url = JSON.parse(req.body.radio)[0].audioURL;
         const id = req.body.id;
         try {
             if (!url) res.status(400).json('None url')

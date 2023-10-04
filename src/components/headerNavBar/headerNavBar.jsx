@@ -114,7 +114,6 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
     const getGenres = async () => {
         if (isAdminLoc) {
             getAllGenres().then(data => radioStation.setGenres(data));
-            console.log(radioStation.genres)
         }
     }
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -228,7 +227,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                                 >{radioStation.selectedGenre.name || 'Выберите жанр'}</DropdownToggle>
                                 <DropdownMenu className="custom-dropdown-menu">
                                     {radioStation.genres.map(genre =>
-                                        <Dropdown.Item key={genre.id} onClick={(e) => e.stopPropagation()}>
+                                        <Dropdown.Item className={'custom-dropdown-item'} key={genre.id} onClick={(e) => e.stopPropagation()}>
                                             <Form.Check
                                                 className="checkboxOne"
                                                 type="checkbox"

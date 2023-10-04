@@ -12,7 +12,7 @@ const CreateRadio = observer(({show, onHide}) => {
     const {radioStation} = useContext(Context)
     const param = useParams()
     const [title, setTitle] = useState('')
-    const [radio, setRadio] = useState('')
+    const [radio, setRadio] = useState([{ audioURL: '', bitrate: '' }, { audioURL: '', bitrate: '' }, { audioURL: '', bitrate: '' }]);
     const [radioLinkName, setRadioLinkName] = useState('')
     const [genreToAdd, setGenreToAdd] =useState('')
     const[countryToAdd, setCountryToAdd] =useState('')
@@ -65,18 +65,35 @@ const CreateRadio = observer(({show, onHide}) => {
 
     useEffect(()=>{
         console.log(selectedGenres)
-    },[selectedGenres])
+    },[selectedGenres]);
+
+    const handleRadioInputChange = (index, field, value) => {
+        if (field === 'bitrate') {
+            const isValidBitrate = /^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 1000;
+            if (isValidBitrate || value === "") {
+                const updatedRadio = [...radio];
+                updatedRadio[index][field] = value;
+                setRadio(updatedRadio);
+            }
+        } else {
+            const updatedRadio = [...radio];
+            updatedRadio[index][field] = value;
+            setRadio(updatedRadio);
+        }
+    };
+
 
     const addRadio = () => {
         const formData = new FormData()
         formData.append('title', title)
-        formData.append('radio', radio)
+        formData.append('radio', JSON.stringify(radio));
         formData.append('radioLinkName', radioLinkName)
         formData.append('image', file)
         formData.append('country_id', countryToAdd.id)
         const genresIdsString = selectedGenres.join(',');
         formData.append('genre_id', genresIdsString)
-        formData.append('language_id',languageToAdd.id)
+        formData.append('language_id',languageToAdd.id);
+        console.log(radio);
         createRadio(formData).then(data => {
             if (data.status === 409){
                 alert(data.message)
@@ -92,24 +109,20 @@ const CreateRadio = observer(({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton  style={{backgroundColor:'#F4F4F4'}}>
-                <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'20px', fontWeight:'bold'}}>
+                <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'18px', fontWeight:'bold'}}>
                     Добавить радиостанцию
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body  style={{backgroundColor:'#F4F4F4', padding:'0 15px'}}>
                 <Form>
+                    <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'20px', fontWeight:'bold', margin:'13px 0 -8px 0'}}>
+                        Название
+                    </Modal.Title>
                     <Form.Control
                         value={title}
                         onChange={e => setTitle(e.target.value)}
                         className="mt-3"
                         placeholder="Введите название радиостанции"
-                        style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
-                    />
-                    <Form.Control
-                        value={radio}
-                        onChange={e => setRadio(e.target.value)}
-                        className="mt-3"
-                        placeholder="Введите ссылку на радиостанцию"
                         style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
                     />
                     <Form.Control
@@ -119,6 +132,72 @@ const CreateRadio = observer(({show, onHide}) => {
                         placeholder="Название радиостанции для адресной строки"
                         style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
                     />
+                    <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'18px', fontWeight:'bold', margin:'13px 0 -8px 0'}}>
+                        Аудиопоток
+                    </Modal.Title>
+                    <div style={{display:'flex', flexDirection: 'row'}}>
+                        <Form.Control
+                            value={radio[0].audioURL}
+                            onChange={(e) =>
+                                handleRadioInputChange(0, 'audioURL', e.target.value)
+                            }
+                            className="mt-3"
+                            placeholder="Введите ссылку на радиостанцию"
+                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                        />
+                        <Form.Control
+                            value={radio[0].bitrate}
+                            onChange={(e) =>
+                                handleRadioInputChange(0, 'bitrate', e.target.value)
+                            }
+                            className="mt-3"
+                            placeholder="Битрейт"
+                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', width:'85px', marginLeft:'15px'}}
+                        />
+                    </div>
+                    <div style={{display:'flex', flexDirection: 'row'}}>
+                        <Form.Control
+                            value={radio[1].audioURL}
+                            onChange={(e) =>
+                                handleRadioInputChange(1, 'audioURL', e.target.value)
+                            }
+                            className="mt-3"
+                            placeholder="Введите ссылку на радиостанцию"
+                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                        />
+                        <Form.Control
+                            value={radio[1].bitrate}
+                            onChange={(e) =>
+                                handleRadioInputChange(1, 'bitrate', e.target.value)
+                            }
+                            className="mt-3"
+                            placeholder="Битрейт"
+                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', width:'85px', marginLeft:'15px'}}
+                        />
+                    </div>
+                    <div style={{display:'flex', flexDirection: 'row'}}>
+                        <Form.Control
+                            value={radio[2].audioURL}
+                            onChange={(e) =>
+                                handleRadioInputChange(2, 'audioURL', e.target.value)
+                            }
+                            className="mt-3"
+                            placeholder="Введите ссылку на радиостанцию"
+                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                        />
+                        <Form.Control
+                            value={radio[2].bitrate}
+                            onChange={(e) =>
+                                handleRadioInputChange(2, 'bitrate', e.target.value)
+                            }
+                            className="mt-3"
+                            placeholder="Битрейт"
+                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', width:'85px', marginLeft:'15px'}}
+                        />
+                    </div>
+                    <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'18px', fontWeight:'bold', margin:'13px 0 -8px 0'}}>
+                        Идентификация
+                    </Modal.Title>
                     <Col className="dropdown-modal-block">
                         <Dropdown className="custom-dropdown dropdown-modal-toggle" onClick={getGenres}>
                             <DropdownToggle className="custom-dropdown-toggle custom-dropdown-toggle2" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>

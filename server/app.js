@@ -16,7 +16,7 @@ const onlineUpdater = require('./utils/onlineUpdater')
 connection();
 
 const corsOptions = {
-    origin: 'https://radio-online.me', // Добавьте свой домен или '*' для разрешения всех доменов
+    origin: ['https://radio-online.me', 'http://localhost:3000'],  // Добавьте свой домен или '*' для разрешения всех доменов
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204, // некоторые браузеры требуют этот статус для простых запросов OPTIONS
 };

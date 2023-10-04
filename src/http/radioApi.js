@@ -50,11 +50,11 @@ export const createRadio = async (radio) => {
     return data
 }
 
-export const getRadios = async (country_id, genre_id, page, limit, searchName, radio_id) => {
+export const getRadios = async (country_id, genre_id, page, limit, searchName, radio_id, bitrate) => {
     const {data} = await $host.get('api/radio', {
         params:
             {
-                country_id, genre_id, page, limit, searchName, radio_id
+                country_id, genre_id, page, limit, searchName, radio_id, bitrate
             }
     })
     return data
@@ -68,6 +68,14 @@ export const getFavoritesRadios = async(ids)=>{
 
 export const deleteRadio = async (id) => {
     const {data} = await $authHost.post('api/radio/delete/' + id, id)
+    return data
+}
+export const incrementBitrate = async (link) => {
+    const {data} = await $host.get('api/radio/incrementBitrate/' + link)
+    return data
+}
+export const decrementBitrate = async (link) => {
+    const {data} = await $host.get('api/radio/decrementBitrate/' + link)
     return data
 }
 

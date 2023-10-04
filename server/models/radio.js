@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const radioSchema = new mongoose.Schema({
     title: { type: String, required: false },
-    radio: { type: String, required: false },
+    radio: {type: String, required: false},
     language: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Language'

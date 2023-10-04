@@ -209,6 +209,9 @@
     background-color: #FFFFFF !important;
     color: #909095 !important;
 }
+.custom-dropdown-item{
+    padding: 4px 0 4px 10px;
+}
 .navBarBlock {
     height: 55px;
     display: flex;

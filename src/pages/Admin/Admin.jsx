@@ -47,7 +47,7 @@ const Admin = observer(() => {
     const [radioVisible, setRadioVisible] = useState(false)
     const [selectedRadio, setSelectedRadio] = useState(null);
     const [title, setTitle] = useState('')
-    const [radioWave, setRadioWave] = useState('')
+    const [radioWave, setRadioWave] = useState([{ audioURL: '', bitrate: '' }, { audioURL: '', bitrate: '' }, { audioURL: '', bitrate: '' }]);
     const [radioLinkName, setRadioLinkName] = useState('')
     const [updGenre, setUpdGenre] = useState([])
     const [updCountry, setUpdCountry] = useState('')
@@ -88,7 +88,7 @@ const Admin = observer(() => {
             console.log('a ue 1')
             getAllCountries().then(data => radioStation.setCountries(data))
             getAllGenres().then(data => radioStation.setGenres(data))
-            getRadios(null, null, radioStation.page, radioStation.limit, '').then(data => {
+            getRadios(null, null, radioStation.page, radioStation.limit, '', radioStation.bitrate).then(data => {
                     radioStation.setRadios(data[0])
                     radioStation.setTotalCount(data[1])
                 }
@@ -99,7 +99,7 @@ const Admin = observer(() => {
     useEffect(() => {
             console.log('a ue 2')
             const genresIds = radioStation.selectedGenre.join(',')
-            getRadios(radioStation.selectedCountry.id, genresIds, radioStation.page, radioStation.limit, radioStation.searchName).then(data => {
+            getRadios(radioStation.selectedCountry.id, genresIds, radioStation.page, radioStation.limit, radioStation.searchName, radioStation.bitrate).then(data => {
                 radioStation.setRadios(data[0])
                 radioStation.setTotalCount(data[1])
                 console.log('page:' + radioStation.page)
@@ -153,7 +153,7 @@ const Admin = observer(() => {
             setUpdCountry(data[2])
             setUpdLanguage(data[3])
             setTitle(r.title)
-            setRadioWave(r.radio)
+            setRadioWave(JSON.parse(r.radio))
             setRadioLinkName(r.radioLinkName)
             console.log(data[0], data[1], data[2], data[3])
         })
@@ -191,12 +191,27 @@ const Admin = observer(() => {
         deleteRadio({id: id}).then(response => refreshPage())
     }
 
+    const handleRadioInputChange = (index, field, value) => {
+        if (field === 'bitrate') {
+            const isValidBitrate = /^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 1000;
+            if (isValidBitrate || value === "") {
+                const updatedRadio = [...radioWave];
+                updatedRadio[index][field] = value;
+                setRadioWave(updatedRadio);
+            }
+        } else {
+            const updatedRadio = [...radioWave];
+            updatedRadio[index][field] = value;
+            setRadioWave(updatedRadio);
+        }
+    };
+
     const updateR = (id) => {
         console.log('popal')
         const formData = new FormData()
         formData.append('id', id)
         formData.append('title', title)
-        formData.append('radio', radioWave)
+        formData.append('radio', JSON.stringify(radioWave));
         formData.append('radioLinkName', radioLinkName)
         formData.append('image', file)
         formData.append('imageName', selectedRadio.image)
@@ -213,6 +228,7 @@ const Admin = observer(() => {
 
         })
     }
+
 
 
     return (
@@ -314,6 +330,65 @@ const Admin = observer(() => {
 
                                 {selectedRadio && (
                                     <div className="largeRadioBlockAdmin">
+                                        <div className={'dropdown-image-block'}>
+                                            <div className="d-flex justify-content-start custom-dropdown-block"
+                                                 style={{display: 'flex', flexDirection: 'column'}}>
+                                                <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
+                                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                                }} onClick={getGenres}>
+                                                    <DropdownToggle
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{'Жанр'}</DropdownToggle>
+                                                    <DropdownMenu
+                                                        className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                        {radioStation.genres.map(genre =>
+                                                            <Dropdown.Item key={genre.id} onClick={(e) => e.stopPropagation()}>
+                                                                <Form.Check
+                                                                    className="checkboxOne"
+                                                                    type="checkbox"
+                                                                    label={genre.name.length >= 11 ? genre.name.slice(0, 12) : genre.name}
+                                                                    checked={updGenre.includes(genre.id)}
+                                                                    onChange={() => toggleGenre(genre.id)}
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                />
+                                                            </Dropdown.Item>)}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                                <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
+                                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                                }} onClick={getCountries}>
+                                                    <DropdownToggle
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updCountry.name || 'страна'}</DropdownToggle>
+                                                    <DropdownMenu
+                                                        className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                        {radioStation.countries.map(country =>
+                                                            <Dropdown.Item onClick={() => setUpdCountry(country)}
+                                                                           key={country.id}> {country.name.length >= 13 ? country.name.slice(0,14) : country.name} </Dropdown.Item>
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                                <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
+                                                    boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
+                                                }} onClick={getLanguages}>
+                                                    <DropdownToggle
+                                                        className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updLanguage.name || 'язык'}</DropdownToggle>
+                                                    <DropdownMenu
+                                                        className="custom-dropdown-menu custom-admin-dropdown-menu">
+                                                        {radioStation.languages.map(language =>
+                                                            <Dropdown.Item onClick={() => setUpdLanguage(language)}
+                                                                           key={language.id}> {language.name.length >= 13 ? language.name.slice(0,14) : language.name} </Dropdown.Item>
+                                                        )}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            </div>
+                                            <div>
+                                                <Image
+                                                    width={150}
+                                                    height={150}
+                                                    style={{borderRadius: '8px'}}
+                                                    src={selectedRadio.image !== 'image' ? 'https://backend.radio-online.me/' + selectedRadio.image : nonePrev}
+                                                />
+                                            </div>
+                                        </div>
                                         <div className={'select-admin-radio-info'}>
                                             <div className="d-flex justify-content-between select-admin-radio-inputs">
                                                 <Form className='admin-input-block'>
@@ -326,15 +401,6 @@ const Admin = observer(() => {
                                                     />
                                                 </Form>
                                                 <Form className='admin-input-block'>
-                                                    <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Ссылка:</p>
-                                                    <Form.Control
-                                                        value={radioWave}
-                                                        onChange={e => setRadioWave(e.target.value)}
-                                                        placeholder={selectedRadio.radio}
-                                                        className='admin-input'
-                                                    />
-                                                </Form>
-                                                <Form className='admin-input-block'>
                                                     <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Отображение:</p>
                                                     <Form.Control
                                                         value={radioLinkName}
@@ -343,7 +409,7 @@ const Admin = observer(() => {
                                                         className='admin-input'
                                                     />
                                                 </Form>
-                                                <Form className='admin-input-block'style={{marginBottom:'0'}}>
+                                                <Form className='admin-input-block' style={{marginBottom:'0'}}>
                                                     <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Файл:</p>
                                                     <Form.Control
                                                         type="file"
@@ -352,64 +418,85 @@ const Admin = observer(() => {
                                                     />
                                                 </Form>
                                             </div>
-                                            <div className={'dropdown-image-block'}>
-                                                <div className="d-flex justify-content-start custom-dropdown-block"
-                                                     style={{display: 'flex', flexDirection: 'column'}}>
-                                                    <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
-                                                        boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                                    }} onClick={getGenres}>
-                                                        <DropdownToggle
-                                                            className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{'Жанр'}</DropdownToggle>
-                                                        <DropdownMenu
-                                                            className="custom-dropdown-menu custom-admin-dropdown-menu">
-                                                            {radioStation.genres.map(genre =>
-                                                                <Dropdown.Item key={genre.id} onClick={(e) => e.stopPropagation()}>
-                                                                    <Form.Check
-                                                                        className="checkboxOne"
-                                                                        type="checkbox"
-                                                                        label={genre.name.length >= 11 ? genre.name.slice(0, 12) : genre.name}
-                                                                        checked={updGenre.includes(genre.id)}
-                                                                        onChange={() => toggleGenre(genre.id)}
-                                                                        onClick={(e) => e.stopPropagation()}
-                                                                    />
-                                                                </Dropdown.Item>)}
-                                                        </DropdownMenu>
-                                                    </Dropdown>
-                                                    <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
-                                                        boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                                    }} onClick={getCountries}>
-                                                        <DropdownToggle
-                                                            className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updCountry.name || 'страна'}</DropdownToggle>
-                                                        <DropdownMenu
-                                                            className="custom-dropdown-menu custom-admin-dropdown-menu">
-                                                            {radioStation.countries.map(country =>
-                                                                <Dropdown.Item onClick={() => setUpdCountry(country)}
-                                                                               key={country.id}> {country.name.length >= 13 ? country.name.slice(0,14) : country.name} </Dropdown.Item>
-                                                            )}
-                                                        </DropdownMenu>
-                                                    </Dropdown>
-                                                    <Dropdown className="custom-dropdown custom-admin-dropdown" style={{
-                                                        boxShadow: '0px 0px 18px rgba(133, 133, 133, 0.2',
-                                                    }} onClick={getLanguages}>
-                                                        <DropdownToggle
-                                                            className="custom-dropdown-toggle custom-admin-dropdown-toggle" style={{backgroundColor: '#FFFFFF', color: '#909095'}}>{updLanguage.name || 'язык'}</DropdownToggle>
-                                                        <DropdownMenu
-                                                            className="custom-dropdown-menu custom-admin-dropdown-menu">
-                                                            {radioStation.languages.map(language =>
-                                                                <Dropdown.Item onClick={() => setUpdLanguage(language)}
-                                                                               key={language.id}> {language.name.length >= 13 ? language.name.slice(0,14) : language.name} </Dropdown.Item>
-                                                            )}
-                                                        </DropdownMenu>
-                                                    </Dropdown>
-                                                </div>
-                                                <div>
-                                                    <Image
-                                                        width={150}
-                                                        height={150}
-                                                        style={{borderRadius: '8px'}}
-                                                        src={selectedRadio.image !== 'image' ? 'https://backend.radio-online.me/' + selectedRadio.image : nonePrev}
-                                                    />
-                                                </div>
+                                            <div className="d-flex justify-content-between select-admin-radio-inputs" style={{marginTop:'10px'}}>
+                                                <Form className='admin-input-block'>
+                                                    <div style={{display:'flex', flexDirection: 'row', width:'100%', justifyContent:'space-between'}}>
+                                                        <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Ссылка:</p>
+                                                        <p style={{margin: '0 22px 0 0', fontWeight: '500'}}>Битрейт:</p>
+                                                    </div>
+                                                    <div style={{display:'flex', flexDirection: 'row', width:'100%'}}>
+                                                        <Form.Control
+                                                            value={radioWave[0].audioURL}
+                                                            onChange={(e) =>
+                                                                handleRadioInputChange(0, 'audioURL', e.target.value)
+                                                            }
+                                                            className='admin-input'
+                                                            placeholder="Введите ссылку на радиостанцию"
+                                                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                                                        />
+                                                        <Form.Control
+                                                            value={radioWave[0].bitrate}
+                                                            onChange={(e) =>
+                                                                handleRadioInputChange(0, 'bitrate', e.target.value)
+                                                            }
+                                                            className='admin-input'
+                                                            placeholder="Битрейт"
+                                                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', width:'85px', marginLeft:'15px'}}
+                                                        />
+                                                    </div>
+                                                </Form>
+                                                <Form className='admin-input-block'>
+                                                    <div style={{display:'flex', flexDirection: 'row', width:'100%', justifyContent:'space-between'}}>
+                                                        <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Ссылка:</p>
+                                                        <p style={{margin: '0 22px 0 0', fontWeight: '500'}}>Битрейт:</p>
+                                                    </div>
+                                                    <div style={{display:'flex', flexDirection: 'row', width:'100%'}}>
+                                                        <Form.Control
+                                                            value={radioWave[1].audioURL}
+                                                            onChange={(e) =>
+                                                                handleRadioInputChange(1, 'audioURL', e.target.value)
+                                                            }
+                                                            className='admin-input'
+                                                            placeholder="Введите ссылку на радиостанцию"
+                                                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                                                        />
+                                                        <Form.Control
+                                                            value={radioWave[1].bitrate}
+                                                            onChange={(e) =>
+                                                                handleRadioInputChange(1, 'bitrate', e.target.value)
+                                                            }
+                                                            className='admin-input'
+                                                            placeholder="Битрейт"
+                                                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', width:'85px', marginLeft:'15px'}}
+                                                        />
+                                                    </div>
+                                                </Form>
+                                                <Form className='admin-input-block' style={{marginBottom:'0'}}>
+                                                    <div style={{display:'flex', flexDirection: 'row', width:'100%', justifyContent:'space-between'}}>
+                                                        <p style={{margin: '0 15px 0 0', fontWeight: '500'}}>Ссылка:</p>
+                                                        <p style={{margin: '0 22px 0 0', fontWeight: '500'}}>Битрейт:</p>
+                                                    </div>
+                                                    <div style={{display:'flex', flexDirection: 'row', width:'100%'}}>
+                                                        <Form.Control
+                                                            value={radioWave[2].audioURL}
+                                                            onChange={(e) =>
+                                                                handleRadioInputChange(2, 'audioURL', e.target.value)
+                                                            }
+                                                            className='admin-input'
+                                                            placeholder="Введите ссылку на радиостанцию"
+                                                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px'}}
+                                                        />
+                                                        <Form.Control
+                                                            value={radioWave[2].bitrate}
+                                                            onChange={(e) =>
+                                                                handleRadioInputChange(2, 'bitrate', e.target.value)
+                                                            }
+                                                            className='admin-input'
+                                                            placeholder="Битрейт"
+                                                            style={{backgroundColor:'#fff', outline:'none', border:'0', height:'42px', borderRadius:'10px', width:'85px', marginLeft:'15px'}}
+                                                        />
+                                                    </div>
+                                                </Form>
                                             </div>
                                         </div>
                                         <Col className="d-flex justify-content-between admin-btns-block">
