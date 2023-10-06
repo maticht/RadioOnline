@@ -69,16 +69,16 @@ html, body {
     justify-content: space-between;
 }
 .dropdown-image-block{
+    margin-left: 0;
+    flex-direction: row;
     width: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    margin-left: 60px;
 }
 .select-admin-radio-info{
     display: flex;
     justify-content: space-between;
-    flex-direction: row;
+    flex-direction: column;
 }
 .admin-input{
     background-color: #fff;
@@ -87,18 +87,20 @@ html, body {
     height: 42px;
     border-radius: 10px;
     box-shadow: 0px 0px 18px rgba(133, 133, 133, 0.2);
-    width: 500px;
+    width: 100%;
 }
 .select-admin-radio-inputs{
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
 .admin-input-block{
+    width: 100%;
     margin-bottom:10px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
 }
 .custom-dropdown-block{
     width: 100%;
@@ -112,7 +114,6 @@ html, body {
 
 @media screen and (max-width: 1030px) {
     .dropdown-image-block{
-        margin-left: 15px;
     }
 }
 @media screen and (max-width: 992px) {
@@ -140,26 +141,23 @@ html, body {
         width: 100%;
     }
     .dropdown-image-block{
-        margin-left: 40px;
     }
     .admin-input{
-        width: 400px;
+        width: 100%;
     }
 }
 @media screen and (max-width: 915px) {
     .dropdown-image-block{
-        margin-left: 40px;
     }
     .admin-input{
-        width: 300px;
+        width: 100%;
     }
 }
 @media screen and (max-width: 810px) {
     .dropdown-image-block{
-        margin-left: 20px;
     }
     .admin-input{
-        width: 270px;
+        width: 100%;
     }
 }
 @media screen and (max-width: 742px) {
@@ -199,7 +197,7 @@ html, body {
     }
     .custom-dropdown-block{
         width: 100%;
-        margin-left: 15px;
+        margin-left: 25px;
     }
     .custom-admin-dropdown-toggle{
         width: 100%;
