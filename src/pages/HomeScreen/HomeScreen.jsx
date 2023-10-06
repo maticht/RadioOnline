@@ -340,7 +340,6 @@ const HomeScreen = observer(() => {
             } else {
                 audioRef.current.play();
             }
-            setIsPlaying(!isPlaying);
             setBitrateNumber(bitrateNumber);
         }, 200)
     };
@@ -623,6 +622,8 @@ const HomeScreen = observer(() => {
                                                 }}>
                                                     <button className={`audio-play-btn`} onClick={togglePlayback}>
                                                         {currentMusicName === 'Загрузка...' ? (
+                                                            <div className="loading-icon"></div>
+                                                        ) : isLoading ? (
                                                             <div className="loading-icon"></div>
                                                         ) : isPlaying ? (
                                                             <img src={stop} alt="Stop" className="audio-icon" />
