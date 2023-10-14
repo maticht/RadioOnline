@@ -29,6 +29,13 @@ import nofavorite from "../../img/nofavorite.svg";
 import favorite from "../../img/favorite.svg";
 import errormsg from "../../img/errormsg.svg";
 import share from "../../img/share.svg";
+import shearlogo from "../../img/shearlogo.svg";
+import oklogo from '../../img/oklogo.svg';
+import fblogo from '../../img/fblogo.svg';
+import vklogo from '../../img/vklogo.svg';
+import tglogo from '../../img/tglogo.svg';
+import instlogo from '../../img/instlogo.png';
+import wtplogo from '../../img/wtplogo.png';
 import {Context} from "../../index";
 import SendErrorMessage from "../../components/modals/SendErrorMessage";
 import SendRatingMessage from "../../components/modals/SendRatingMessage";
@@ -81,6 +88,12 @@ const HomeScreen = observer(() => {
     const [isLoading, setIsLoading] = useState(false);
     const [successfulAddRating, setSuccessfulAddRating] = useState(false);
     const [bitrateNumber, setBitrateNumber] = useState(0);
+    const [telegramUrl, setTelegramUrl] = useState('');
+    const [vkUrl, setVkUrl] = useState('');
+    const [facebookUrl, setFacebookUrl] = useState('');
+    const [okUrl, setOkUrl] = useState('');
+    const [whatsappUrl, setWhatsappUrl] = useState('');
+    const [instagramUrl, setInstagramUrl] = useState('');
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -351,16 +364,59 @@ const HomeScreen = observer(() => {
 
     const copyLinkAndShowMessage = () => {
         let currentUrl = window.location.href;
+        setCurrentUrl(currentUrl);
+        setInputCurrentUrl(currentUrl);
         if (location.pathname === `/favorites/${params.radioId}`) {
-            currentUrl = currentUrl.replace('/favorites', '')
+            currentUrl = currentUrl.replace('/favorites', '');
         }
-        navigator.clipboard.writeText(currentUrl).then(r => {
-        });
-        setShowCopiedMessage(true);
-        setTimeout(() => {
-            setShowCopiedMessage(false);
-        }, 1200);
+        navigator.clipboard.writeText(currentUrl).then(() => {
+            (showCopiedMessage !== true) ? setShowCopiedMessage(true) : setShowCopiedMessage(false)
+        }).catch(err => console.error('Could not copy text: ', err));
+
     };
+
+    const [currentUrl, setCurrentUrl] = useState(window.location.href);
+    const [inputCurrentUrl, setInputCurrentUrl] = useState(window.location.href);
+
+    const copyLinkToClipboard = () => {
+        if (selectedRadio !== null) {
+            const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
+            const sharingText = `Слушать ${radioTitle} бесплатно`;
+            navigator.clipboard.writeText(`${sharingText}\n${currentUrl}`).then(() => {
+                setInputCurrentUrl('Скопировано!')
+            }).catch(err => console.error('Could not copy text: ', err));
+        }
+
+    };
+    let socialMediaLogos = [];
+    if (selectedRadio !== null) {
+        const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
+        const sharingText = `Слушать ${radioTitle} бесплатно`;
+        socialMediaLogos = [
+            { name: 'Telegram', logo: tglogo, url: `https://telegram.me/share/url?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
+            { name: 'VK', logo: vklogo, url: `https://vk.com/share.php?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
+            { name: 'Facebook', logo: fblogo, url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
+            { name: 'OK', logo: oklogo, url: `https://connect.ok.ru/offer?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
+            { name: 'WhatsApp', logo: wtplogo, url: `https://wa.me/?text=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
+            { name: 'Instagram', logo: instlogo, url: `https://www.instagram.com/?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` }
+        ];
+    }
+
+
+    const wrapperRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                setShowCopiedMessage(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [wrapperRef]);
 
 
     const handleAddToFavorites = async (selectedRadioId) => {
@@ -480,14 +536,7 @@ const HomeScreen = observer(() => {
                                                         flexDirection: 'column',
                                                         borderRadius: '8px'
                                                     }}>
-                                                        <div style={{display: 'flex', flexDirection: 'row'}}>
-                                                            <img style={{width: '16px'}} src={online} alt="star"/>
-
-                                                            <p style={{margin: '0 0 0 5px', fontSize: '14px'}}>
-                                                                {radioOnline}
-                                                            </p>
-                                                        </div>
-                                                        <Image width={140} height={125}
+                                                        <Image width={140} height={140}
                                                                className="mt-1 rounded rounded-10 d-block mx-auto"
                                                                src={selectedRadio.image !== 'image' ? 'https://backend.radio-online.me/' + selectedRadio.image : nonePrev}/>
                                                     </div>
@@ -514,34 +563,43 @@ const HomeScreen = observer(() => {
                                                     ) : (
                                                         <div style={{
                                                             width: '100%',
-                                                            paddingBottom: '20px',
+                                                            paddingBottom: '15px',
+                                                            paddingTop:'5px',
                                                             borderBottom: '1px solid #E9E9E9'
                                                         }}>
-                                                            {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
-                                                                <div style={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'row',
-                                                                    alignItems: 'center'
-                                                                }}>
-                                                                    <img style={{margin: '0', width: '14px'}}
-                                                                         src={goldStar} alt="star"/>
-                                                                    <p style={{
-                                                                        margin: '1px 0 0 2px',
-                                                                        fontSize: '13px',
-                                                                        fontWeight: '500'
-                                                                    }}>
-                                                                        {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
-                                                                    </p>
-                                                                    <p style={{margin: '0 0 0 5px', fontSize: '12px'}}>
-                                                                        ({ratingArrUS.length} отзывов)
-                                                                    </p>
-                                                                </div>
-                                                            )}
+                                                            {/*{ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (*/}
+                                                            {/*    <div style={{*/}
+                                                            {/*        display: 'flex',*/}
+                                                            {/*        flexDirection: 'row',*/}
+                                                            {/*        alignItems: 'center'*/}
+                                                            {/*    }}>*/}
+                                                            {/*        <img style={{margin: '0', width: '14px'}}*/}
+                                                            {/*             src={goldStar} alt="star"/>*/}
+                                                            {/*        <p style={{*/}
+                                                            {/*            margin: '1px 0 0 2px',*/}
+                                                            {/*            fontSize: '13px',*/}
+                                                            {/*            fontWeight: '500'*/}
+                                                            {/*        }}>*/}
+                                                            {/*            {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}*/}
+                                                            {/*        </p>*/}
+                                                            {/*        <p style={{margin: '0 0 0 5px', fontSize: '12px'}}>*/}
+                                                            {/*            ({ratingArrUS.length} отзывов)*/}
+                                                            {/*        </p>*/}
+                                                            {/*    </div>*/}
+                                                            {/*)}*/}
                                                             <div>
                                                                 <h6 style={{
+                                                                    margin:'0 0 0 0',
                                                                     fontWeight: 'bold',
                                                                     fontSize: '14px'
                                                                 }}>{selectedRadio.title}</h6>
+                                                            </div>
+                                                            <div style={{display: 'flex', flexDirection: 'row', marginTop:'5px'}}>
+                                                                <img style={{width: '16px'}} src={online} alt="online"/>
+
+                                                                <p style={{margin: '0 0 0 5px', fontSize: '14px'}}>
+                                                                    {radioOnline}
+                                                                </p>
                                                             </div>
                                                         </div>
                                                     )}
@@ -776,7 +834,7 @@ const HomeScreen = observer(() => {
                                     <img className="imgContainer" src={errormsg}/>
                                     <p className="textContainer">Радио <br/> не работает</p>
                                 </div>
-                                <div className="shearContainer">
+                                <div className="shearContainer"  ref={wrapperRef}>
                                     <div
                                         className="btnContainer"
                                         onClick={copyLinkAndShowMessage}
@@ -790,7 +848,23 @@ const HomeScreen = observer(() => {
                                     <div>
                                         {showCopiedMessage && (
                                             <div className="copiedMessage">
-                                                Ссылка скопирована!
+                                                <div>
+                                                    <div style={{display:'flex', flexDirection:"row", justifyContent:'space-between', alignItems:'center'}}>
+                                                        <input type="text" value={inputCurrentUrl} />
+                                                        <img style={{width:'20px', marginLeft:'8px', cursor:"pointer"}} src={shearlogo} onClick={copyLinkToClipboard}/>
+                                                    </div>
+                                                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', marginTop:"10px", marginBottom:"5px"}}>
+                                                        {socialMediaLogos.map((platform, index) => (
+                                                            <img
+                                                                key={index}
+                                                                style={{width:'24px', cursor:'pointer'}}
+                                                                src={platform.logo}
+                                                                alt={platform.name}
+                                                                onClick={() => window.open(platform.url, '_blank')}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
                                             </div>
                                         )}
                                     </div>
