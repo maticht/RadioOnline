@@ -5,6 +5,7 @@ import {createUseStyles} from "react-jss";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import {
     createCustomRating,
+    decrementBitrate,
     fetchCurrentMusicName,
     fetchOneRadioByLink,
     getAllCountries,
@@ -12,8 +13,6 @@ import {
     getFavoritesRadios,
     getRadios,
     incrementBitrate,
-    decrementBitrate,
-
 } from "../../http/radioApi";
 import goldStar from "../../img/goldStar.svg";
 import online from "../../img/online.svg";
@@ -91,6 +90,7 @@ const HomeScreen = observer(() => {
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const [inputCurrentUrl, setInputCurrentUrl] = useState(window.location.href);
     const wrapperRef = useRef(null);
+    const [visibleReviews, setVisibleReviews] = useState(2);
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -199,7 +199,8 @@ const HomeScreen = observer(() => {
         if (typeof (params.radioId) !== "undefined") {
             setLeaveReview(false)
             setAllReviews(false)
-            radioStation.setLimit(18);
+            radioStation.setLimit((windowWidth <= 535) ? 8 : (windowWidth <= 720) ? 12 : 18);
+            // (windowWidth <= 535) ? radioStation.setLimit(8) :
             fetchOneRadioByLink(params.radioId).then(data => {
                 setIsLoading(true);
                 setSelectedRadio(data[0]);
@@ -230,7 +231,7 @@ const HomeScreen = observer(() => {
             const interval = setInterval(() => {
                 fetchCurrentMusicName(selectedRadio).then(data => {
                     if (data.StreamTitle === '') {
-                        setCurrentMusicName(`Играет ${selectedRadio.title}`);
+                        setCurrentMusicName(`${selectedRadio.title}`);
                     } else {
                         setCurrentMusicName(data.StreamTitle);
                     }
@@ -315,7 +316,7 @@ const HomeScreen = observer(() => {
             radioStation.setSearchName('');
             fetchCurrentMusicName(r).then(data => {
                 if (data.StreamTitle === '') {
-                    setCurrentMusicName(`Играет ${r.title}`);
+                    setCurrentMusicName(`${r.title}`);
                 } else {
                     setCurrentMusicName(data.StreamTitle);
                 }
@@ -374,9 +375,7 @@ const HomeScreen = observer(() => {
 
     const copyLinkToClipboard = () => {
         if (selectedRadio !== null) {
-            const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
-            const sharingText = `Слушать ${radioTitle} бесплатно`;
-            navigator.clipboard.writeText(`${sharingText}\n${currentUrl}`).then(() => {
+            navigator.clipboard.writeText(currentUrl).then(() => {
                 setInputCurrentUrl('Скопировано!')
             }).catch(err => console.error('Could not copy text: ', err));
         }
@@ -387,12 +386,36 @@ const HomeScreen = observer(() => {
         const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
         const sharingText = `Слушать ${radioTitle} бесплатно`;
         socialMediaLogos = [
-            { name: 'Telegram', logo: tglogo, url: `https://telegram.me/share/url?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
-            { name: 'VK', logo: vklogo, url: `https://vk.com/share.php?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
-            { name: 'Facebook', logo: fblogo, url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
-            { name: 'OK', logo: oklogo, url: `https://connect.ok.ru/offer?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
-            { name: 'WhatsApp', logo: wtplogo, url: `https://wa.me/?text=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` },
-            { name: 'Instagram', logo: instlogo, url: `https://www.instagram.com/?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` }
+            {
+                name: 'Telegram',
+                logo: tglogo,
+                url: `https://telegram.me/share/url?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+            },
+            {
+                name: 'VK',
+                logo: vklogo,
+                url: `https://vk.com/share.php?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+            },
+            {
+                name: 'Facebook',
+                logo: fblogo,
+                url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+            },
+            {
+                name: 'OK',
+                logo: oklogo,
+                url: `https://connect.ok.ru/offer?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+            },
+            {
+                name: 'WhatsApp',
+                logo: wtplogo,
+                url: `https://wa.me/?text=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+            },
+            {
+                name: 'Instagram',
+                logo: instlogo,
+                url: `https://www.instagram.com/?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+            }
         ];
     }
 
@@ -555,7 +578,7 @@ const HomeScreen = observer(() => {
                                                         <div style={{
                                                             width: '100%',
                                                             paddingBottom: '15px',
-                                                            paddingTop:'5px',
+                                                            paddingTop: '5px',
                                                             borderBottom: '1px solid #E9E9E9'
                                                         }}>
                                                             {/*{ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (*/}
@@ -580,12 +603,16 @@ const HomeScreen = observer(() => {
                                                             {/*)}*/}
                                                             <div>
                                                                 <h6 style={{
-                                                                    margin:'0 0 0 0',
+                                                                    margin: '0 0 0 0',
                                                                     fontWeight: 'bold',
                                                                     fontSize: '14px'
                                                                 }}>{selectedRadio.title}</h6>
                                                             </div>
-                                                            <div style={{display: 'flex', flexDirection: 'row', marginTop:'5px'}}>
+                                                            <div style={{
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                marginTop: '5px'
+                                                            }}>
                                                                 <img style={{width: '16px'}} src={online} alt="online"/>
 
                                                                 <p style={{margin: '0 0 0 5px', fontSize: '14px'}}>
@@ -675,9 +702,9 @@ const HomeScreen = observer(() => {
                                                         ) : isLoading ? (
                                                             <div className="loading-icon"></div>
                                                         ) : isPlaying ? (
-                                                            <img src={stop} alt="Stop" className="audio-icon" />
+                                                            <img src={stop} alt="Stop" className="audio-icon"/>
                                                         ) : (
-                                                            <img src={play} alt="Play" className="audio-icon" />
+                                                            <img src={play} alt="Play" className="audio-icon"/>
                                                         )}
                                                     </button>
                                                     {isLoading ? (
@@ -746,7 +773,7 @@ const HomeScreen = observer(() => {
                                                             color: '#06B5AE',
                                                             fontWeight: bitrateNumber === 0 ? 500 : 200,
                                                             margin: '0 0 0 5px',
-                                                            cursor:'pointer'
+                                                            cursor: 'pointer'
                                                         }}
                                                               onClick={() => toggleBitrateChange(0)}>
                                                             {JSON.parse(selectedRadio.radio)[0].bitrate}
@@ -755,7 +782,7 @@ const HomeScreen = observer(() => {
                                                             color: '#06B5AE',
                                                             margin: '0 0 0 5px',
                                                             fontWeight: bitrateNumber === 1 ? 500 : 200,
-                                                            cursor:'pointer'
+                                                            cursor: 'pointer'
                                                         }}
                                                               onClick={() => toggleBitrateChange(1)}
                                                         >
@@ -765,7 +792,7 @@ const HomeScreen = observer(() => {
                                                             color: '#06B5AE',
                                                             margin: '0 0 0 5px',
                                                             fontWeight: bitrateNumber === 2 ? 500 : 200,
-                                                            cursor:'pointer'
+                                                            cursor: 'pointer'
                                                         }}
                                                               onClick={() => toggleBitrateChange(2)}
                                                         >
@@ -825,7 +852,7 @@ const HomeScreen = observer(() => {
                                     <img className="imgContainer" src={errormsg}/>
                                     <p className="textContainer">Радио <br/> не работает</p>
                                 </div>
-                                <div className="shearContainer"  ref={wrapperRef}>
+                                <div className="shearContainer" ref={wrapperRef}>
                                     <div
                                         className="btnContainer"
                                         onClick={copyLinkAndShowMessage}
@@ -840,15 +867,30 @@ const HomeScreen = observer(() => {
                                         {showCopiedMessage && (
                                             <div className="copiedMessage">
                                                 <div>
-                                                    <div style={{display:'flex', flexDirection:"row", justifyContent:'space-between', alignItems:'center'}}>
-                                                        <input type="text" value={inputCurrentUrl} />
-                                                        <img style={{width:'20px', marginLeft:'8px', cursor:"pointer"}} src={shearlogo} onClick={copyLinkToClipboard}/>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        flexDirection: "row",
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <input type="text" value={inputCurrentUrl}/>
+                                                        <img style={{
+                                                            width: '20px',
+                                                            marginLeft: '8px',
+                                                            cursor: "pointer"
+                                                        }} src={shearlogo} onClick={copyLinkToClipboard}/>
                                                     </div>
-                                                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', marginTop:"10px", marginBottom:"5px"}}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'space-between',
+                                                        marginTop: "10px",
+                                                        marginBottom: "5px"
+                                                    }}>
                                                         {socialMediaLogos.map((platform, index) => (
                                                             <img
                                                                 key={index}
-                                                                style={{width:'24px', cursor:'pointer'}}
+                                                                style={{width: '24px', cursor: 'pointer'}}
                                                                 src={platform.logo}
                                                                 alt={platform.name}
                                                                 onClick={() => window.open(platform.url, '_blank')}
@@ -1135,70 +1177,118 @@ const HomeScreen = observer(() => {
                                 </div>
                                 : null}
                             <div style={{margin: '10px 0 13px 0', overflow: 'auto'}}>
-                                <p style={{
-                                    fontSize: '20px',
-                                    fontStyle: 'normal',
-                                    margin: '0 0 10px 0',
-                                    fontWeight: '700',
-                                    lineHeight: 'normal'
-                                }}
-                                >{`Отзывы`}</p>
+                                <div style={{display: 'flex', flexDirection: "row", alignItems: 'center'}}>
+                                    <p style={{
+                                        fontSize: '20px',
+                                        fontStyle: 'normal',
+                                        margin: '0 0 10px 0',
+                                        fontWeight: '700',
+                                        lineHeight: 'normal'
+                                    }}
+                                    >{`Отзывы`}</p>
+                                    {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
+                                        <div style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginLeft: '10px'
+                                        }}>
+                                            <img style={{margin: '0 0 5px 0', width: '14px'}}
+                                                 src={goldStar} alt="star"/>
+                                            <p style={{
+                                                margin: '0 0 7px 2px',
+                                                fontSize: '13px',
+                                                fontWeight: '500'
+                                            }}>
+                                                {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
+                                            </p>
+                                            <p style={{margin: '0 0 6px 5px', fontSize: '12px'}}>
+                                                ({ratingArrUS.length - 1} отзывов)
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
                                 {allReviews ?
                                     ratingArrUS.map((rating, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
                                             alignItems: 'flex-start',
                                             flexDirection: 'column',
-                                            padding: "10px 10px",
+                                            padding: "10px 0px",
                                             backgroundColor: '#fff',
                                             borderRadius: '10px',
                                             textDecoration: "none",
                                             color: "#000000",
-                                            marginBottom: '10px'
+                                            marginBottom: '10px',
                                         }}>
                                             <div style={{
                                                 display: 'flex',
-                                                width: '100%',
+                                                width: 'calc(100% - 20px)',
                                                 flexDirection: 'row',
                                                 justifyContent: 'flex-start',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
+                                                margin:"0 10px"
+
                                             }}>
                                                 <p style={{
                                                     margin: '0px',
-                                                    fontWeight: '700',
+                                                    fontWeight: '600',
                                                     color: '#000',
                                                     fontSize: '14px'
                                                 }}>{rating.name}</p>
                                                 <div
-                                                    style={{display: 'flex', flexDirection: 'row', marginLeft: '15px'}}>
-                                                    <img src={goldStar} alt="Star"
-                                                         style={{marginRight: '5px', width: '18px'}}/>
-                                                    <p style={{margin: '0px', fontWeight: '500',}}>{rating.value}</p>
+                                                    style={{
+                                                        width:'100%',
+                                                        justifyContent:'space-between',
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        marginLeft: '10px',
+                                                        alignItems: 'center',
+                                                        border:"1px"
+                                                    }}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                    }}>
+                                                        {[...Array(5)].map((_, index) => (
+                                                            <img
+                                                                key={index}
+                                                                src={index < rating.value ? goldStar : Star}
+                                                                alt="Star"
+                                                                style={{ margin: '0 5px -1px 0', width: '15px' }}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                    <p className={'data-text'}>{new Date(rating.created).toLocaleString()}</p>
                                                 </div>
                                             </div>
                                             <p style={{
                                                 wordWrap: "break-word",
                                                 color: '#000',
-                                                margin: '5px 5px 5px 0',
+                                                width:'calc(100% - 0px)',
+                                                borderTop:'1px solid #E9E9E9',
+                                                margin: '8px 0 5px 0',
+                                                padding:'5px 10px 0 10px',
                                                 fontSize: '13px'
                                             }}>
                                                 {rating.description}
                                             </p>
-
                                         </div>
                                     ))
                                     :
-                                    ratingArrUS.slice(0, 2).map((rating, index) => (
+                                    ratingArrUS.slice(0, visibleReviews).map((rating, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
                                             alignItems: 'flex-start',
                                             flexDirection: 'column',
-                                            padding: "10px 10px",
+                                            padding: "10px 0px",
                                             backgroundColor: '#fff',
                                             borderRadius: '10px',
                                             textDecoration: "none",
                                             color: "#000000",
-                                            marginBottom: '10px'
+                                            marginBottom: '10px',
                                         }}>
                                             {isLoading ? (
                                                 <div style={{
@@ -1217,29 +1307,43 @@ const HomeScreen = observer(() => {
                                             ) : (
                                                 <div style={{
                                                     display: 'flex',
-                                                    width: '100%',
+                                                    width: 'calc(100% - 20px)',
                                                     flexDirection: 'row',
                                                     justifyContent: 'flex-start',
-                                                    alignItems: 'center'
+                                                    alignItems: 'center',
+                                                    margin:"0 10px"
+
                                                 }}>
                                                     <p style={{
                                                         margin: '0px',
-                                                        fontWeight: '700',
+                                                        fontWeight: '600',
                                                         color: '#000',
                                                         fontSize: '14px'
                                                     }}>{rating.name}</p>
                                                     <div
                                                         style={{
+                                                            width:'100%',
+                                                            justifyContent:'space-between',
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            marginLeft: '15px'
+                                                            marginLeft: '10px',
+                                                            alignItems: 'center',
+                                                            border:"1px"
                                                         }}>
-                                                        <img src={goldStar} alt="Star"
-                                                             style={{width: '18px', margin: '0  5px 3px 0'}}/>
-                                                        <p style={{
-                                                            margin: '0px',
-                                                            fontWeight: '500',
-                                                        }}>{rating.value}</p>
+                                                        <div style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                        }}>
+                                                            {[...Array(5)].map((_, index) => (
+                                                                <img
+                                                                    key={index}
+                                                                    src={index < rating.value ? goldStar : Star}
+                                                                    alt="Star"
+                                                                    style={{ margin: '0 5px -1px 0', width: '15px' }}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                        <p className={'data-text'}>{new Date(rating.created).toLocaleString()}</p>
                                                     </div>
                                                 </div>)}
                                             {isLoading ? (
@@ -1261,7 +1365,10 @@ const HomeScreen = observer(() => {
                                                 <p style={{
                                                     wordWrap: "break-word",
                                                     color: '#000',
-                                                    margin: '7px 5px 5px 0',
+                                                    width:'calc(100% - 0px)',
+                                                    borderTop:'1px solid #E9E9E9',
+                                                    margin: '8px 0 5px 0',
+                                                    padding:'5px 10px 0 10px',
                                                     fontSize: '13px'
                                                 }}>
                                                     {rating.description}
@@ -1273,9 +1380,9 @@ const HomeScreen = observer(() => {
                                     <Button
                                         variant={"outline-dark"}
                                         className="admin-additional-button submit_btn"
-                                        onClick={() => setAllReviews(true)}
+                                        onClick={() => setVisibleReviews(prev => prev + 10)}
                                     >
-                                        Читать все отзывы
+                                        {ratingArrUS.length - visibleReviews <= 10 ? 'Показать оставшиеся' : 'Загрузить ещё'}
                                     </Button>
                                     <Button
                                         variant={"outline-dark"}
