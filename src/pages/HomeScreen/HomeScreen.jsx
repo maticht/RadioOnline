@@ -88,12 +88,9 @@ const HomeScreen = observer(() => {
     const [isLoading, setIsLoading] = useState(false);
     const [successfulAddRating, setSuccessfulAddRating] = useState(false);
     const [bitrateNumber, setBitrateNumber] = useState(0);
-    const [telegramUrl, setTelegramUrl] = useState('');
-    const [vkUrl, setVkUrl] = useState('');
-    const [facebookUrl, setFacebookUrl] = useState('');
-    const [okUrl, setOkUrl] = useState('');
-    const [whatsappUrl, setWhatsappUrl] = useState('');
-    const [instagramUrl, setInstagramUrl] = useState('');
+    const [currentUrl, setCurrentUrl] = useState(window.location.href);
+    const [inputCurrentUrl, setInputCurrentUrl] = useState(window.location.href);
+    const wrapperRef = useRef(null);
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -375,9 +372,6 @@ const HomeScreen = observer(() => {
 
     };
 
-    const [currentUrl, setCurrentUrl] = useState(window.location.href);
-    const [inputCurrentUrl, setInputCurrentUrl] = useState(window.location.href);
-
     const copyLinkToClipboard = () => {
         if (selectedRadio !== null) {
             const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
@@ -401,9 +395,6 @@ const HomeScreen = observer(() => {
             { name: 'Instagram', logo: instlogo, url: `https://www.instagram.com/?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}` }
         ];
     }
-
-
-    const wrapperRef = useRef(null);
 
     useEffect(() => {
         function handleClickOutside(event) {
