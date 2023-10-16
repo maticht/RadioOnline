@@ -9,7 +9,7 @@ const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const icy = require('icy')
-const {parse} = require("icy");
+const axios = require('axios'); // Для выполнения HTTP-запросов
 
 // const ffmpegPath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
 // const ffprobePath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
@@ -35,6 +35,16 @@ async function getAudioMetadataFromStream(streamUrl) {
             }
         });
     });
+}
+
+async function isLinkValid(url) {
+    try {
+        const response = await axios.head(url); // Выполняем HEAD-запрос
+        return response.status === 200; // Проверяем статус ответа
+    } catch (error) {
+        console.error('Ошибка при проверке ссылки:', error);
+        return error.response.status === 403; // Проверяем статус ответа; // Если произошла ошибка, считаем ссылку недействительной
+    }
 }
 
 async function getIcyMetadataFromStream(streamUrl) {
@@ -348,12 +358,10 @@ class RadioController {
                         .replaceAll("<title>Radio Online</title>", `<title>Radio Online - ${radioStation.title}</title>`)
                         .replaceAll("Слушайте любимые радиостанции с удовольствием на площадке Radio Online!", `Слушайте радиостанцию ${radioStation.title} на площадке Radio Online!`)
                         .replaceAll("https://radio-online.me", `https://radio-online.me/${radioStation.radioLinkName}`)
-                        .replaceAll("image_holder", `https://backend.radio-online.me/${radioStation.image}`)
+                        .replaceAll("https://cdn-icons-png.flaticon.com/512/2094/2094284.png", `https://backend.radio-online.me/${radioStation.image}`)
                 }
-
                 console.log(updatedHeadContent)
                 return res.json([radioStation, genres, country, language, updatedHeadContent])
-
             });
         } catch (error) {
             console.error(error);
@@ -411,9 +419,13 @@ class RadioController {
     //     }
     // }
 
+
+
+
     async getRadioMetadata(req, res) {
         const url = JSON.parse(req.body.radio)[0].audioURL;
         const id = req.body.id;
+
         try {
             if (!url) res.status(400).json('None url')
             if (radioOnlineMap.has(id)) {
@@ -429,26 +441,31 @@ class RadioController {
             console.log(e)
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
-        try {
-            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-            let meta;
-            meta = await new Promise((resolve, reject) => {
-                icy.get(url, (response) => {
-                    response.on("metadata", (metadata) => {
-                        const parsedMetadata = icy.parse(metadata);
-                        resolve(parsedMetadata);
-                    });
-                    response.on("error", (error) => {
-                        console.log(error.message);
-                        resolve({StreamTitle: 'Неизвестно'})
+
+        if (!await isLinkValid(url)){
+            return res.json({StreamTitle: 'Радиостанция на ремонте'});
+        }else {
+            try {
+                process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+                let meta;
+                meta = await new Promise((resolve, reject) => {
+                    icy.get(url, (response) => {
+                        response.on("metadata", (metadata) => {
+                            const parsedMetadata = icy.parse(metadata);
+                            resolve(parsedMetadata);
+                        });
+                        response.on("error", (error) => {
+                            console.log(error.message);
+                            resolve({StreamTitle: 'Неизвестно'})
+                        });
                     });
                 });
-            });
-            //console.log(meta);
-            return res.json(meta);
-        } catch (err) {
-            console.error('Ошибка внутри try-catch:', err);
-            return res.status(500).json({success: false, error: 'Internal server error'});
+                //console.log(meta);
+                return res.json(meta);
+            } catch (err) {
+                console.error('Ошибка внутри try-catch:', err);
+                return res.status(500).json({success: false, error: 'Internal server error'});
+            }
         }
     }
 
