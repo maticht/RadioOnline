@@ -41,6 +41,7 @@ import SendRatingMessage from "../../components/modals/SendRatingMessage";
 import Pages from "../../components/Pages/Pages";
 import {observer} from "mobx-react-lite";
 import Footer from "../../components/Footer/Footer";
+import {Helmet} from 'react-helmet-async';
 
 
 const useStyles = createUseStyles({
@@ -101,6 +102,7 @@ const HomeScreen = observer(() => {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
+
     useEffect(() => {
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -165,7 +167,7 @@ const HomeScreen = observer(() => {
             getRadios(null, null, radioStation.page, radioStation.limit, '', radioId, radioStation.bitrate).then(data => {
                     radioStation.setRadios(data[0]);
                     radioStation.setTotalCount(data[1]);
-                    console.log('запрс из 1 useEffect');
+                    console.log('запрос из 1 useEffect');
                     setTimeout(() => {
                         setIsLoading(false);
                     }, 100);
@@ -186,7 +188,7 @@ const HomeScreen = observer(() => {
                 getRadios(radioStation.selectedCountry.id, genresIds, radioStation.page, radioStation.limit, radioStation.searchName, radioId, radioStation.bitrate).then(data => {
                     radioStation.setRadios(data[0])
                     radioStation.setTotalCount(data[1]);
-                    console.log('запрс из 2 useEffect')
+                    console.log('запрос из 2 useEffect')
                     setTimeout(() => {
                         setIsLoading(false);
                     }, 100);
@@ -195,36 +197,101 @@ const HomeScreen = observer(() => {
         }, [radioStation.page, radioStation.selectedCountry, radioStation.selectedGenre, radioStation.searchName]
     )
 
-    useEffect(() => {
-        if (typeof (params.radioId) !== "undefined") {
-            setLeaveReview(false)
-            setAllReviews(false)
-            radioStation.setLimit((windowWidth <= 535) ? 8 : (windowWidth <= 720) ? 12 : 18);
-            // (windowWidth <= 535) ? radioStation.setLimit(8) :
-            fetchOneRadioByLink(params.radioId).then(data => {
-                setIsLoading(true);
-                setSelectedRadio(data[0]);
-                setRadioOnline(data[0].online);
-                setRatingArrUs(data[0].rating);
-                console.log(selectGenre);
-                console.log(data[1]);
-                setSelectGenre(data[1]);
-                setSelectCountry(data[2]);
-                setSelectLanguage(data[3]);
-                if (!isFav && !isFavWithId) {
-                    const genresIdArr = data[1].map((genre) => genre.id);
-                    radioStation.setSelectGenre(genresIdArr)
-                    console.log(radioStation.selectedGenre)
-                }
-                audioRef.current.play();
-                togglePlayback();
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 500);
+    function replaceHtmlWithNewContent(newHtml) {
+        const tempDiv = document.createElement('div');
+        // Вставляем в него HTML-код, который вы хотите использовать в теге <head>
+        tempDiv.innerHTML = newHtml;
 
-            });
+        // Получаем ссылку на текущий тег <head> в документе
+        const currentHead = document.head;
+
+        // Удаляем все дочерние элементы из текущего тега <head>
+        while (currentHead.firstChild) {
+            currentHead.removeChild(currentHead.firstChild);
         }
+
+        // Вставляем новые элементы из временного div в текущий тег <head>
+        while (tempDiv.firstChild) {
+            currentHead.appendChild(tempDiv.firstChild);
+        }
+    }
+
+
+    useEffect(() => {
+        try {
+            if (typeof (params.radioId) !== "undefined") {
+
+                setLeaveReview(false)
+                setAllReviews(false)
+
+                radioStation.setLimit((windowWidth <= 535) ? 8 : (windowWidth <= 720) ? 12 : 18);
+                // (windowWidth <= 535) ? radioStation.setLimit(8) :
+                fetchOneRadioByLink(params.radioId).then(data => {
+                    setIsLoading(true);
+                    setSelectedRadio(data[0]);
+                    const audioURL = JSON.parse(data[0].radio)[bitrateNumber].audioURL;
+                    // Устанавливаем URL аудио
+                    if (audioRef.current !== null && typeof (audioRef.current) !== "undefined") {
+                        audioRef.current.src = audioURL;
+                    }
+
+                    /*const ogTags = [
+                        { property: 'og:title', content: `Radio Online - ${data[0].title}` },
+                        { property: 'og:image', content: `https://backend.radio-online.me/${data[0].image}` },
+                        { property: 'og:description', content: `Слушайте радиостанцию "${data[0].title}" на radio-online.me` },
+                    ];
+
+                    // Устанавливаем метатеги с помощью react-helmet-async
+                    const helmet = document.querySelector('head');
+                    ogTags.forEach(tag => {
+                        const tagElement = document.createElement('meta');
+                        tagElement.setAttribute('property', tag.property);
+                        tagElement.setAttribute('content', tag.content);
+                        helmet.appendChild(tagElement);
+                    });*/
+
+                    setRadioOnline(data[0].online);
+                    setRatingArrUs(data[0].rating);
+                    setSelectGenre(data[1]);
+                    setSelectCountry(data[2]);
+                    setSelectLanguage(data[3]);
+                    // console.log(data[4]);
+                    //replaceHtmlWithNewContent(data[4]);
+                    if (!isFav && !isFavWithId) {
+                        const genresIdArr = data[1].map((genre) => genre.id);
+                        radioStation.setSelectGenre(genresIdArr)
+                        console.log(radioStation.selectedGenre)
+                    }
+                    // Обработчик, который будет вызван, когда аудио будет готово к воспроизведению
+                    const onCanPlayThrough = () => {
+                        audioRef.current.play();
+                    };
+                    const onPlay = () => {
+                        setIsPlaying(true);
+                    };
+                    // Добавляем обработчик события canplaythrough
+                    if (audioRef.current !== null && typeof (audioRef.current) !== "undefined") {
+                        audioRef.current.addEventListener('canplaythrough', onCanPlayThrough);
+                        audioRef.current.addEventListener('play', onPlay);
+                    }
+
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 500);
+
+                    // Очищаем обработчик события, чтобы избежать утечек памяти
+                    return () => {
+                        audioRef.current.removeEventListener('canplaythrough', onCanPlayThrough);
+                        audioRef.current.removeEventListener('play', onPlay);
+                    };
+                });
+            }
+        } catch (e) {
+            console.log(e.message)
+        }
+
     }, [params]);
+
 
     useEffect(() => {
         if (selectedRadio !== null) {
@@ -304,6 +371,7 @@ const HomeScreen = observer(() => {
         setRating(value);
     };
 
+
     /* eslint-disable no-restricted-globals */
     const getOneRadio = (r) => {
         if (selectedRadio === null || r.title !== selectedRadio.title) {
@@ -316,18 +384,12 @@ const HomeScreen = observer(() => {
             radioStation.setSearchName('');
             fetchCurrentMusicName(r).then(data => {
                 if (data.StreamTitle === '') {
-                    setCurrentMusicName(`${r.title}`);
+                    setCurrentMusicName('Загрузка...');
                 } else {
-                    setCurrentMusicName(data.StreamTitle);
+                    setCurrentMusicName('Загрузка...');
                 }
                 console.log(data)
             });
-            setTimeout(() => {
-                setIsPlaying(true);
-                audioRef.current.play();
-            }, 200)
-
-            // });
             if (isFav || isFavWithId) {
                 navigation(`/favorites/${r.radioLinkName}`)
             } else {
@@ -335,6 +397,7 @@ const HomeScreen = observer(() => {
             }
         }
     }
+
 
     const togglePlayback = () => {
         if (isPlaying) {
@@ -465,9 +528,59 @@ const HomeScreen = observer(() => {
         }
     }
 
-
     return (
         <div className={classes.container}>
+            {selectedRadio !== null ? (
+                <Helmet>
+                    {/* HTML Meta Tags*/}
+                    <title>Radio Online</title>
+                    <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>
+
+                    {/*Facebook Meta Tags*/}
+                    <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
+                    <meta property="og:type" content="music.radio_station"/>
+                    <meta property="og:title" content={`Radio Online - ${selectedRadio.title}`}/>
+                    <meta property="og:description"
+                          content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>
+                    <meta property="og:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>
+
+                    {/*Twitter Meta Tags*/}
+                    <meta name="twitter:card" content="summary_large_image"/>
+                    <meta property="twitter:domain" content="radio-online.me"/>
+                    <meta property="twitter:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
+                    <meta name="twitter:title" content={`Radio Online - ${selectedRadio.title}`}/>
+                    <meta name="twitter:description"
+                          content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>
+                    <meta name="twitter:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>
+                </Helmet>
+            ) : (
+                <Helmet>
+                    {/* HTML Meta Tags*/}
+                    <title>RadioOnline</title>
+                    <meta name="description"
+                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          data-rh="true"/>
+
+                    {/*Facebook Meta Tags*/}
+                    <meta property="og:url" content="https://radio-online.me" data-rh="true"/>
+                    <meta property="og:type" content="music.radio_station" data-rh="true"/>
+                    <meta property="og:title" content="RadioOnline" data-rh="true"/>
+                    <meta property="og:description"
+                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          data-rh="true"/>
+                    <meta property="og:image" content="image_holder" data-rh="true"/>
+
+                    {/*Twitter Meta Tags*/}
+                    <meta name="twitter:card" content="summary_large_image" data-rh="true"/>
+                    <meta property="twitter:domain" content="radio-online.me" data-rh="true"/>
+                    <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>
+                    <meta name="twitter:title" content="Radio Online" data-rh="true"/>
+                    <meta name="twitter:description"
+                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          data-rh="true"/>
+                    <meta name="twitter:image" content="image_holder" data-rh="true"/>
+                </Helmet>
+            )}
             <div className={classes.maxWidthContainer}>
                 <HeaderNavBar setSelectedRadio={removeSelectedRadio} isSelectedRadioActive={selectedRadio !== null}/>
                 <div className={'bestSpecialists'}>
@@ -699,7 +812,7 @@ const HomeScreen = observer(() => {
                                                     <button className={`audio-play-btn`} onClick={togglePlayback}>
                                                         {currentMusicName === 'Загрузка...' ? (
                                                             <div className="loading-icon"></div>
-                                                        ) : isLoading ? (
+                                                        ) : isLoading || (isLoading && isPlaying === false) ? (
                                                             <div className="loading-icon"></div>
                                                         ) : isPlaying ? (
                                                             <img src={stop} alt="Stop" className="audio-icon"/>
@@ -1228,7 +1341,7 @@ const HomeScreen = observer(() => {
                                                 flexDirection: 'row',
                                                 justifyContent: 'flex-start',
                                                 alignItems: 'center',
-                                                margin:"0 10px"
+                                                margin: "0 10px"
 
                                             }}>
                                                 <p style={{
@@ -1239,13 +1352,13 @@ const HomeScreen = observer(() => {
                                                 }}>{rating.name}</p>
                                                 <div
                                                     style={{
-                                                        width:'100%',
-                                                        justifyContent:'space-between',
+                                                        width: '100%',
+                                                        justifyContent: 'space-between',
                                                         display: 'flex',
                                                         flexDirection: 'row',
                                                         marginLeft: '10px',
                                                         alignItems: 'center',
-                                                        border:"1px"
+                                                        border: "1px"
                                                     }}>
                                                     <div style={{
                                                         display: 'flex',
@@ -1256,7 +1369,7 @@ const HomeScreen = observer(() => {
                                                                 key={index}
                                                                 src={index < rating.value ? goldStar : Star}
                                                                 alt="Star"
-                                                                style={{ margin: '0 5px -1px 0', width: '15px' }}
+                                                                style={{margin: '0 5px -1px 0', width: '15px'}}
                                                             />
                                                         ))}
                                                     </div>
@@ -1266,10 +1379,10 @@ const HomeScreen = observer(() => {
                                             <p style={{
                                                 wordWrap: "break-word",
                                                 color: '#000',
-                                                width:'calc(100% - 0px)',
-                                                borderTop:'1px solid #E9E9E9',
+                                                width: 'calc(100% - 0px)',
+                                                borderTop: '1px solid #E9E9E9',
                                                 margin: '8px 0 5px 0',
-                                                padding:'5px 10px 0 10px',
+                                                padding: '5px 10px 0 10px',
                                                 fontSize: '13px'
                                             }}>
                                                 {rating.description}
@@ -1310,7 +1423,7 @@ const HomeScreen = observer(() => {
                                                     flexDirection: 'row',
                                                     justifyContent: 'flex-start',
                                                     alignItems: 'center',
-                                                    margin:"0 10px"
+                                                    margin: "0 10px"
 
                                                 }}>
                                                     <p style={{
@@ -1321,13 +1434,13 @@ const HomeScreen = observer(() => {
                                                     }}>{rating.name}</p>
                                                     <div
                                                         style={{
-                                                            width:'100%',
-                                                            justifyContent:'space-between',
+                                                            width: '100%',
+                                                            justifyContent: 'space-between',
                                                             display: 'flex',
                                                             flexDirection: 'row',
                                                             marginLeft: '10px',
                                                             alignItems: 'center',
-                                                            border:"1px"
+                                                            border: "1px"
                                                         }}>
                                                         <div style={{
                                                             display: 'flex',
@@ -1338,7 +1451,7 @@ const HomeScreen = observer(() => {
                                                                     key={index}
                                                                     src={index < rating.value ? goldStar : Star}
                                                                     alt="Star"
-                                                                    style={{ margin: '0 5px -1px 0', width: '15px' }}
+                                                                    style={{margin: '0 5px -1px 0', width: '15px'}}
                                                                 />
                                                             ))}
                                                         </div>
@@ -1364,10 +1477,10 @@ const HomeScreen = observer(() => {
                                                 <p style={{
                                                     wordWrap: "break-word",
                                                     color: '#000',
-                                                    width:'calc(100% - 0px)',
-                                                    borderTop:'1px solid #E9E9E9',
+                                                    width: 'calc(100% - 0px)',
+                                                    borderTop: '1px solid #E9E9E9',
                                                     margin: '8px 0 5px 0',
-                                                    padding:'5px 10px 0 10px',
+                                                    padding: '5px 10px 0 10px',
                                                     fontSize: '13px'
                                                 }}>
                                                     {rating.description}

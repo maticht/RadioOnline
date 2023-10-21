@@ -9,7 +9,7 @@ const radioOnlineMap = require("../models/radioOnlineMap")
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const icy = require('icy')
-const {parse} = require("icy");
+const axios = require('axios'); // Для выполнения HTTP-запросов
 
 // const ffmpegPath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
 // const ffprobePath = 'http://backend.delkind.pl/ffmpeg-2023-07-16-git-c541ecf0dc-full_build/bin/ffprobe.exe';
@@ -35,6 +35,16 @@ async function getAudioMetadataFromStream(streamUrl) {
             }
         });
     });
+}
+
+async function isLinkValid(url) {
+    try {
+        const response = await axios.head(url); // Выполняем HEAD-запрос
+        return response.status === 200; // Проверяем статус ответа
+    } catch (error) {
+        console.error('Ошибка при проверке ссылки:', error);
+        return error.response.status === 403; // Проверяем статус ответа; // Если произошла ошибка, считаем ссылку недействительной
+    }
 }
 
 async function getIcyMetadataFromStream(streamUrl) {
@@ -131,7 +141,6 @@ class RadioController {
                         radioStations = await Radio.find({country: new Types.ObjectId(country_id)}).skip(offset).limit(limit);
                         resultCount = await Radio.countDocuments({country: new Types.ObjectId(country_id)});
                     } else if (!country_id && genreIds.length !== 0) {
-                        const genreRegex = new RegExp(genreIds.join('|'));
                         radioStations = await Radio.find({ genre: { $regex: genreRegex } }).skip(offset).limit(limit);
                         resultCount = await Radio.countDocuments({genre: { $regex: genreRegex }});
                     } else if (country_id && genreIds.length !== 0) {
@@ -267,6 +276,11 @@ class RadioController {
             console.log(genres, 'Массив жанров')
             let country = await Country.findById(radioStation.country.toString())
             let language = await Language.findById(radioStation.language.toString())
+
+            const indexPath  = path.resolve(__dirname, '../..', 'build', 'index.html');
+            console.log(indexPath)
+
+
             return res.json([radioStation, genres, country, language])
         } catch (error) {
             console.error(error);
@@ -327,7 +341,28 @@ class RadioController {
             }
             let country = await Country.findById(radioStation.country.toString())
             let language = await Language.findById(radioStation.language.toString())
-            return res.json([radioStation, genres, country, language])
+
+            const indexPath  = path.resolve(__dirname, '../..', 'build', 'index.html');
+
+            fs.readFile(indexPath, 'utf8', (err, htmlData) => {
+                if (err) {
+                    console.error('Error during file reading', err);
+                    return res.status(404).end()
+                }
+
+                const headTagRegex = /<head\b[^>]*>(.*?)<\/head>/s;
+                const headContentMatch = htmlData.match(headTagRegex);
+                let updatedHeadContent;
+                if (headContentMatch && headContentMatch[1]) {
+                    updatedHeadContent = headContentMatch[1]
+                        .replaceAll("<title>Radio Online</title>", `<title>Radio Online - ${radioStation.title}</title>`)
+                        .replaceAll("Слушайте любимые радиостанции с удовольствием на площадке Radio Online!", `Слушайте радиостанцию ${radioStation.title} на площадке Radio Online!`)
+                        .replaceAll("https://radio-online.me", `https://radio-online.me/${radioStation.radioLinkName}`)
+                        .replaceAll("https://cdn-icons-png.flaticon.com/512/2094/2094284.png", `https://backend.radio-online.me/${radioStation.image}`)
+                }
+                console.log(updatedHeadContent)
+                return res.json([radioStation, genres, country, language, updatedHeadContent])
+            });
         } catch (error) {
             console.error(error);
             return res.status(500).json({message: 'Internal server error'});
@@ -384,9 +419,13 @@ class RadioController {
     //     }
     // }
 
+
+
+
     async getRadioMetadata(req, res) {
         const url = JSON.parse(req.body.radio)[0].audioURL;
         const id = req.body.id;
+
         try {
             if (!url) res.status(400).json('None url')
             if (radioOnlineMap.has(id)) {
@@ -402,27 +441,32 @@ class RadioController {
             console.log(e)
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
-        try {
-            process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-            let meta;
-            meta = await new Promise((resolve, reject) => {
-                icy.get(url, (response) => {
-                    response.on("metadata", (metadata) => {
-                        const parsedMetadata = icy.parse(metadata);
-                        resolve(parsedMetadata);
-                    });
-                    response.on("error", (error) => {
-                        console.log(error.message);
-                        resolve({StreamTitle: 'Неизвестно'})
+
+        // if (!await isLinkValid(url)){
+            //return res.json({StreamTitle: 'Радиостанция на ремонте'});
+        // }else {
+            try {
+                process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+                let meta;
+                meta = await new Promise((resolve, reject) => {
+                    icy.get(url, (response) => {
+                        response.on("metadata", (metadata) => {
+                            const parsedMetadata = icy.parse(metadata);
+                            resolve(parsedMetadata);
+                        });
+                        response.on("error", (error) => {
+                            console.log(error.message);
+                            resolve({StreamTitle: 'Неизвестно'})
+                        });
                     });
                 });
-            });
-            //console.log(meta);
-            return res.json(meta);
-        } catch (err) {
-            console.error('Ошибка внутри try-catch:', err);
-            return res.status(500).json({success: false, error: 'Internal server error'});
-        }
+                //console.log(meta);
+                return res.json(meta);
+            } catch (err) {
+                console.error('Ошибка внутри try-catch:', err);
+                return res.status(500).json({success: false, error: 'Internal server error'});
+            }
+        // }
     }
 
 
@@ -485,6 +529,9 @@ class RadioController {
             const genresIdsStringArrUpdatedFromAdmin = req.body.genre_id.split(",");
             let genre;
 
+            // текущие: A B C
+            // новые: A C D
+
             for(const genreIdFromDB of genresIdsStringArrFromDB){
                 if(genresIdsStringArrUpdatedFromAdmin.includes(genreIdFromDB)){
 
@@ -504,6 +551,7 @@ class RadioController {
                     await genre.save();
                 }
             }
+
             radio.title = req.body.title
             radio.radio = req.body.radio
             radio.radioLinkName = req.body.radioLinkName

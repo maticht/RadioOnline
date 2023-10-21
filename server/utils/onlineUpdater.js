@@ -2,14 +2,25 @@ const {Radio} = require("../models/radio");
 const radioOnlineMap = require("../models/radioOnlineMap")
 const intervalTime = 4000; // 4 секунды
 let radios;
+const fs = require('fs');
+let siteMap = '';
 
 async function fillMap() {
     try {
         radios = await Radio.find();
         radios.forEach(radio => {
             radioOnlineMap.set(radio.id, 0);
+            siteMap = siteMap + `https://radio-online.me/${radio.radioLinkName}\n`
         });
+        console.log(siteMap)
         console.log(radioOnlineMap)
+        fs.writeFile('sitemap.txt', siteMap,(err) => {
+            if (err) {
+                console.error('Произошла ошибка при записи файла:', err);
+            } else {
+                console.log('Файл успешно записан.');
+            }
+        });
     } catch (error) {
         console.log('Ошибка при заполнения массива с онлайном":', error);
     }
@@ -43,6 +54,7 @@ async function updateOnlineField() {
         console.log('Ошибка при обновлении поля "online":', error);
     }
 }
+
 
 function onlineUpdater() {
     fillMap();

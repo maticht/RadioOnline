@@ -21,10 +21,15 @@ const corsOptions = {
     optionsSuccessStatus: 204, // некоторые браузеры требуют этот статус для простых запросов OPTIONS
 };
 
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
+//app.use(require('prerender-node').set('prerenderToken', 'h7eZuWXUTdbB5vwor0NO'));
+// app.get('/', (req, res) =>{
+//     res.send("Prerender test")
+// })
 onlineUpdater();
 // bitrateUpdater();
 app.use("/addingRating", addingRating);
@@ -40,3 +45,8 @@ const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`);
 });
+
+// module.exports = {
+//     path: '/',
+//     handler:app
+// }

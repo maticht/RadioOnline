@@ -152,6 +152,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                 return [...prevGenres, genreId];
             }
         });
+
     }
 
     useEffect(()=>{
