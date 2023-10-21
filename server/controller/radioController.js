@@ -442,9 +442,9 @@ class RadioController {
             return res.status(500).json({success: false, error: 'Internal server error'});
         }
 
-        if (!await isLinkValid(url)){
-            return res.json({StreamTitle: 'Радиостанция на ремонте'});
-        }else {
+        // if (!await isLinkValid(url)){
+            //return res.json({StreamTitle: 'Радиостанция на ремонте'});
+        // }else {
             try {
                 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
                 let meta;
@@ -466,7 +466,7 @@ class RadioController {
                 console.error('Ошибка внутри try-catch:', err);
                 return res.status(500).json({success: false, error: 'Internal server error'});
             }
-        }
+        // }
     }
 
 
