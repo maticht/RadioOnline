@@ -267,8 +267,10 @@ const HomeScreen = observer(() => {
                         audioRef.current.play();
                     };
                     const onPlay = () => {
+                        console.log("Начало воспроизведения")
                         setIsPlaying(true);
                     };
+
                     // Добавляем обработчик события canplaythrough
                     if (audioRef.current !== null && typeof (audioRef.current) !== "undefined") {
                         audioRef.current.addEventListener('canplaythrough', onCanPlayThrough);
@@ -809,15 +811,25 @@ const HomeScreen = observer(() => {
                                                     alignItems: 'flex-start',
                                                     marginRight: '-20px'
                                                 }}>
+                                                    {/*<button className={`audio-play-btn`} onClick={togglePlayback}>*/}
+                                                    {/*    {currentMusicName === 'Загрузка...' ? (*/}
+                                                    {/*        <div className="loading-icon"></div>*/}
+                                                    {/*    ) : isLoading || (isLoading && isPlaying === false) ? (*/}
+                                                    {/*        <div className="loading-icon"></div>*/}
+                                                    {/*    ) : isPlaying ? (*/}
+                                                    {/*        <img src={stop} alt="Stop" className="audio-icon"/>*/}
+                                                    {/*    ) :  (*/}
+                                                    {/*        <img src={play} alt="Play" className="audio-icon"/>*/}
+                                                    {/*    )*/}
+                                                    {/*    }*/}
+                                                    {/*</button>*/}
                                                     <button className={`audio-play-btn`} onClick={togglePlayback}>
                                                         {currentMusicName === 'Загрузка...' ? (
                                                             <div className="loading-icon"></div>
-                                                        ) : isLoading || (isLoading && isPlaying === false) ? (
+                                                        ) : !isPlaying ? (
                                                             <div className="loading-icon"></div>
-                                                        ) : isPlaying ? (
-                                                            <img src={stop} alt="Stop" className="audio-icon"/>
                                                         ) : (
-                                                            <img src={play} alt="Play" className="audio-icon"/>
+                                                            <img src={stop} alt="Stop" className="audio-icon"/>
                                                         )}
                                                     </button>
                                                     {isLoading ? (
