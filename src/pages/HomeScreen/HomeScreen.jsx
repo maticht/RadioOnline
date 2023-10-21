@@ -1006,7 +1006,6 @@ const HomeScreen = observer(() => {
                                             textDecoration: "none",
                                             color: "#000",
                                             flexDirection: 'column',
-                                            height: '100%',
                                             width: '100%'
                                         }}>
                                             <div style={{
@@ -1019,25 +1018,25 @@ const HomeScreen = observer(() => {
                                                     display: 'flex',
                                                     flexDirection: 'row'
                                                 }}>
-                                                    {radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (
-                                                        <div style={{
-                                                            position: 'absolute',
-                                                            top: 1,
-                                                            left: 1,
-                                                            backgroundColor: '#ffffff',
-                                                            padding: '13px 5px 1px 12px',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'space-between',
-                                                            borderRadius: '8px'
-                                                        }}>
-                                                            <img style={{width: '15px', margin: '0 0 3px 0'}}
-                                                                 src={goldStar} alt="star"/>
-                                                            <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>
-                                                                {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}
-                                                            </p>
-                                                        </div>
-                                                    )}
+                                                    {/*{radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (*/}
+                                                    {/*    <div style={{*/}
+                                                    {/*        position: 'absolute',*/}
+                                                    {/*        top: 1,*/}
+                                                    {/*        left: 1,*/}
+                                                    {/*        backgroundColor: '#ffffff',*/}
+                                                    {/*        padding: '13px 5px 1px 12px',*/}
+                                                    {/*        display: 'flex',*/}
+                                                    {/*        alignItems: 'center',*/}
+                                                    {/*        justifyContent: 'space-between',*/}
+                                                    {/*        borderRadius: '8px'*/}
+                                                    {/*    }}>*/}
+                                                    {/*        <img style={{width: '15px', margin: '0 0 3px 0'}}*/}
+                                                    {/*             src={goldStar} alt="star"/>*/}
+                                                    {/*        <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>*/}
+                                                    {/*            {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}*/}
+                                                    {/*        </p>*/}
+                                                    {/*    </div>*/}
+                                                    {/*)}*/}
                                                 </div>
                                                 <div style={{
                                                     marginTop: '10px',
@@ -1046,7 +1045,7 @@ const HomeScreen = observer(() => {
                                                     justifyContent: 'space-between',
                                                     alignContent: 'space-around'
                                                 }}>
-                                                    <Image width={140} height={125}
+                                                    <Image width={140} height={140}
                                                            className="mt-1 rounded rounded-10 d-block mx-auto"
                                                            src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
 
@@ -1380,9 +1379,9 @@ const HomeScreen = observer(() => {
                                     <Button
                                         variant={"outline-dark"}
                                         className="admin-additional-button submit_btn"
-                                        onClick={() => setVisibleReviews(prev => prev + 10)}
+                                        onClick={() => setVisibleReviews(prev => prev + 7)}
                                     >
-                                        {ratingArrUS.length - visibleReviews <= 10 ? 'Показать оставшиеся' : 'Загрузить ещё'}
+                                        {ratingArrUS.length - visibleReviews <= 7 ? 'Показать оставшиеся' : 'Загрузить ещё'}
                                     </Button>
                                     <Button
                                         variant={"outline-dark"}
