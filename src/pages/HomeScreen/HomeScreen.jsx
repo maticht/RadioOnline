@@ -382,6 +382,7 @@ const HomeScreen = observer(() => {
                 behavior: 'smooth'
             });
             setIsLoading(true);
+            setBitrateNumber(0)
             setSelectedRadio(r);
             radioStation.setSearchName('');
             fetchCurrentMusicName(r).then(data => {
