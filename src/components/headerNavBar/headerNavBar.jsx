@@ -12,7 +12,7 @@ import DropdownMenu from "react-bootstrap/DropdownMenu";
 import {deleteCustomRating, getAllCountries, getAllGenres} from "../../http/radioApi";
 import axios from "axios";
 import OpenMessages from "../modals/OpenMessages/OpenMessages";
-import {getAllCustomErrors, getAllCustomRating} from "../../http/radioApi";
+import {getAllCustomErrors, getAllCustomRating, getAllCustomMessages} from "../../http/radioApi";
 
 const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
     const param = useParams();
@@ -29,14 +29,16 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
     const [messageVisible, setMessageVisible] = useState(false);
     const [errMessagesLs, setErrMessagesLs] = useState([]);
     const [ratMessagesLs, setRatMessagesLs] = useState([]);
+    const [msgMessagesLs, setMsgMessagesLs] = useState([]);
     const [allMessagesLs, setAllMessagesLs] = useState([]);
 
 
     useEffect(() => {
-        Promise.all([getAllCustomRating(), getAllCustomErrors()]).then(([ratingData, errorData]) => {
+        Promise.all([getAllCustomRating(), getAllCustomErrors(), getAllCustomMessages()]).then(([ratingData, errorData, messageData]) => {
             setRatMessagesLs(ratingData.length);
             setErrMessagesLs(errorData.length);
-            setAllMessagesLs(ratingData.length + errorData.length);
+            setMsgMessagesLs(messageData.length)
+            setAllMessagesLs(ratingData.length + errorData.length + messageData.length);
         });
     }, []);
 
@@ -143,6 +145,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
     const [selectedGenresUS,setSelectedGenresUS]= useState([])
 
     const toggleGenre = (genreId) => {
+        setSelectedRadio();
         setSelectedGenresUS((prevGenres) => {
             if (prevGenres.includes(genreId)) {
                 // Убираем жанр, если он уже в списке
@@ -235,9 +238,9 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                                                 label={genre.name.length >= 11 ? genre.name.slice(0, 12) : genre.name}
                                                 checked={radioStation.selectedGenre.includes(genre.id)}
                                                 onChange={() => {
-                                                    if (!isSelectedRadioActive) {
+                                                    //if (!isSelectedRadioActive) {
                                                         toggleGenre(genre.id);
-                                                    }
+                                                    //}
                                                 }}
                                                 onClick={e => {
                                                     if (isSelectedRadioActive) {
@@ -245,7 +248,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                                                     }
                                                     e.stopPropagation();
                                                 }}
-                                                disabled={isSelectedRadioActive} // Добавить атрибут disabled, если isSelectedRadioActive равно true
+                                                //disabled={isSelectedRadioActive} // Добавить атрибут disabled, если isSelectedRadioActive равно true
                                             />
                                         </Dropdown.Item>
                                     )}

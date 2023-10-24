@@ -130,6 +130,20 @@ export const getAllCustomRating = async () => {
     return data
 }
 
+export const createCustomMessage = async (customError) => {
+    const {data} = await $host.post('api/customMessage', customError)
+    return data
+}
+
+export const deleteCustomMessage = async (id) => {
+    const {data} = await $host.post('api/customMessage/delete', id)
+    return data
+}
+
+export const getAllCustomMessages = async () => {
+    const {data} = await $host.get('api/customMessage')
+    return data
+}
 // export const calculateAudioBitrate = async (radio)=>{
 //     const {data} = await $host.post('api/radio/bitrate/'+radio.id, radio)
 //     return data

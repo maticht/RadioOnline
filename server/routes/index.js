@@ -8,6 +8,7 @@ const ratingRouter = require('./ratingRouter')
 const languageRouter = require('./languageRouter')
 const customErrorRouter = require('./customErrorRouter')
 const customRatingRouter = require('./customRatingRouter')
+const customMessageRouter = require('./customMessageRouter')
 
 
 
@@ -19,5 +20,6 @@ router.use('/rating', ratingRouter)
 router.use('/admin', adminRouter)
 router.use('/customError', customErrorRouter)
 router.use('/customRating', customRatingRouter)
+router.use('/customMessage', customMessageRouter)
 
 module.exports = router

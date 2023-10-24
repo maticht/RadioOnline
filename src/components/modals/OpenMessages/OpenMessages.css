@@ -46,6 +46,9 @@
 .ratMessages{
 
 }
+.msgMessages{
+
+}
 @media screen and (max-width: 420px) {
     .radio-err-msg{
         flex-direction: column;
