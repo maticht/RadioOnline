@@ -29,11 +29,11 @@ import favorite from "../../img/favorite.svg";
 import errormsg from "../../img/errormsg.svg";
 import share from "../../img/share.svg";
 import shearlogo from "../../img/shearlogo.svg";
-import oklogo from '../../img/oklogo.svg';
-import fblogo from '../../img/fblogo.svg';
-import vklogo from '../../img/vklogo.svg';
-import tglogo from '../../img/tglogo.svg';
-import instlogo from '../../img/instlogo.png';
+import oklogo from '../../img/oklogo.png';
+import fblogo from '../../img/fblogo.png';
+import vklogo from '../../img/vklogo.png';
+import tglogo from '../../img/tglogo.png';
+import instlogo from '../../img/viberlogo.png';
 import wtplogo from '../../img/wtplogo.png';
 import {Context} from "../../index";
 import SendErrorMessage from "../../components/modals/SendErrorMessage";
@@ -91,7 +91,8 @@ const HomeScreen = observer(() => {
     const [currentUrl, setCurrentUrl] = useState(window.location.href);
     const [inputCurrentUrl, setInputCurrentUrl] = useState(window.location.href);
     const wrapperRef = useRef(null);
-    const [visibleReviews, setVisibleReviews] = useState(2);
+    const [visibleReviews, setVisibleReviews] = useState(7);
+    const [loadingIco, setLoadingIco] = useState(false);
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
@@ -267,7 +268,8 @@ const HomeScreen = observer(() => {
                         audioRef.current.play();
                     };
                     const onPlay = () => {
-                        console.log("Начало воспроизведения")
+                        console.log("Начало воспроизведения");
+                        setLoadingIco(false);
                         setIsPlaying(true);
                     };
 
@@ -366,7 +368,7 @@ const HomeScreen = observer(() => {
             setSuccessfulAddRating(true);
             setTimeout(() => {
                 setSuccessfulAddRating(false);
-            }, 5000);
+            }, 2000);
         }
     };
     const handleRate = (value) => {
@@ -382,6 +384,7 @@ const HomeScreen = observer(() => {
                 behavior: 'smooth'
             });
             setIsLoading(true);
+            setLoadingIco(true);
             setSelectedRadio(r);
             radioStation.setSearchName('');
             fetchCurrentMusicName(r).then(data => {
@@ -586,39 +589,51 @@ const HomeScreen = observer(() => {
             <div className={classes.maxWidthContainer}>
                 <HeaderNavBar setSelectedRadio={removeSelectedRadio} isSelectedRadioActive={selectedRadio !== null}/>
                 <div className={'bestSpecialists'}>
-                    {selectedRadio === null ?
-                        <p style={{
-                            fontSize: '20px',
-                            margin: '0 0 px 0',
-                            fontStyle: 'normal',
-                            fontWeight: '700',
-                            lineHeight: 'normal'
-                        }}>{isFav || isFavWithId ? 'Избранные радиостанции' : `Радио онлайн — слушать бесплатно`}</p>
-                        : isLoading ? (
-                            <div className='bitrate' style={{
-                                width: "250px",
-                                height: '30px',
-                                display: 'flex',
-                                marginTop: '-7px',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                alignContent: 'space-around',
-                                borderRadius: '10px',
-                                background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
-                                backgroundSize: '200% 100%',
-                                animation: 'gradientAnimation 1s linear infinite',
-                            }}>
-                            </div>
+                    {selectedRadio === null ? (
+                        isLoading ? (
+                            <div
+                                className='bitrate'
+                                style={{
+                                    width: '250px',
+                                    height: '30px',
+                                    display: 'flex',
+                                    marginTop: '-7px',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    alignContent: 'space-around',
+                                    borderRadius: '10px',
+                                    background: 'linear-gradient(to right, #e3e3e3, #f0f0f0, #f0f0f0, #e3e3e3)',
+                                    backgroundSize: '200% 100%',
+                                    animation: 'gradientAnimation 1s linear infinite',
+                                }}
+                            ></div>
                         ) : (
-                            <title style={{
+                            <p
+                                style={{
+                                    fontSize: '20px',
+                                    margin: '0 0 px 0',
+                                    fontStyle: 'normal',
+                                    fontWeight: '700',
+                                    lineHeight: 'normal',
+                                }}
+                            >
+                                {isFav || isFavWithId ? 'Избранные радиостанции' : `Радио онлайн — слушать бесплатно`}
+                            </p>
+                        )
+                    ) : (
+                        <p
+                            style={{
                                 fontSize: '20px',
                                 margin: '0 0 5px 0',
                                 fontStyle: 'normal',
                                 fontWeight: '700',
-                                lineHeight: 'normal'
-                            }}>{`${selectedRadio.title} — слушать бесплатно`}</title>
-                        )
-                    }
+                                lineHeight: 'normal',
+                            }}
+                        >
+                            {`${selectedRadio.title} — слушать бесплатно`}
+                        </p>
+
+                    )}
                     {selectedRadio && (
                         <div className='selectedRadio'>
                             <div className="radioBlock">
@@ -811,25 +826,15 @@ const HomeScreen = observer(() => {
                                                     alignItems: 'flex-start',
                                                     marginRight: '-20px'
                                                 }}>
-                                                    {/*<button className={`audio-play-btn`} onClick={togglePlayback}>*/}
-                                                    {/*    {currentMusicName === 'Загрузка...' ? (*/}
-                                                    {/*        <div className="loading-icon"></div>*/}
-                                                    {/*    ) : isLoading || (isLoading && isPlaying === false) ? (*/}
-                                                    {/*        <div className="loading-icon"></div>*/}
-                                                    {/*    ) : isPlaying ? (*/}
-                                                    {/*        <img src={stop} alt="Stop" className="audio-icon"/>*/}
-                                                    {/*    ) :  (*/}
-                                                    {/*        <img src={play} alt="Play" className="audio-icon"/>*/}
-                                                    {/*    )*/}
-                                                    {/*    }*/}
-                                                    {/*</button>*/}
                                                     <button className={`audio-play-btn`} onClick={togglePlayback}>
                                                         {currentMusicName === 'Загрузка...' ? (
                                                             <div className="loading-icon"></div>
-                                                        ) : !isPlaying ? (
+                                                        ) : loadingIco ? (
                                                             <div className="loading-icon"></div>
+                                                        ) : isPlaying ? (
+                                                            <img src={stop} alt="Stop" className="audio-icon" />
                                                         ) : (
-                                                            <img src={stop} alt="Stop" className="audio-icon"/>
+                                                            <img src={play} alt="Play" className="audio-icon" />
                                                         )}
                                                     </button>
                                                     {isLoading ? (
@@ -1072,7 +1077,7 @@ const HomeScreen = observer(() => {
                                             }}>
                                                 <div style={{
                                                     width: "140px",
-                                                    height: '125px',
+                                                    height: '140px',
                                                     marginTop: '10px',
                                                     marginLeft: '10px',
                                                     display: 'flex',
@@ -1419,6 +1424,7 @@ const HomeScreen = observer(() => {
                                                     width: "150px",
                                                     height: '25px',
                                                     display: 'flex',
+                                                    marginLeft:'10px',
                                                     flexDirection: 'column',
                                                     justifyContent: 'space-between',
                                                     alignContent: 'space-around',
@@ -1472,10 +1478,10 @@ const HomeScreen = observer(() => {
                                                 </div>)}
                                             {isLoading ? (
                                                 <div style={{
-                                                    width: "100%",
+                                                    width: "calc(100% - 20px)",
                                                     height: '25px',
                                                     display: 'flex',
-                                                    margin: '5px 5px 0 0',
+                                                    margin: '5px 10px 0 10px',
                                                     flexDirection: 'column',
                                                     justifyContent: 'space-between',
                                                     alignContent: 'space-around',
