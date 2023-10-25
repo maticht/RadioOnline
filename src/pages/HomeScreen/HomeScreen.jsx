@@ -779,35 +779,43 @@ const HomeScreen = observer(() => {
                                                                 justifyContent: 'space-between',
                                                                 flexDirection: 'column',
                                                             }}>
-                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Жанр</p>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px'
-                                                                }}>Страна</p>
-                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Язык</p>
-                                                            </div>
-                                                            <div style={{
-                                                                display: 'flex',
-                                                                alignItems: 'flex-start',
-                                                                justifyContent: 'space-between',
-                                                                flexDirection: 'column',
-                                                                margin: '0 0 0 10px'
-                                                            }}>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold'
-                                                                }}>{genreOutput(selectGenre)}</p>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold'
-                                                                }}>{selectCountry.name}</p>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold'
-                                                                }}>{selectLanguage.name}</p>
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                }}>
+                                                                    <p style={{margin: '2px 0', fontSize: '12px', width:'42px'}}>Жанр</p>
+                                                                    <p style={{
+                                                                        margin: '2px 0 2px 5px',
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold',
+                                                                        lineHeight:'11px'
+                                                                    }}>{genreOutput(selectGenre)}</p>
+                                                                </div>
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                }}>
+                                                                    <p style={{margin: '2px 0', fontSize: '12px', width:'42px'}}>Страна</p>
+                                                                    <p style={{
+                                                                        margin: '2px 0 2px 5px',
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold'
+                                                                    }}>{selectCountry.name}</p>
+                                                                </div>
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                }}>
+                                                                    <p style={{margin: '2px 0', fontSize: '12px', width:'42px'}}>Язык</p>
+                                                                    <p style={{
+                                                                        margin: '2px 0 2px 5px',
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold'
+                                                                    }}>{selectCountry.name}</p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     )}
@@ -833,9 +841,9 @@ const HomeScreen = observer(() => {
                                                         ) : loadingIco ? (
                                                             <div className="loading-icon"></div>
                                                         ) : isPlaying ? (
-                                                            <img src={stop} alt="Stop" className="audio-icon" />
+                                                            <img src={stop} alt="Stop" className="audio-icon"/>
                                                         ) : (
-                                                            <img src={play} alt="Play" className="audio-icon" />
+                                                            <img src={play} alt="Play" className="audio-icon"/>
                                                         )}
                                                     </button>
                                                     {isLoading ? (
@@ -1123,89 +1131,95 @@ const HomeScreen = observer(() => {
                                 ))}</div>
                         ) : (
                             <div className={'allRadios'}>
-                                {radioStation.radios.map((radio, index) => (
-
-                                    <div
-                                        className={'oneBestSpecialistsBlock'}
-                                        key={radio.id}
-                                        onClick={() => getOneRadio(radio)}
-                                        // style={{
-                                        //     marginRight: handleMarginRight(selectedRadio && selectedRadio.id !== radio.id ? (index - 1) : index),
-                                        // }}
-                                    >
-                                        <Link style={{
-                                            textDecoration: "none",
-                                            color: "#000",
-                                            flexDirection: 'column',
-                                            width: '100%'
-                                        }}>
-                                            <div style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignContent: 'space-between'
-                                            }}>
-                                                <div style={{
-                                                    position: 'relative',
-                                                    display: 'flex',
-                                                    flexDirection: 'row'
-                                                }}>
-                                                    {/*{radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (*/}
-                                                    {/*    <div style={{*/}
-                                                    {/*        position: 'absolute',*/}
-                                                    {/*        top: 1,*/}
-                                                    {/*        left: 1,*/}
-                                                    {/*        backgroundColor: '#ffffff',*/}
-                                                    {/*        padding: '13px 5px 1px 12px',*/}
-                                                    {/*        display: 'flex',*/}
-                                                    {/*        alignItems: 'center',*/}
-                                                    {/*        justifyContent: 'space-between',*/}
-                                                    {/*        borderRadius: '8px'*/}
-                                                    {/*    }}>*/}
-                                                    {/*        <img style={{width: '15px', margin: '0 0 3px 0'}}*/}
-                                                    {/*             src={goldStar} alt="star"/>*/}
-                                                    {/*        <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>*/}
-                                                    {/*            {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}*/}
-                                                    {/*        </p>*/}
-                                                    {/*    </div>*/}
-                                                    {/*)}*/}
-                                                </div>
-                                                <div style={{
-                                                    marginTop: '10px',
-                                                    display: 'flex',
+                                {radioStation.radios.length === 0 ? (<p style={{
+                                    fontSize: '18px',
+                                    fontStyle: 'normal',
+                                    margin: '30px 0 10px 0',
+                                    fontWeight: '700',
+                                    lineHeight: 'normal'
+                                }}>Вы не добавили ни одной радиостанции в избранное</p>) :
+                                    radioStation.radios.map((radio, index) => (
+                                            <div
+                                                className={'oneBestSpecialistsBlock'}
+                                                key={radio.id}
+                                                onClick={() => getOneRadio(radio)}
+                                                // style={{
+                                                //     marginRight: handleMarginRight(selectedRadio && selectedRadio.id !== radio.id ? (index - 1) : index),
+                                                // }}
+                                            >
+                                                <Link style={{
+                                                    textDecoration: "none",
+                                                    color: "#000",
                                                     flexDirection: 'column',
-                                                    justifyContent: 'space-between',
-                                                    alignContent: 'space-around'
+                                                    width: '100%'
                                                 }}>
-                                                    <Image width={140} height={140}
-                                                           className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                           src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignContent: 'space-between'
+                                                    }}>
+                                                        <div style={{
+                                                            position: 'relative',
+                                                            display: 'flex',
+                                                            flexDirection: 'row'
+                                                        }}>
+                                                            {/*{radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (*/}
+                                                            {/*    <div style={{*/}
+                                                            {/*        position: 'absolute',*/}
+                                                            {/*        top: 1,*/}
+                                                            {/*        left: 1,*/}
+                                                            {/*        backgroundColor: '#ffffff',*/}
+                                                            {/*        padding: '13px 5px 1px 12px',*/}
+                                                            {/*        display: 'flex',*/}
+                                                            {/*        alignItems: 'center',*/}
+                                                            {/*        justifyContent: 'space-between',*/}
+                                                            {/*        borderRadius: '8px'*/}
+                                                            {/*    }}>*/}
+                                                            {/*        <img style={{width: '15px', margin: '0 0 3px 0'}}*/}
+                                                            {/*             src={goldStar} alt="star"/>*/}
+                                                            {/*        <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>*/}
+                                                            {/*            {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}*/}
+                                                            {/*        </p>*/}
+                                                            {/*    </div>*/}
+                                                            {/*)}*/}
+                                                        </div>
+                                                        <div style={{
+                                                            marginTop: '10px',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'space-between',
+                                                            alignContent: 'space-around'
+                                                        }}>
+                                                            <Image width={140} height={140}
+                                                                   className="mt-1 rounded rounded-10 d-block mx-auto"
+                                                                   src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
 
-                                                </div>
-                                            </div>
-                                            <div style={{
-                                                marginTop: '10px',
-                                                padding: radio.title.length >= 17 ? '4px 5px 0 5px' : '12px 5px 0 5px',
-                                                borderTop: "1px solid #EAEAEA",
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'space-between',
-                                                alignContent: 'space-around'
-                                            }}>
-                                                <p className="mx-auto"
-                                                   style={{
-                                                       fontWeight: '500',
-                                                       margin: '0 0 0 0',
-                                                       textAlign: 'center',
-                                                       lineHeight: '16px'
-                                                   }}>
-                                                    {radio.title}
-                                                    {/*{(radio.title).length > 15 ? (radio.title).slice(0, 15) + '...' : radio.title}*/}
-                                                </p>
-                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{
+                                                        marginTop: '10px',
+                                                        padding: radio.title.length >= 17 ? '4px 5px 0 5px' : '12px 5px 0 5px',
+                                                        borderTop: "1px solid #EAEAEA",
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'space-between',
+                                                        alignContent: 'space-around'
+                                                    }}>
+                                                        <p className="mx-auto"
+                                                           style={{
+                                                               fontWeight: '500',
+                                                               margin: '0 0 0 0',
+                                                               textAlign: 'center',
+                                                               lineHeight: '16px'
+                                                           }}>
+                                                            {radio.title}
+                                                            {/*{(radio.title).length > 15 ? (radio.title).slice(0, 15) + '...' : radio.title}*/}
+                                                        </p>
+                                                    </div>
 
-                                        </Link>
-                                    </div>
-                                ))}
+                                                </Link>
+                                            </div>
+                                        ))}
                             </div>
                         )}
                     </div>
@@ -1425,7 +1439,7 @@ const HomeScreen = observer(() => {
                                                     width: "150px",
                                                     height: '25px',
                                                     display: 'flex',
-                                                    marginLeft:'10px',
+                                                    marginLeft: '10px',
                                                     flexDirection: 'column',
                                                     justifyContent: 'space-between',
                                                     alignContent: 'space-around',
