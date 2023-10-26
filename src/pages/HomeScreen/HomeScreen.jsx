@@ -843,9 +843,9 @@ const HomeScreen = observer(() => {
                                                         ) : loadingIco ? (
                                                             <div className="loading-icon"></div>
                                                         ) : isPlaying ? (
-                                                            <img src={stop} alt="Stop" className="audio-icon" />
+                                                            <img src={stop} alt="Stop" className="audio-icon"/>
                                                         ) : (
-                                                            <img src={play} alt="Play" className="audio-icon" />
+                                                            <img src={play} alt="Play" className="audio-icon"/>
                                                         )}
                                                     </button>
                                                     {isLoading ? (
@@ -1191,28 +1191,28 @@ const HomeScreen = observer(() => {
                                                            className="mt-1 rounded rounded-10 d-block mx-auto"
                                                            src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
 
-                                                </div>
-                                            </div>
-                                            <div style={{
-                                                marginTop: '10px',
-                                                padding: radio.title.length >= 17 ? '4px 5px 0 5px' : '12px 5px 0 5px',
-                                                borderTop: "1px solid #EAEAEA",
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'space-between',
-                                                alignContent: 'space-around'
-                                            }}>
-                                                <p className="mx-auto"
-                                                   style={{
-                                                       fontWeight: '500',
-                                                       margin: '0 0 0 0',
-                                                       textAlign: 'center',
-                                                       lineHeight: '16px'
-                                                   }}>
-                                                    {radio.title}
-                                                    {/*{(radio.title).length > 15 ? (radio.title).slice(0, 15) + '...' : radio.title}*/}
-                                                </p>
-                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{
+                                                        marginTop: '10px',
+                                                        padding: radio.title.length >= 17 ? '4px 5px 0 5px' : '12px 5px 0 5px',
+                                                        borderTop: "1px solid #EAEAEA",
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'space-between',
+                                                        alignContent: 'space-around'
+                                                    }}>
+                                                        <p className="mx-auto"
+                                                           style={{
+                                                               fontWeight: '500',
+                                                               margin: '0 0 0 0',
+                                                               textAlign: 'center',
+                                                               lineHeight: '16px'
+                                                           }}>
+                                                            {radio.title}
+                                                            {/*{(radio.title).length > 15 ? (radio.title).slice(0, 15) + '...' : radio.title}*/}
+                                                        </p>
+                                                    </div>
 
                                         </Link>
                                     </div>
@@ -1441,7 +1441,7 @@ const HomeScreen = observer(() => {
                                                     width: "150px",
                                                     height: '25px',
                                                     display: 'flex',
-                                                    marginLeft:'10px',
+                                                    marginLeft: '10px',
                                                     flexDirection: 'column',
                                                     justifyContent: 'space-between',
                                                     alignContent: 'space-around',
