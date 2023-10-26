@@ -4,7 +4,6 @@ https://radio-online.me/novoe
 https://radio-online.me/retro-fm
 https://radio-online.me/avtoradio
 https://radio-online.me/chocolate
-https://radio-online.me/horoshee
 https://radio-online.me/kavkaz-hit
 https://radio-online.me/mariya-fm
 https://radio-online.me/yuzhnaya-volna
@@ -106,4 +105,3 @@ https://radio-online.me/maximum
 https://radio-online.me/rossii
 https://radio-online.me/detskoe
 https://radio-online.me/novaya-volna
-https://radio-online.me/123123123123

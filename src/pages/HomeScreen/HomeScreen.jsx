@@ -24,6 +24,7 @@ import quiet from '../../img/quiet.svg'
 import loud from '../../img/loud.svg'
 import silently from '../../img/silently.svg'
 import nonePrev from "../../img/noneprev.png";
+import nothingHere from '../../img/nothing_here.png'
 import nofavorite from "../../img/nofavorite.svg";
 import favorite from "../../img/favorite.svg";
 import errormsg from "../../img/errormsg.svg";
@@ -283,7 +284,7 @@ const HomeScreen = observer(() => {
                         setIsLoading(false);
                     }, 500);
 
-                    // Очищаем обработчик события, чтобы избежать утечек памяти
+                    //Очищаем обработчик события, чтобы избежать утечек памяти
                     return () => {
                         audioRef.current.removeEventListener('canplaythrough', onCanPlayThrough);
                         audioRef.current.removeEventListener('play', onPlay);
@@ -386,6 +387,7 @@ const HomeScreen = observer(() => {
             setIsLoading(true);
             setLoadingIco(true);
             setBitrateNumber(0)
+            setCurrentMusicName('Загрузка...')
             setSelectedRadio(r);
             radioStation.setSearchName('');
             fetchCurrentMusicName(r).then(data => {
@@ -539,7 +541,7 @@ const HomeScreen = observer(() => {
             {selectedRadio !== null ? (
                 <Helmet>
                     {/* HTML Meta Tags*/}
-                    <title>Radio Online</title>
+                    <title>{`Radio Online - ${selectedRadio.title}`}</title>
                     <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>
 
                     {/*Facebook Meta Tags*/}
@@ -562,7 +564,7 @@ const HomeScreen = observer(() => {
             ) : (
                 <Helmet>
                     {/* HTML Meta Tags*/}
-                    <title>RadioOnline</title>
+                    <title>Radio Online</title>
                     <meta name="description"
                           content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
                           data-rh="true"/>
@@ -779,35 +781,43 @@ const HomeScreen = observer(() => {
                                                                 justifyContent: 'space-between',
                                                                 flexDirection: 'column',
                                                             }}>
-                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Жанр</p>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px'
-                                                                }}>Страна</p>
-                                                                <p style={{margin: '2px 0', fontSize: '12px'}}>Язык</p>
-                                                            </div>
-                                                            <div style={{
-                                                                display: 'flex',
-                                                                alignItems: 'flex-start',
-                                                                justifyContent: 'space-between',
-                                                                flexDirection: 'column',
-                                                                margin: '0 0 0 10px'
-                                                            }}>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold'
-                                                                }}>{genreOutput(selectGenre)}</p>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold'
-                                                                }}>{selectCountry.name}</p>
-                                                                <p style={{
-                                                                    margin: '2px 0',
-                                                                    fontSize: '12px',
-                                                                    fontWeight: 'bold'
-                                                                }}>{selectLanguage.name}</p>
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                }}>
+                                                                    <p style={{margin: '2px 0', fontSize: '12px', width:'42px'}}>Жанр</p>
+                                                                    <p style={{
+                                                                        margin: '2px 0 2px 5px',
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold',
+                                                                        lineHeight:'11px'
+                                                                    }}>{genreOutput(selectGenre)}</p>
+                                                                </div>
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                }}>
+                                                                    <p style={{margin: '2px 0', fontSize: '12px', width:'42px'}}>Страна</p>
+                                                                    <p style={{
+                                                                        margin: '2px 0 2px 5px',
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold'
+                                                                    }}>{selectCountry.name}</p>
+                                                                </div>
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                }}>
+                                                                    <p style={{margin: '2px 0', fontSize: '12px', width:'42px'}}>Язык</p>
+                                                                    <p style={{
+                                                                        margin: '2px 0 2px 5px',
+                                                                        fontSize: '12px',
+                                                                        fontWeight: 'bold'
+                                                                    }}>{selectCountry.name}</p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     )}
@@ -1123,7 +1133,8 @@ const HomeScreen = observer(() => {
                                 ))}</div>
                         ) : (
                             <div className={'allRadios'}>
-                                {radioStation.radios.map((radio, index) => (
+                                {radioStation.radios.length !== 0 ?
+                                    (radioStation.radios.map((radio, index) => (
 
                                     <div
                                         className={'oneBestSpecialistsBlock'}
@@ -1205,7 +1216,12 @@ const HomeScreen = observer(() => {
 
                                         </Link>
                                     </div>
-                                ))}
+                                )))
+                            :
+                                    <Image
+                                           className="mt-1 rounded rounded-10 d-block mx-auto"
+                                           src={nothingHere}
+                                    />}
                             </div>
                         )}
                     </div>

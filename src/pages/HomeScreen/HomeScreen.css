@@ -347,7 +347,7 @@ textarea::placeholder{
     background-color: #EBEBEB;
     width: 180px;
     margin-top: 5px;
-    border-radius: 8px;
+    border-radius: 6px;
     border: none;
     padding: 5px 5px;
     color: #747474;
