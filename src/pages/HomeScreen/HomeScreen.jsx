@@ -33,7 +33,7 @@ import oklogo from '../../img/oklogo.png';
 import fblogo from '../../img/fblogo.png';
 import vklogo from '../../img/vklogo.png';
 import tglogo from '../../img/tglogo.png';
-import instlogo from '../../img/viberlogo.png';
+import viberlogo from '../../img/viberlogo.png';
 import wtplogo from '../../img/wtplogo.png';
 import {Context} from "../../index";
 import SendErrorMessage from "../../components/modals/SendErrorMessage";
@@ -96,6 +96,14 @@ const HomeScreen = observer(() => {
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
+
+    useEffect(() => {
+        if (window.location.hostname !== 'radio-online.me') {
+            // window.location.replace('https://radio-online.me');
+            window.location.href = 'https://radio-online.me';
+        }
+        window.location.href = 'https://radio-online.me';
+    }, []);
 
 
     useEffect(() => {
@@ -458,32 +466,32 @@ const HomeScreen = observer(() => {
             {
                 name: 'Telegram',
                 logo: tglogo,
-                url: `https://telegram.me/share/url?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `https://telegram.me/share/url?url=${encodeURIComponent(`${currentUrl}\n${sharingText}`)}`
             },
             {
                 name: 'VK',
                 logo: vklogo,
-                url: `https://vk.com/share.php?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `https://vk.com/share.php?url=${encodeURIComponent(`${currentUrl}`)}`
             },
             {
                 name: 'Facebook',
                 logo: fblogo,
-                url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${currentUrl}`)}`
             },
             {
                 name: 'OK',
                 logo: oklogo,
-                url: `https://connect.ok.ru/offer?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `https://connect.ok.ru/offer?url=${encodeURIComponent(`${currentUrl}`)}`
             },
             {
                 name: 'WhatsApp',
                 logo: wtplogo,
-                url: `https://wa.me/?text=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `https://wa.me/?text=${encodeURIComponent(`${currentUrl}\n${sharingText}`)}`
             },
             {
-                name: 'Instagram',
-                logo: instlogo,
-                url: `https://www.instagram.com/?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                name: 'Viber',
+                logo: viberlogo,
+                url: `viber://forward?text=${encodeURIComponent(`${currentUrl}`)}`
             }
         ];
     }
@@ -536,57 +544,57 @@ const HomeScreen = observer(() => {
 
     return (
         <div className={classes.container}>
-            {selectedRadio !== null ? (
-                <Helmet>
-                    {/* HTML Meta Tags*/}
-                    <title>Radio Online</title>
-                    <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>
+            {/*{selectedRadio !== null ? (*/}
+            {/*    <Helmet>*/}
+            {/*        /!* HTML Meta Tags*!/*/}
+            {/*        <title>Radio Online</title>*/}
+            {/*        <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>*/}
 
-                    {/*Facebook Meta Tags*/}
-                    <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
-                    <meta property="og:type" content="music.radio_station"/>
-                    <meta property="og:title" content={`Radio Online - ${selectedRadio.title}`}/>
-                    <meta property="og:description"
-                          content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>
-                    <meta property="og:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>
+            {/*        /!*Facebook Meta Tags*!/*/}
+            {/*        <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>*/}
+            {/*        <meta property="og:type" content="music.radio_station"/>*/}
+            {/*        <meta property="og:title" content={`Radio Online - ${selectedRadio.title}`}/>*/}
+            {/*        <meta property="og:description"*/}
+            {/*              content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>*/}
+            {/*        <meta property="og:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>*/}
 
-                    {/*Twitter Meta Tags*/}
-                    <meta name="twitter:card" content="summary_large_image"/>
-                    <meta property="twitter:domain" content="radio-online.me"/>
-                    <meta property="twitter:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
-                    <meta name="twitter:title" content={`Radio Online - ${selectedRadio.title}`}/>
-                    <meta name="twitter:description"
-                          content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>
-                    <meta name="twitter:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>
-                </Helmet>
-            ) : (
-                <Helmet>
-                    {/* HTML Meta Tags*/}
-                    <title>RadioOnline</title>
-                    <meta name="description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
-                          data-rh="true"/>
+            {/*        /!*Twitter Meta Tags*!/*/}
+            {/*        <meta name="twitter:card" content="summary_large_image"/>*/}
+            {/*        <meta property="twitter:domain" content="radio-online.me"/>*/}
+            {/*        <meta property="twitter:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>*/}
+            {/*        <meta name="twitter:title" content={`Radio Online - ${selectedRadio.title}`}/>*/}
+            {/*        <meta name="twitter:description"*/}
+            {/*              content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>*/}
+            {/*        <meta name="twitter:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>*/}
+            {/*    </Helmet>*/}
+            {/*) : (*/}
+            {/*    <Helmet>*/}
+            {/*        /!* HTML Meta Tags*!/*/}
+            {/*        <title>RadioOnline</title>*/}
+            {/*        <meta name="description"*/}
+            {/*              content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"*/}
+            {/*              data-rh="true"/>*/}
 
-                    {/*Facebook Meta Tags*/}
-                    <meta property="og:url" content="https://radio-online.me" data-rh="true"/>
-                    <meta property="og:type" content="music.radio_station" data-rh="true"/>
-                    <meta property="og:title" content="RadioOnline" data-rh="true"/>
-                    <meta property="og:description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
-                          data-rh="true"/>
-                    <meta property="og:image" content="image_holder" data-rh="true"/>
+            {/*        /!*Facebook Meta Tags*!/*/}
+            {/*        <meta property="og:url" content="https://radio-online.me" data-rh="true"/>*/}
+            {/*        <meta property="og:type" content="music.radio_station" data-rh="true"/>*/}
+            {/*        <meta property="og:title" content="RadioOnline" data-rh="true"/>*/}
+            {/*        <meta property="og:description"*/}
+            {/*              content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"*/}
+            {/*              data-rh="true"/>*/}
+            {/*        <meta property="og:image" content="image_holder" data-rh="true"/>*/}
 
-                    {/*Twitter Meta Tags*/}
-                    <meta name="twitter:card" content="summary_large_image" data-rh="true"/>
-                    <meta property="twitter:domain" content="radio-online.me" data-rh="true"/>
-                    <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>
-                    <meta name="twitter:title" content="Radio Online" data-rh="true"/>
-                    <meta name="twitter:description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
-                          data-rh="true"/>
-                    <meta name="twitter:image" content="image_holder" data-rh="true"/>
-                </Helmet>
-            )}
+            {/*        /!*Twitter Meta Tags*!/*/}
+            {/*        <meta name="twitter:card" content="summary_large_image" data-rh="true"/>*/}
+            {/*        <meta property="twitter:domain" content="radio-online.me" data-rh="true"/>*/}
+            {/*        <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>*/}
+            {/*        <meta name="twitter:title" content="Radio Online" data-rh="true"/>*/}
+            {/*        <meta name="twitter:description"*/}
+            {/*              content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"*/}
+            {/*              data-rh="true"/>*/}
+            {/*        <meta name="twitter:image" content="image_holder" data-rh="true"/>*/}
+            {/*    </Helmet>*/}
+            {/*)}*/}
             <div className={classes.maxWidthContainer}>
                 <HeaderNavBar setSelectedRadio={removeSelectedRadio} isSelectedRadioActive={selectedRadio !== null}/>
                 <div className={'bestSpecialists'}>
