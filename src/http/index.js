@@ -7,6 +7,9 @@ const $host = axios.create({
 const $authHost = axios.create({
     baseURL: 'https://backend.radio-online.me'
 })
+//'http://localhost:8081'
+//'https://backend.radio-online.me'
+
 
 // https://backend.radio-online.me
 

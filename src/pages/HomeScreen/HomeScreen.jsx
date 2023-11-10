@@ -24,6 +24,7 @@ import quiet from '../../img/quiet.svg'
 import loud from '../../img/loud.svg'
 import silently from '../../img/silently.svg'
 import nonePrev from "../../img/noneprev.png";
+import nothingHere from '../../img/nothing_here.png'
 import nofavorite from "../../img/nofavorite.svg";
 import favorite from "../../img/favorite.svg";
 import errormsg from "../../img/errormsg.svg";
@@ -96,14 +97,6 @@ const HomeScreen = observer(() => {
 
     const isFav = location.pathname === '/favorites'
     const isFavWithId = location.pathname === `/favorites/${params.radioId}`
-
-    useEffect(() => {
-        if (window.location.hostname !== 'radio-online.me') {
-            // window.location.replace('https://radio-online.me');
-            window.location.href = 'https://radio-online.me';
-        }
-        window.location.href = 'https://radio-online.me';
-    }, []);
 
 
     useEffect(() => {
@@ -291,7 +284,7 @@ const HomeScreen = observer(() => {
                         setIsLoading(false);
                     }, 500);
 
-                    // Очищаем обработчик события, чтобы избежать утечек памяти
+                    //Очищаем обработчик события, чтобы избежать утечек памяти
                     return () => {
                         audioRef.current.removeEventListener('canplaythrough', onCanPlayThrough);
                         audioRef.current.removeEventListener('play', onPlay);
@@ -394,6 +387,7 @@ const HomeScreen = observer(() => {
             setIsLoading(true);
             setLoadingIco(true);
             setBitrateNumber(0)
+            setCurrentMusicName('Загрузка...')
             setSelectedRadio(r);
             radioStation.setSearchName('');
             fetchCurrentMusicName(r).then(data => {
@@ -544,57 +538,57 @@ const HomeScreen = observer(() => {
 
     return (
         <div className={classes.container}>
-            {/*{selectedRadio !== null ? (*/}
-            {/*    <Helmet>*/}
-            {/*        /!* HTML Meta Tags*!/*/}
-            {/*        <title>Radio Online</title>*/}
-            {/*        <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>*/}
+            {selectedRadio !== null ? (
+                <Helmet>
+                    {/* HTML Meta Tags*/}
+                    <title>{`Radio Online - ${selectedRadio.title}`}</title>
+                    <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>
 
-            {/*        /!*Facebook Meta Tags*!/*/}
-            {/*        <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>*/}
-            {/*        <meta property="og:type" content="music.radio_station"/>*/}
-            {/*        <meta property="og:title" content={`Radio Online - ${selectedRadio.title}`}/>*/}
-            {/*        <meta property="og:description"*/}
-            {/*              content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>*/}
-            {/*        <meta property="og:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>*/}
+                    {/*Facebook Meta Tags*/}
+                    <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
+                    <meta property="og:type" content="music.radio_station"/>
+                    <meta property="og:title" content={`Radio Online - ${selectedRadio.title}`}/>
+                    <meta property="og:description"
+                          content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>
+                    <meta property="og:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>
 
-            {/*        /!*Twitter Meta Tags*!/*/}
-            {/*        <meta name="twitter:card" content="summary_large_image"/>*/}
-            {/*        <meta property="twitter:domain" content="radio-online.me"/>*/}
-            {/*        <meta property="twitter:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>*/}
-            {/*        <meta name="twitter:title" content={`Radio Online - ${selectedRadio.title}`}/>*/}
-            {/*        <meta name="twitter:description"*/}
-            {/*              content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>*/}
-            {/*        <meta name="twitter:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>*/}
-            {/*    </Helmet>*/}
-            {/*) : (*/}
-            {/*    <Helmet>*/}
-            {/*        /!* HTML Meta Tags*!/*/}
-            {/*        <title>RadioOnline</title>*/}
-            {/*        <meta name="description"*/}
-            {/*              content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"*/}
-            {/*              data-rh="true"/>*/}
+                    {/*Twitter Meta Tags*/}
+                    <meta name="twitter:card" content="summary_large_image"/>
+                    <meta property="twitter:domain" content="radio-online.me"/>
+                    <meta property="twitter:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
+                    <meta name="twitter:title" content={`Radio Online - ${selectedRadio.title}`}/>
+                    <meta name="twitter:description"
+                          content={`Слушайте радиостанцию "${selectedRadio.title}" на radio-online.me`}/>
+                    <meta name="twitter:image" content={`https://backend.radio-online.me/${selectedRadio.image}`}/>
+                </Helmet>
+            ) : (
+                <Helmet>
+                    {/* HTML Meta Tags*/}
+                    <title>Radio Online</title>
+                    <meta name="description"
+                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          data-rh="true"/>
 
-            {/*        /!*Facebook Meta Tags*!/*/}
-            {/*        <meta property="og:url" content="https://radio-online.me" data-rh="true"/>*/}
-            {/*        <meta property="og:type" content="music.radio_station" data-rh="true"/>*/}
-            {/*        <meta property="og:title" content="RadioOnline" data-rh="true"/>*/}
-            {/*        <meta property="og:description"*/}
-            {/*              content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"*/}
-            {/*              data-rh="true"/>*/}
-            {/*        <meta property="og:image" content="image_holder" data-rh="true"/>*/}
+                    {/*Facebook Meta Tags*/}
+                    <meta property="og:url" content="https://radio-online.me" data-rh="true"/>
+                    <meta property="og:type" content="music.radio_station" data-rh="true"/>
+                    <meta property="og:title" content="RadioOnline" data-rh="true"/>
+                    <meta property="og:description"
+                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          data-rh="true"/>
+                    <meta property="og:image" content="image_holder" data-rh="true"/>
 
-            {/*        /!*Twitter Meta Tags*!/*/}
-            {/*        <meta name="twitter:card" content="summary_large_image" data-rh="true"/>*/}
-            {/*        <meta property="twitter:domain" content="radio-online.me" data-rh="true"/>*/}
-            {/*        <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>*/}
-            {/*        <meta name="twitter:title" content="Radio Online" data-rh="true"/>*/}
-            {/*        <meta name="twitter:description"*/}
-            {/*              content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"*/}
-            {/*              data-rh="true"/>*/}
-            {/*        <meta name="twitter:image" content="image_holder" data-rh="true"/>*/}
-            {/*    </Helmet>*/}
-            {/*)}*/}
+                    {/*Twitter Meta Tags*/}
+                    <meta name="twitter:card" content="summary_large_image" data-rh="true"/>
+                    <meta property="twitter:domain" content="radio-online.me" data-rh="true"/>
+                    <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>
+                    <meta name="twitter:title" content="Radio Online" data-rh="true"/>
+                    <meta name="twitter:description"
+                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          data-rh="true"/>
+                    <meta name="twitter:image" content="image_holder" data-rh="true"/>
+                </Helmet>
+            )}
             <div className={classes.maxWidthContainer}>
                 <HeaderNavBar setSelectedRadio={removeSelectedRadio} isSelectedRadioActive={selectedRadio !== null}/>
                 <div className={'bestSpecialists'}>
@@ -1139,68 +1133,63 @@ const HomeScreen = observer(() => {
                                 ))}</div>
                         ) : (
                             <div className={'allRadios'}>
-                                {radioStation.radios.length === 0 ? (<p style={{
-                                    fontSize: '18px',
-                                    fontStyle: 'normal',
-                                    margin: '30px 0 10px 0',
-                                    fontWeight: '700',
-                                    lineHeight: 'normal'
-                                }}>Вы не добавили ни одной радиостанции в избранное</p>) :
-                                    radioStation.radios.map((radio, index) => (
-                                            <div
-                                                className={'oneBestSpecialistsBlock'}
-                                                key={radio.id}
-                                                onClick={() => getOneRadio(radio)}
-                                                // style={{
-                                                //     marginRight: handleMarginRight(selectedRadio && selectedRadio.id !== radio.id ? (index - 1) : index),
-                                                // }}
-                                            >
-                                                <Link style={{
-                                                    textDecoration: "none",
-                                                    color: "#000",
-                                                    flexDirection: 'column',
-                                                    width: '100%'
+                                {radioStation.radios.length !== 0 ?
+                                    (radioStation.radios.map((radio, index) => (
+
+                                    <div
+                                        className={'oneBestSpecialistsBlock'}
+                                        key={radio.id}
+                                        onClick={() => getOneRadio(radio)}
+                                        // style={{
+                                        //     marginRight: handleMarginRight(selectedRadio && selectedRadio.id !== radio.id ? (index - 1) : index),
+                                        // }}
+                                    >
+                                        <Link style={{
+                                            textDecoration: "none",
+                                            color: "#000",
+                                            flexDirection: 'column',
+                                            width: '100%'
+                                        }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignContent: 'space-between'
+                                            }}>
+                                                <div style={{
+                                                    position: 'relative',
+                                                    display: 'flex',
+                                                    flexDirection: 'row'
                                                 }}>
-                                                    <div style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        alignContent: 'space-between'
-                                                    }}>
-                                                        <div style={{
-                                                            position: 'relative',
-                                                            display: 'flex',
-                                                            flexDirection: 'row'
-                                                        }}>
-                                                            {/*{radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (*/}
-                                                            {/*    <div style={{*/}
-                                                            {/*        position: 'absolute',*/}
-                                                            {/*        top: 1,*/}
-                                                            {/*        left: 1,*/}
-                                                            {/*        backgroundColor: '#ffffff',*/}
-                                                            {/*        padding: '13px 5px 1px 12px',*/}
-                                                            {/*        display: 'flex',*/}
-                                                            {/*        alignItems: 'center',*/}
-                                                            {/*        justifyContent: 'space-between',*/}
-                                                            {/*        borderRadius: '8px'*/}
-                                                            {/*    }}>*/}
-                                                            {/*        <img style={{width: '15px', margin: '0 0 3px 0'}}*/}
-                                                            {/*             src={goldStar} alt="star"/>*/}
-                                                            {/*        <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>*/}
-                                                            {/*            {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}*/}
-                                                            {/*        </p>*/}
-                                                            {/*    </div>*/}
-                                                            {/*)}*/}
-                                                        </div>
-                                                        <div style={{
-                                                            marginTop: '10px',
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            justifyContent: 'space-between',
-                                                            alignContent: 'space-around'
-                                                        }}>
-                                                            <Image width={140} height={140}
-                                                                   className="mt-1 rounded rounded-10 d-block mx-auto"
-                                                                   src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
+                                                    {/*{radio.rating && radio.rating.length > 0 && radio.rating[0] !== '' && (*/}
+                                                    {/*    <div style={{*/}
+                                                    {/*        position: 'absolute',*/}
+                                                    {/*        top: 1,*/}
+                                                    {/*        left: 1,*/}
+                                                    {/*        backgroundColor: '#ffffff',*/}
+                                                    {/*        padding: '13px 5px 1px 12px',*/}
+                                                    {/*        display: 'flex',*/}
+                                                    {/*        alignItems: 'center',*/}
+                                                    {/*        justifyContent: 'space-between',*/}
+                                                    {/*        borderRadius: '8px'*/}
+                                                    {/*    }}>*/}
+                                                    {/*        <img style={{width: '15px', margin: '0 0 3px 0'}}*/}
+                                                    {/*             src={goldStar} alt="star"/>*/}
+                                                    {/*        <p style={{margin: '0 0 0 2px', fontSize: '13px'}}>*/}
+                                                    {/*            {(radio.rating.reduce((acc, rating) => acc + rating.value, 0) / radio.rating.length).toFixed(1)}*/}
+                                                    {/*        </p>*/}
+                                                    {/*    </div>*/}
+                                                    {/*)}*/}
+                                                </div>
+                                                <div style={{
+                                                    marginTop: '10px',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    alignContent: 'space-around'
+                                                }}>
+                                                    <Image width={140} height={140}
+                                                           className="mt-1 rounded rounded-10 d-block mx-auto"
+                                                           src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
 
                                                         </div>
                                                     </div>
@@ -1225,9 +1214,14 @@ const HomeScreen = observer(() => {
                                                         </p>
                                                     </div>
 
-                                                </Link>
-                                            </div>
-                                        ))}
+                                        </Link>
+                                    </div>
+                                )))
+                            :
+                                    <Image
+                                           className="mt-1 rounded rounded-10 d-block mx-auto"
+                                           src={nothingHere}
+                                    />}
                             </div>
                         )}
                     </div>
