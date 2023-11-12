@@ -39,11 +39,11 @@ async function getAudioMetadataFromStream(streamUrl) {
 
 async function isLinkValid(url) {
     try {
-        const response = await axios.head(url); // Выполняем HEAD-запрос
-        return response.status === 200; // Проверяем статус ответа
+        await axios.head(url); // Выполняем HEAD-запрос
+        return true;
     } catch (error) {
-        console.error('Ошибка при проверке ссылки:', error);
-        return error.response.status === 403; // Проверяем статус ответа; // Если произошла ошибка, считаем ссылку недействительной
+        console.error('Ошибка при проверке ссылки:', error.message, error.response.status);
+        return false; // Если произошла ошибка, считаем ссылку недействительной
     }
 }
 
@@ -121,8 +121,8 @@ class RadioController {
     async getAll(req, res) {
         try {
             let {country_id, genre_id, page, limit, searchName, radio_id, bitrate} = req.query
-            console.log("поисковое слово " + searchName);
-            console.log("поисковое айди радио " + radio_id);
+            // console.log("поисковое слово " + searchName);
+            // console.log("поисковое айди радио " + radio_id);
             console.log(genre_id);
             const genreIds = genre_id ? genre_id.split(',') : [];
             console.log(genreIds)
@@ -133,7 +133,7 @@ class RadioController {
             if (radio_id === '' || typeof radio_id === 'undefined') {
 
                 if (searchName === '') {
-                    console.log('Попал сюда')
+                    //console.log('Попал сюда')
                     if (!country_id && genreIds.length === 0) {
                         radioStations = await Radio.find().skip(offset).limit(limit);
                         resultCount = await Radio.countDocuments();
@@ -250,7 +250,7 @@ class RadioController {
             }
             const count = resultCount
             radioStations.sort((a, b) => b.bitrate - a.bitrate);
-            console.log(radioStations);
+            //console.log(radioStations);
             return res.json([radioStations, count, page])
         } catch (error) {
             console.log(error);
@@ -426,7 +426,9 @@ class RadioController {
     async getRadioMetadata(req, res) {
         const url = JSON.parse(req.body.radio)[0].audioURL;
         const id = req.body.id;
-
+        if(!await isLinkValid(url)){
+            return res.json({StreamTitle:"Радио на ремонте"})
+        }
         try {
             if (!url) res.status(400).json('None url')
             if (radioOnlineMap.has(id)) {

@@ -99,7 +99,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
         setSelectedRadio()//убирает значение выбранного радио это колбек функция
         radioStation.setSearchName('')
         radioStation.setPage(1)
-        radioStation.setLimit(42);
+        radioStation.setLimit((windowWidth <= 535) ? 18 : (windowWidth <= 720) ? 36 : 42);
         radioStation.setSelectGenre([])
         setSelectedGenresUS([]);
         radioStation.setSelectCountry({})
@@ -155,7 +155,19 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                 return [...prevGenres, genreId];
             }
         });
+    }
 
+    const toggleCountry = (country) =>{
+        setSelectedRadio();
+        radioStation.setSelectCountry(country)
+        setSelectedGenresUS([]);
+        setSearch('');
+        setSelectedRadio()//убирает значение выбранного радио это колбек функция
+        radioStation.setSearchName('')
+        radioStation.setPage(1)
+        radioStation.setLimit((windowWidth <= 535) ? 18 : (windowWidth <= 720) ? 36 : 42);
+        radioStation.setSelectGenre([])
+        history(`/`);
     }
 
     useEffect(()=>{
@@ -220,7 +232,7 @@ const HeaderNavBar = observer(({setSelectedRadio, isSelectedRadioActive}) => {
                                 >{radioStation.selectedCountry.name || 'Выберите страну'}</DropdownToggle>
                                 <DropdownMenu className="custom-dropdown-menu">
                                     {radioStation.countries.map(country =>
-                                        <Dropdown.Item onClick={() => radioStation.setSelectCountry(country)}
+                                        <Dropdown.Item onClick={() => toggleCountry(country)}
                                                        key={country.id}> {country.name} </Dropdown.Item>
                                     )}
                                 </DropdownMenu>

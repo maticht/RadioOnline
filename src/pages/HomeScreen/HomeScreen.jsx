@@ -161,7 +161,7 @@ const HomeScreen = observer(() => {
             });
         } else {
             setIsLoading(true);
-
+            radioStation.setLimit((windowWidth <= 535) ? 18 : (windowWidth <= 720) ? 36 : 42);
             let radioId;
             if (selectedRadio !== null) {
                 radioId = selectedRadio.id;
@@ -226,7 +226,7 @@ const HomeScreen = observer(() => {
                 setLeaveReview(false)
                 setAllReviews(false)
 
-                radioStation.setLimit((windowWidth <= 535) ? 8 : (windowWidth <= 720) ? 12 : 18);
+                radioStation.setLimit((windowWidth <= 535) ? 6 : (windowWidth <= 720) ? 10 : 18);
                 // (windowWidth <= 535) ? radioStation.setLimit(8) :
                 fetchOneRadioByLink(params.radioId).then(data => {
                     setIsLoading(true);
@@ -541,8 +541,10 @@ const HomeScreen = observer(() => {
             {selectedRadio !== null ? (
                 <Helmet>
                     {/* HTML Meta Tags*/}
-                    <title>{`Radio Online - ${selectedRadio.title}`}</title>
-                    <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>
+                    <title>{`${selectedRadio.title} — слушать бесплатно`}</title>
+                    <meta name="description" content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"/>
+                    {/*<link rel="shortcut icon" href={`https://backend.radio-online.me/${selectedRadio.image}`} type="image/x-icon"/>*/}
+
 
                     {/*Facebook Meta Tags*/}
                     <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
@@ -564,7 +566,7 @@ const HomeScreen = observer(() => {
             ) : (
                 <Helmet>
                     {/* HTML Meta Tags*/}
-                    <title>Radio Online</title>
+                    <title>Радио онлайн — слушать бесплатно</title>
                     <meta name="description"
                           content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
                           data-rh="true"/>
@@ -869,7 +871,7 @@ const HomeScreen = observer(() => {
                                                                 margin: '1px 0'
                                                             }}>Сейчас играет</p>
                                                             <div className='musicName'>
-                                                                {currentMusicName.length > 32 ? (
+                                                                {currentMusicName.length > 15 ? (
                                                                     <p style={{
                                                                         fontSize: '12px',
                                                                         fontWeight: 'bold',
@@ -1323,22 +1325,25 @@ const HomeScreen = observer(() => {
                                 </div>
                                 : null}
                             <div style={{margin: '10px 0 13px 0', overflow: 'auto'}}>
-                                <div style={{display: 'flex', flexDirection: "row", alignItems: 'center'}}>
+                                <div style={{display: 'flex', flexDirection: "row", alignItems: 'flex-start', width: '100%', justifyContent:'space-between'}}>
                                     <p style={{
-                                        fontSize: '20px',
+                                        fontSize: '18px',
                                         fontStyle: 'normal',
                                         margin: '0 0 10px 0',
                                         fontWeight: '700',
-                                        lineHeight: 'normal'
+                                        lineHeight: 'normal',
+                                        width: '100%'
                                     }}
-                                    >{`Отзывы`}</p>
+                                    >{`Отзывы о ${selectedRadio.title}`}</p>
                                     {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
                                         <div style={{
                                             width: '100%',
                                             display: 'flex',
                                             flexDirection: 'row',
                                             alignItems: 'center',
-                                            marginLeft: '10px'
+                                            marginLeft: '10px',
+                                            marginTop: '3px',
+                                            justifyContent: 'flex-end'
                                         }}>
                                             <img style={{margin: '0 0 5px 0', width: '14px'}}
                                                  src={goldStar} alt="star"/>
@@ -1524,17 +1529,21 @@ const HomeScreen = observer(() => {
                                         </div>))
                                 }
                                 <Col className="d-flex justify-content-between rate-btns-block">
-                                    <Button
+                                    {ratingArrUS.length !== 0 && (
+                                        <Button
                                         variant={"outline-dark"}
                                         className="admin-additional-button submit_btn"
                                         onClick={() => setVisibleReviews(prev => prev + 7)}
                                     >
                                         {ratingArrUS.length - visibleReviews <= 7 ? 'Показать оставшиеся' : 'Загрузить ещё'}
                                     </Button>
+                                        )}
+
                                     <Button
                                         variant={"outline-dark"}
                                         className="main-admin-button submit_btn"
                                         onClick={() => setLeaveReview(true)}
+                                        style={{width: ratingArrUS.length === 0 ? "100%" : (windowWidth <= 750) ? "100%" : "50%"}}
                                     >
                                         Оставить отзыв
                                     </Button>
@@ -1546,7 +1555,7 @@ const HomeScreen = observer(() => {
                 </div>
 
             </div>
-            <Footer/>
+            <Footer setSelectedRadio={removeSelectedRadio}/>
         </div>
     );
 })
