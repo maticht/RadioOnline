@@ -6,15 +6,15 @@ module.exports = async (email, subject, html) => {
             host: process.env.HOST,
             port: Number(process.env.EMAIL_PORT),
             auth: {
-                user: 'radio-online@server757413.nazwa.pl',
-                pass: '7hC-X74jRQ#2QA$',
+                user: 'cisdeals@delkind.pl',
+                pass: 'SDE7heXNE*9H85W',
             },
             secure: false,
         });
 
         await transporter.sendMail({
             from: process.env.USER,
-            to: 'sergey-sokolov@inbox.ru',
+            to: 'iamsergeysokolov@gmail.com',
             subject: subject,
             html: html,
         });

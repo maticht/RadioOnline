@@ -11,8 +11,6 @@ const $authHost = axios.create({
 //'https://backend.radio-online.me'
 
 
-// https://backend.radio-online.me
-
 // const authInterceptor = config => {
 //     config.headers.authorization = `Bearer ${localStorage.getItem('token')}`
 //     return config

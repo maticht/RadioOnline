@@ -34,7 +34,7 @@ import oklogo from '../../img/oklogo.png';
 import fblogo from '../../img/fblogo.png';
 import vklogo from '../../img/vklogo.png';
 import tglogo from '../../img/tglogo.png';
-import viberlogo from '../../img/viberlogo.png';
+import instlogo from '../../img/viberlogo.png';
 import wtplogo from '../../img/wtplogo.png';
 import {Context} from "../../index";
 import SendErrorMessage from "../../components/modals/SendErrorMessage";
@@ -161,7 +161,7 @@ const HomeScreen = observer(() => {
             });
         } else {
             setIsLoading(true);
-
+            radioStation.setLimit((windowWidth <= 535) ? 18 : (windowWidth <= 720) ? 36 : 42);
             let radioId;
             if (selectedRadio !== null) {
                 radioId = selectedRadio.id;
@@ -226,7 +226,7 @@ const HomeScreen = observer(() => {
                 setLeaveReview(false)
                 setAllReviews(false)
 
-                radioStation.setLimit((windowWidth <= 535) ? 8 : (windowWidth <= 720) ? 12 : 18);
+                radioStation.setLimit((windowWidth <= 535) ? 6 : (windowWidth <= 720) ? 10 : 18);
                 // (windowWidth <= 535) ? radioStation.setLimit(8) :
                 fetchOneRadioByLink(params.radioId).then(data => {
                     setIsLoading(true);
@@ -454,13 +454,13 @@ const HomeScreen = observer(() => {
     };
     let socialMediaLogos = [];
     if (selectedRadio !== null) {
-        const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
-        const sharingText = `Слушать ${radioTitle} бесплатно`;
+        // const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
+        const sharingText = `${selectedRadio.title} — слушать бесплатно`;
         socialMediaLogos = [
             {
                 name: 'Telegram',
                 logo: tglogo,
-                url: `https://telegram.me/share/url?url=${encodeURIComponent(`${currentUrl}\n${sharingText}`)}`
+                url: `https://telegram.me/share/url?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
             },
             {
                 name: 'VK',
@@ -470,12 +470,12 @@ const HomeScreen = observer(() => {
             {
                 name: 'Facebook',
                 logo: fblogo,
-                url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${currentUrl}`)}`
+                url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
             },
             {
                 name: 'OK',
                 logo: oklogo,
-                url: `https://connect.ok.ru/offer?url=${encodeURIComponent(`${currentUrl}`)}`
+                url: `https://connect.ok.ru/offer?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
             },
             {
                 name: 'WhatsApp',
@@ -484,8 +484,8 @@ const HomeScreen = observer(() => {
             },
             {
                 name: 'Viber',
-                logo: viberlogo,
-                url: `viber://forward?text=${encodeURIComponent(`${currentUrl}`)}`
+                logo: instlogo,
+                url: `viber://forward?text=${encodeURIComponent(`${currentUrl}\n${sharingText}`)}`
             }
         ];
     }
@@ -541,8 +541,10 @@ const HomeScreen = observer(() => {
             {selectedRadio !== null ? (
                 <Helmet>
                     {/* HTML Meta Tags*/}
-                    <title>{`Radio Online - ${selectedRadio.title}`}</title>
-                    <meta name="description" content="Здарова бандиты, это Сережа Соколов, узнали ?"/>
+                    <title>{`${selectedRadio.title} — слушать бесплатно`}</title>
+                    <meta name="description" content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."/>
+                    {/*<link rel="shortcut icon" href={`https://backend.radio-online.me/${selectedRadio.image}`} type="image/x-icon"/>*/}
+
 
                     {/*Facebook Meta Tags*/}
                     <meta property="og:url" content={`https://radio-online.me/${selectedRadio.radioLinkName}`}/>
@@ -564,9 +566,9 @@ const HomeScreen = observer(() => {
             ) : (
                 <Helmet>
                     {/* HTML Meta Tags*/}
-                    <title>Radio Online</title>
+                    <title>Радио онлайн — слушать бесплатно</title>
                     <meta name="description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."
                           data-rh="true"/>
 
                     {/*Facebook Meta Tags*/}
@@ -574,7 +576,7 @@ const HomeScreen = observer(() => {
                     <meta property="og:type" content="music.radio_station" data-rh="true"/>
                     <meta property="og:title" content="RadioOnline" data-rh="true"/>
                     <meta property="og:description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."
                           data-rh="true"/>
                     <meta property="og:image" content="image_holder" data-rh="true"/>
 
@@ -584,7 +586,7 @@ const HomeScreen = observer(() => {
                     <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>
                     <meta name="twitter:title" content="Radio Online" data-rh="true"/>
                     <meta name="twitter:description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."
                           data-rh="true"/>
                     <meta name="twitter:image" content="image_holder" data-rh="true"/>
                 </Helmet>
@@ -816,7 +818,7 @@ const HomeScreen = observer(() => {
                                                                         margin: '2px 0 2px 5px',
                                                                         fontSize: '12px',
                                                                         fontWeight: 'bold'
-                                                                    }}>{selectCountry.name}</p>
+                                                                    }}>{selectLanguage.name}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -869,7 +871,7 @@ const HomeScreen = observer(() => {
                                                                 margin: '1px 0'
                                                             }}>Сейчас играет</p>
                                                             <div className='musicName'>
-                                                                {currentMusicName.length > 32 ? (
+                                                                {currentMusicName.length > 16 ? (
                                                                     <p style={{
                                                                         fontSize: '12px',
                                                                         fontWeight: 'bold',
@@ -1218,10 +1220,8 @@ const HomeScreen = observer(() => {
                                     </div>
                                 )))
                             :
-                                    <Image
-                                           className="mt-1 rounded rounded-10 d-block mx-auto"
-                                           src={nothingHere}
-                                    />}
+                                    <h5 style={{ top: "50%", margin:'200px auto', textAlign: "center"}}
+                                    >Ничего не найдено</h5>}
                             </div>
                         )}
                     </div>
@@ -1322,35 +1322,34 @@ const HomeScreen = observer(() => {
                                     </div>
                                 </div>
                                 : null}
-                            <div style={{margin: '10px 0 13px 0', overflow: 'auto'}}>
-                                <div style={{display: 'flex', flexDirection: "row", alignItems: 'center'}}>
+                            <div style={{margin: '15px 0 13px 0', overflow: 'auto'}}>
+                                <div className='rating-title'>
                                     <p style={{
-                                        fontSize: '20px',
+                                        fontSize: '18px',
                                         fontStyle: 'normal',
-                                        margin: '0 0 10px 0',
+                                        margin: '0 0 0 0',
                                         fontWeight: '700',
-                                        lineHeight: 'normal'
+                                        lineHeight: 'normal',
+                                        width: '100%'
                                     }}
-                                    >{`Отзывы`}</p>
+                                    >{`Отзывы о «${selectedRadio.title}»`}</p>
                                     {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
-                                        <div style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            marginLeft: '10px'
-                                        }}>
-                                            <img style={{margin: '0 0 5px 0', width: '14px'}}
+                                        <div  className='rating-amount'>
+                                            <img style={{margin: '0 0 0 0', width: '14px'}}
                                                  src={goldStar} alt="star"/>
                                             <p style={{
-                                                margin: '0 0 7px 2px',
+                                                margin: '0 0 0 2px',
                                                 fontSize: '13px',
                                                 fontWeight: '500'
                                             }}>
                                                 {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
                                             </p>
-                                            <p style={{margin: '0 0 6px 5px', fontSize: '12px'}}>
-                                                ({ratingArrUS.length - 1} отзывов)
+                                            <p style={{ margin: '0 0 0 5px', fontSize: '12px' }}>
+                                                {ratingArrUS.length === 1
+                                                    ? `(${ratingArrUS.length} отзыв)`
+                                                    : ratingArrUS.length === 2 || ratingArrUS.length === 3 || ratingArrUS.length === 4
+                                                        ? `(${ratingArrUS.length} отзыва)`
+                                                        : `(${ratingArrUS.length} отзывов)`}
                                             </p>
                                         </div>
                                     )}
@@ -1461,19 +1460,12 @@ const HomeScreen = observer(() => {
                                                     margin: "0 10px"
 
                                                 }}>
-                                                    <p style={{
-                                                        margin: '0px',
-                                                        fontWeight: '600',
-                                                        color: '#000',
-                                                        fontSize: '14px'
-                                                    }}>{rating.name}</p>
                                                     <div
                                                         style={{
                                                             width: '100%',
                                                             justifyContent: 'space-between',
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            marginLeft: '10px',
                                                             alignItems: 'center',
                                                             border: "1px"
                                                         }}>
@@ -1489,7 +1481,15 @@ const HomeScreen = observer(() => {
                                                                     style={{margin: '0 5px -1px 0', width: '15px'}}
                                                                 />
                                                             ))}
+                                                            <p style={{
+                                                                margin: '0px',
+                                                                fontWeight: '600',
+                                                                color: '#000',
+                                                                fontSize: '14px',
+                                                                marginLeft:'10px'
+                                                            }}>{rating.name}</p>
                                                         </div>
+
                                                         <p className={'data-text'}>{new Date(rating.created).toLocaleString()}</p>
                                                     </div>
                                                 </div>)}
@@ -1524,17 +1524,21 @@ const HomeScreen = observer(() => {
                                         </div>))
                                 }
                                 <Col className="d-flex justify-content-between rate-btns-block">
-                                    <Button
+                                    {ratingArrUS.length !== 0 && (
+                                        <Button
                                         variant={"outline-dark"}
                                         className="admin-additional-button submit_btn"
                                         onClick={() => setVisibleReviews(prev => prev + 7)}
                                     >
                                         {ratingArrUS.length - visibleReviews <= 7 ? 'Показать оставшиеся' : 'Загрузить ещё'}
                                     </Button>
+                                        )}
+
                                     <Button
                                         variant={"outline-dark"}
                                         className="main-admin-button submit_btn"
                                         onClick={() => setLeaveReview(true)}
+                                        style={{width: ratingArrUS.length === 0 ? "100%" : (windowWidth <= 995) ? "100%" : "50%"}}
                                     >
                                         Оставить отзыв
                                     </Button>
@@ -1546,7 +1550,7 @@ const HomeScreen = observer(() => {
                 </div>
 
             </div>
-            <Footer/>
+            <Footer setSelectedRadio={removeSelectedRadio}/>
         </div>
     );
 })

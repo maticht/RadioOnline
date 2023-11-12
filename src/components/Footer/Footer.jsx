@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import {Context} from "../../index";
 import './Footer.css';
 
-const Footer = observer(() => {
+const Footer = observer(({setSelectedRadio}) => {
     const {radioStation} = useContext(Context);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -28,6 +28,7 @@ const Footer = observer(() => {
     const columnCount = getColumnCount();
 
     const setGenreOnFooter = (genre) => {
+        setSelectedRadio();
         const arr = [];
         arr.push(genre.id)
         radioStation.setSelectGenre(arr)

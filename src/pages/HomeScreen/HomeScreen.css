@@ -432,6 +432,22 @@ textarea::placeholder{
 .sl-radio-info{
     margin-left: 20px;
 }
+.rating-title{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+    justify-content:space-between
+}
+.rating-amount{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 3px;
+    justify-content: flex-end;
+}
 
 @media screen and (max-width: 1060px) {
     .bestSpecialists {
@@ -570,6 +586,7 @@ textarea::placeholder{
         display: flex;
         flex-direction: column;
     }
+
     .main-admin-button {
         width: 100%;
     }
@@ -672,6 +689,21 @@ textarea::placeholder{
         margin: 5px 0 0 0;
         box-shadow: 0px 0px 0px;
         padding-left: 0;
+    }
+    .rating-title{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        justify-content:flex-start;
+    }
+    .rating-amount{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top: 0;
+        justify-content: flex-start;
     }
 }
 @media screen and (max-width: 510px) {
