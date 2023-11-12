@@ -5,6 +5,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `cd RadioOnline`
+### `npm i`
+### `npm start`
+
+### `cd server`
 ### `npm i`
 ### `npm start`
 
