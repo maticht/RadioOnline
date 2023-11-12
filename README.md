@@ -6,12 +6,18 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+go to project folder
 ### `cd RadioOnline`
+installing dependencies
 ### `npm i`
+frontend launch
 ### `npm start`
 
+going to the server folder
 ### `cd server`
+installing dependencies
 ### `npm i`
+backend launch
 ### `npm start`
 
 Runs the app in the development mode.\
