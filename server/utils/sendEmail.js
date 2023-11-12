@@ -25,4 +25,3 @@ module.exports = async (email, subject, html) => {
         return error;
     }
 };
-

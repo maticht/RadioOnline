@@ -579,7 +579,7 @@ const Admin = observer(() => {
                                                         justifyContent: 'space-between',
                                                         alignContent: 'space-around'
                                                     }}>
-                                                        <Image width={140} height={125}
+                                                        <Image width={140} height={140}
                                                                className="mt-1 rounded rounded-10 d-block mx-auto"
                                                                src={radio.image !== 'image' ? 'https://backend.radio-online.me/' + radio.image : nonePrev}/>
 

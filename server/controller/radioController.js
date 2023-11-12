@@ -39,10 +39,22 @@ async function getAudioMetadataFromStream(streamUrl) {
 
 async function isLinkValid(url) {
     try {
-        await axios.head(url); // Выполняем HEAD-запрос
+        // Используем Promise.race для установки таймаута
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => {
+                reject(new Error('Таймаут запроса'));
+            }, 2000);
+        });
+
+        // Используем Promise.race для выполнения HEAD-запроса с таймаутом
+        await Promise.race([
+            axios.head(url), // Выполняем HEAD-запрос
+            timeoutPromise
+        ]);
+
         return true;
     } catch (error) {
-        console.error('Ошибка при проверке ссылки:', error.message, error.response.status);
+        console.error('Ошибка при проверке ссылки:', error.message);
         return false; // Если произошла ошибка, считаем ссылку недействительной
     }
 }
@@ -426,9 +438,9 @@ class RadioController {
     async getRadioMetadata(req, res) {
         const url = JSON.parse(req.body.radio)[0].audioURL;
         const id = req.body.id;
-        if(!await isLinkValid(url)){
-            return res.json({StreamTitle:"Радио на ремонте"})
-        }
+        // if(!await isLinkValid(url)){
+        //     return res.json({StreamTitle:"Радио на ремонте"})
+        // }
         try {
             if (!url) res.status(400).json('None url')
             if (radioOnlineMap.has(id)) {
@@ -450,24 +462,29 @@ class RadioController {
         // }else {
             try {
                 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-                let meta;
-                meta = await new Promise((resolve, reject) => {
-                    icy.get(url, (response) => {
-                        response.on("metadata", (metadata) => {
-                            const parsedMetadata = icy.parse(metadata);
-                            resolve(parsedMetadata);
+                const meta = await Promise.race([
+                    new Promise((resolve, reject) => {
+                        icy.get(url, (response) => {
+                            response.on("metadata", (metadata) => {
+                                const parsedMetadata = icy.parse(metadata);
+                                resolve(parsedMetadata);
+                            });
+                            response.on("error", (error) => {
+                                console.log(error.message);
+                                resolve({ StreamTitle: 'Неизвестно' });
+                            });
                         });
-                        response.on("error", (error) => {
-                            console.log(error.message);
-                            resolve({StreamTitle: 'Неизвестно'})
-                        });
-                    });
-                });
-                //console.log(meta);
+                    }),
+                    new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            reject(new Error('Таймаут запроса'));
+                        }, 2000);
+                    }),
+                ]);
                 return res.json(meta);
             } catch (err) {
-                console.error('Ошибка внутри try-catch:', err);
-                return res.status(500).json({success: false, error: 'Internal server error'});
+                console.error('Ошибка внутри try-catch:', err.message);
+                return res.json({ StreamTitle: 'Радио на ремонте' });
             }
         // }
     }

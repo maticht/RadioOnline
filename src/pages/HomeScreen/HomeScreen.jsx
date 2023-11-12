@@ -455,7 +455,7 @@ const HomeScreen = observer(() => {
     let socialMediaLogos = [];
     if (selectedRadio !== null) {
         const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
-        const sharingText = `Слушать ${radioTitle} бесплатно`;
+        const sharingText = `${radioTitle} — слушать бесплатно`;
         socialMediaLogos = [
             {
                 name: 'Telegram',
@@ -542,7 +542,7 @@ const HomeScreen = observer(() => {
                 <Helmet>
                     {/* HTML Meta Tags*/}
                     <title>{`${selectedRadio.title} — слушать бесплатно`}</title>
-                    <meta name="description" content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"/>
+                    <meta name="description" content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."/>
                     {/*<link rel="shortcut icon" href={`https://backend.radio-online.me/${selectedRadio.image}`} type="image/x-icon"/>*/}
 
 
@@ -568,7 +568,7 @@ const HomeScreen = observer(() => {
                     {/* HTML Meta Tags*/}
                     <title>Радио онлайн — слушать бесплатно</title>
                     <meta name="description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."
                           data-rh="true"/>
 
                     {/*Facebook Meta Tags*/}
@@ -576,7 +576,7 @@ const HomeScreen = observer(() => {
                     <meta property="og:type" content="music.radio_station" data-rh="true"/>
                     <meta property="og:title" content="RadioOnline" data-rh="true"/>
                     <meta property="og:description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."
                           data-rh="true"/>
                     <meta property="og:image" content="image_holder" data-rh="true"/>
 
@@ -586,7 +586,7 @@ const HomeScreen = observer(() => {
                     <meta property="twitter:url" content="https://radio-online.me" data-rh="true"/>
                     <meta name="twitter:title" content="Radio Online" data-rh="true"/>
                     <meta name="twitter:description"
-                          content="Слушайте любимые радиостанции с удовольствием на площадке Radio Online!"
+                          content="Все радиостанции на одном сайте! Слушайте интернет радио онлайн бесплатно в прямом эфире в хорошем качестве и без регистрации."
                           data-rh="true"/>
                     <meta name="twitter:image" content="image_holder" data-rh="true"/>
                 </Helmet>
@@ -818,7 +818,7 @@ const HomeScreen = observer(() => {
                                                                         margin: '2px 0 2px 5px',
                                                                         fontSize: '12px',
                                                                         fontWeight: 'bold'
-                                                                    }}>{selectCountry.name}</p>
+                                                                    }}>{selectLanguage.name}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -871,7 +871,7 @@ const HomeScreen = observer(() => {
                                                                 margin: '1px 0'
                                                             }}>Сейчас играет</p>
                                                             <div className='musicName'>
-                                                                {currentMusicName.length > 15 ? (
+                                                                {currentMusicName.length > 16 ? (
                                                                     <p style={{
                                                                         fontSize: '12px',
                                                                         fontWeight: 'bold',
@@ -1220,10 +1220,9 @@ const HomeScreen = observer(() => {
                                     </div>
                                 )))
                             :
-                                    <Image
+                                    <h3 style={{ top: "50%", margin:'auto 0', textAlign: "center"}}
                                            className="mt-1 rounded rounded-10 d-block mx-auto"
-                                           src={nothingHere}
-                                    />}
+                                    >Ничего не найдено</h3>}
                             </div>
                         )}
                     </div>
@@ -1325,7 +1324,7 @@ const HomeScreen = observer(() => {
                                 </div>
                                 : null}
                             <div style={{margin: '10px 0 13px 0', overflow: 'auto'}}>
-                                <div style={{display: 'flex', flexDirection: "row", alignItems: 'flex-start', width: '100%', justifyContent:'space-between'}}>
+                                <div  style={{display: 'flex', flexDirection: "row", alignItems: 'flex-start', width: '100%', justifyContent:'space-between'}}>
                                     <p style={{
                                         fontSize: '18px',
                                         fontStyle: 'normal',
@@ -1334,7 +1333,7 @@ const HomeScreen = observer(() => {
                                         lineHeight: 'normal',
                                         width: '100%'
                                     }}
-                                    >{`Отзывы о ${selectedRadio.title}`}</p>
+                                    >{`Отзывы о «${selectedRadio.title}»`}</p>
                                     {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
                                         <div style={{
                                             width: '100%',
@@ -1466,19 +1465,12 @@ const HomeScreen = observer(() => {
                                                     margin: "0 10px"
 
                                                 }}>
-                                                    <p style={{
-                                                        margin: '0px',
-                                                        fontWeight: '600',
-                                                        color: '#000',
-                                                        fontSize: '14px'
-                                                    }}>{rating.name}</p>
                                                     <div
                                                         style={{
                                                             width: '100%',
                                                             justifyContent: 'space-between',
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            marginLeft: '10px',
                                                             alignItems: 'center',
                                                             border: "1px"
                                                         }}>
@@ -1494,7 +1486,15 @@ const HomeScreen = observer(() => {
                                                                     style={{margin: '0 5px -1px 0', width: '15px'}}
                                                                 />
                                                             ))}
+                                                            <p style={{
+                                                                margin: '0px',
+                                                                fontWeight: '600',
+                                                                color: '#000',
+                                                                fontSize: '14px',
+                                                                marginLeft:'10px'
+                                                            }}>{rating.name}</p>
                                                         </div>
+
                                                         <p className={'data-text'}>{new Date(rating.created).toLocaleString()}</p>
                                                     </div>
                                                 </div>)}
@@ -1543,7 +1543,7 @@ const HomeScreen = observer(() => {
                                         variant={"outline-dark"}
                                         className="main-admin-button submit_btn"
                                         onClick={() => setLeaveReview(true)}
-                                        style={{width: ratingArrUS.length === 0 ? "100%" : (windowWidth <= 750) ? "100%" : "50%"}}
+                                        style={{width: ratingArrUS.length === 0 ? "100%" : (windowWidth <= 995) ? "100%" : "50%"}}
                                     >
                                         Оставить отзыв
                                     </Button>
