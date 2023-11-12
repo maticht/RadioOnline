@@ -454,8 +454,8 @@ const HomeScreen = observer(() => {
     };
     let socialMediaLogos = [];
     if (selectedRadio !== null) {
-        const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
-        const sharingText = `${radioTitle} — слушать бесплатно`;
+        // const radioTitle = selectedRadio.title.includes('адио') ? selectedRadio.title : `Радио ${selectedRadio.title}`;
+        const sharingText = `${selectedRadio.title} — слушать бесплатно`;
         socialMediaLogos = [
             {
                 name: 'Telegram',
@@ -465,7 +465,7 @@ const HomeScreen = observer(() => {
             {
                 name: 'VK',
                 logo: vklogo,
-                url: `https://vk.com/share.php?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `https://vk.com/share.php?url=${encodeURIComponent(`${currentUrl}`)}`
             },
             {
                 name: 'Facebook',
@@ -480,12 +480,12 @@ const HomeScreen = observer(() => {
             {
                 name: 'WhatsApp',
                 logo: wtplogo,
-                url: `https://wa.me/?text=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `https://wa.me/?text=${encodeURIComponent(`${currentUrl}\n${sharingText}`)}`
             },
             {
-                name: 'Instagram',
+                name: 'Viber',
                 logo: instlogo,
-                url: `https://www.instagram.com/?url=${encodeURIComponent(`${sharingText}\n${currentUrl}`)}`
+                url: `viber://forward?text=${encodeURIComponent(`${currentUrl}\n${sharingText}`)}`
             }
         ];
     }
@@ -1220,9 +1220,8 @@ const HomeScreen = observer(() => {
                                     </div>
                                 )))
                             :
-                                    <h3 style={{ top: "50%", margin:'auto 0', textAlign: "center"}}
-                                           className="mt-1 rounded rounded-10 d-block mx-auto"
-                                    >Ничего не найдено</h3>}
+                                    <h5 style={{ top: "50%", margin:'200px auto', textAlign: "center"}}
+                                    >Ничего не найдено</h5>}
                             </div>
                         )}
                     </div>
@@ -1323,38 +1322,34 @@ const HomeScreen = observer(() => {
                                     </div>
                                 </div>
                                 : null}
-                            <div style={{margin: '10px 0 13px 0', overflow: 'auto'}}>
-                                <div  style={{display: 'flex', flexDirection: "row", alignItems: 'flex-start', width: '100%', justifyContent:'space-between'}}>
+                            <div style={{margin: '15px 0 13px 0', overflow: 'auto'}}>
+                                <div className='rating-title'>
                                     <p style={{
                                         fontSize: '18px',
                                         fontStyle: 'normal',
-                                        margin: '0 0 10px 0',
+                                        margin: '0 0 0 0',
                                         fontWeight: '700',
                                         lineHeight: 'normal',
                                         width: '100%'
                                     }}
                                     >{`Отзывы о «${selectedRadio.title}»`}</p>
                                     {ratingArrUS && ratingArrUS.length > 0 && ratingArrUS[0] !== '' && (
-                                        <div style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            marginLeft: '10px',
-                                            marginTop: '3px',
-                                            justifyContent: 'flex-end'
-                                        }}>
-                                            <img style={{margin: '0 0 5px 0', width: '14px'}}
+                                        <div  className='rating-amount'>
+                                            <img style={{margin: '0 0 0 0', width: '14px'}}
                                                  src={goldStar} alt="star"/>
                                             <p style={{
-                                                margin: '0 0 7px 2px',
+                                                margin: '0 0 0 2px',
                                                 fontSize: '13px',
                                                 fontWeight: '500'
                                             }}>
                                                 {(ratingArrUS.reduce((acc, rating) => acc + rating.value, 0) / ratingArrUS.length).toFixed(1)}
                                             </p>
-                                            <p style={{margin: '0 0 6px 5px', fontSize: '12px'}}>
-                                                ({ratingArrUS.length - 1} отзывов)
+                                            <p style={{ margin: '0 0 0 5px', fontSize: '12px' }}>
+                                                {ratingArrUS.length === 1
+                                                    ? `(${ratingArrUS.length} отзыв)`
+                                                    : ratingArrUS.length === 2 || ratingArrUS.length === 3 || ratingArrUS.length === 4
+                                                        ? `(${ratingArrUS.length} отзыва)`
+                                                        : `(${ratingArrUS.length} отзывов)`}
                                             </p>
                                         </div>
                                     )}
