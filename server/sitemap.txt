@@ -5,7 +5,6 @@ https://radio-online.me/retro-fm
 https://radio-online.me/avtoradio
 https://radio-online.me/chocolate
 https://radio-online.me/kavkaz-hit
-https://radio-online.me/mariya-fm
 https://radio-online.me/yuzhnaya-volna
 https://radio-online.me/privet
 https://radio-online.me/relax-fm
@@ -18,7 +17,6 @@ https://radio-online.me/orfej
 https://radio-online.me/jazz
 https://radio-online.me/kalina-krasnaya
 https://radio-online.me/mcm
-https://radio-online.me/kavkaz-radio
 https://radio-online.me/more
 https://radio-online.me/klassik
 https://radio-online.me/spokojnoe
@@ -30,7 +28,6 @@ https://radio-online.me/milicejskaya-volna
 https://radio-online.me/love
 https://radio-online.me/vladivostok-fm
 https://radio-online.me/chavash-en
-https://radio-online.me/fantastiki
 https://radio-online.me/samara-maksimum
 https://radio-online.me/pi-fm
 https://radio-online.me/europa-plus
@@ -39,13 +36,11 @@ https://radio-online.me/vesti-fm
 https://radio-online.me/intervolna
 https://radio-online.me/l
 https://radio-online.me/like-fm
-https://radio-online.me/melodiya
 https://radio-online.me/za-oblakami
 https://radio-online.me/serebryanyj-dozhd
 https://radio-online.me/royal
 https://radio-online.me/radiola
 https://radio-online.me/passazh
-https://radio-online.me/pervoe-radio-kubani
 https://radio-online.me/record
 https://radio-online.me/remix-fm
 https://radio-online.me/tnt-music
@@ -101,3 +96,4 @@ https://radio-online.me/rossii
 https://radio-online.me/detskoe
 https://radio-online.me/novaya-volna
 https://radio-online.me/russkoe
+https://radio-online.me/pervoe-radio-kubani
