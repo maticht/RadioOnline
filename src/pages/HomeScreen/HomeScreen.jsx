@@ -880,7 +880,7 @@ const HomeScreen = observer(() => {
                                                 }}>
                                                     <button className={`audio-play-btn`} onClick={togglePlayback}>
                                                         {currentMusicName === 'Загрузка...' ? (
-                                                            <div className="loading-icon"></div>
+                                                            <img src={play} alt="Play" className="audio-icon"/>
                                                         ) : loadingIco ? (
                                                             <div className="loading-icon"></div>
                                                         ) : isPlaying ? (
@@ -1361,7 +1361,7 @@ const HomeScreen = observer(() => {
                                     </div>
                                 </div>
                                 : null}
-                            <div style={{margin: '15px 0 13px 0', overflow: 'auto'}}>
+                            <div style={{margin: '25px 0 15px 0', overflow: 'auto'}}>
                                 <div className='rating-title'>
                                     <p style={{
                                         fontSize: '18px',
